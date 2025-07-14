@@ -1,0 +1,162 @@
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+
+export type Language = 'es' | 'en';
+
+interface LanguageContextType {
+  language: Language;
+  toggleLanguage: () => void;
+  t: (key: string) => string;
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+const translations = {
+  es: {
+    // Navigation
+    home: 'Inicio',
+    directory: 'Directorio',
+    about: 'Acerca de',
+    contact: 'Contacto',
+    
+    // Hero Section
+    heroTitle: 'Directorio Global de Escuelas Culinarias',
+    heroSubtitle: 'Descubre las mejores escuelas de cocina, universidades gastronómicas y institutos de hospitalidad del mundo',
+    searchPlaceholder: 'Buscar escuelas, ciudades o países...',
+    exploreButton: 'Explorar Escuelas',
+    
+    // Filters
+    filterByCountry: 'Filtrar por país',
+    filterByType: 'Tipo de institución',
+    filterBySpecialty: 'Especialidad',
+    allCountries: 'Todos los países',
+    allTypes: 'Todos los tipos',
+    allSpecialties: 'Todas las especialidades',
+    
+    // School Types
+    university: 'Universidad',
+    institute: 'Instituto',
+    academy: 'Academia',
+    college: 'Colegio',
+    
+    // Specialties
+    culinaryArts: 'Artes Culinarias',
+    hospitality: 'Hospitalidad',
+    pastry: 'Pastelería',
+    wineGastronomy: 'Enología y Gastronomía',
+    hotelManagement: 'Gestión Hotelera',
+    
+    // School Card
+    viewDetails: 'Ver Detalles',
+    location: 'Ubicación',
+    founded: 'Fundada en',
+    students: 'estudiantes',
+    programs: 'programas',
+    
+    // Countries
+    spain: 'España',
+    mexico: 'México',
+    italy: 'Italia',
+    france: 'Francia',
+    usa: 'Estados Unidos',
+    argentina: 'Argentina',
+    
+    // Cities
+    madrid: 'Madrid',
+    barcelona: 'Barcelona',
+    mexico_city: 'Ciudad de México',
+    rome: 'Roma',
+    paris: 'París',
+    
+    // Stats
+    totalSchools: 'escuelas registradas',
+    countries: 'países',
+    specialties: 'especialidades'
+  },
+  en: {
+    // Navigation
+    home: 'Home',
+    directory: 'Directory',
+    about: 'About',
+    contact: 'Contact',
+    
+    // Hero Section
+    heroTitle: 'Global Culinary Schools Directory',
+    heroSubtitle: 'Discover the best culinary schools, gastronomic universities and hospitality institutes worldwide',
+    searchPlaceholder: 'Search schools, cities or countries...',
+    exploreButton: 'Explore Schools',
+    
+    // Filters
+    filterByCountry: 'Filter by country',
+    filterByType: 'Institution type',
+    filterBySpecialty: 'Specialty',
+    allCountries: 'All countries',
+    allTypes: 'All types',
+    allSpecialties: 'All specialties',
+    
+    // School Types
+    university: 'University',
+    institute: 'Institute',
+    academy: 'Academy',
+    college: 'College',
+    
+    // Specialties
+    culinaryArts: 'Culinary Arts',
+    hospitality: 'Hospitality',
+    pastry: 'Pastry',
+    wineGastronomy: 'Wine & Gastronomy',
+    hotelManagement: 'Hotel Management',
+    
+    // School Card
+    viewDetails: 'View Details',
+    location: 'Location',
+    founded: 'Founded in',
+    students: 'students',
+    programs: 'programs',
+    
+    // Countries
+    spain: 'Spain',
+    mexico: 'Mexico',
+    italy: 'Italy',
+    france: 'France',
+    usa: 'United States',
+    argentina: 'Argentina',
+    
+    // Cities
+    madrid: 'Madrid',
+    barcelona: 'Barcelona',
+    mexico_city: 'Mexico City',
+    rome: 'Rome',
+    paris: 'Paris',
+    
+    // Stats
+    totalSchools: 'registered schools',
+    countries: 'countries',
+    specialties: 'specialties'
+  }
+};
+
+export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [language, setLanguage] = useState<Language>('es');
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'es' ? 'en' : 'es');
+  };
+
+  const t = (key: string): string => {
+    return translations[language][key as keyof typeof translations['es']] || key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+};
