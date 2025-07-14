@@ -17,7 +17,7 @@ export const Filters = ({ filters, onFiltersChange, resultsCount }: FiltersProps
   const updateFilter = (key: keyof SchoolFilters, value: string) => {
     onFiltersChange({
       ...filters,
-      [key]: value
+      [key]: value === 'all' ? '' : value
     });
   };
 
@@ -69,7 +69,7 @@ export const Filters = ({ filters, onFiltersChange, resultsCount }: FiltersProps
               <SelectValue placeholder={t('allCountries')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t('allCountries')}</SelectItem>
+              <SelectItem value="all">{t('allCountries')}</SelectItem>
               {countries.map((country) => (
                 <SelectItem key={country} value={country}>
                   {t(country)}
@@ -89,7 +89,7 @@ export const Filters = ({ filters, onFiltersChange, resultsCount }: FiltersProps
               <SelectValue placeholder={t('allTypes')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t('allTypes')}</SelectItem>
+              <SelectItem value="all">{t('allTypes')}</SelectItem>
               {types.map((type) => (
                 <SelectItem key={type} value={type}>
                   {t(type)}
@@ -109,7 +109,7 @@ export const Filters = ({ filters, onFiltersChange, resultsCount }: FiltersProps
               <SelectValue placeholder={t('allSpecialties')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">{t('allSpecialties')}</SelectItem>
+              <SelectItem value="all">{t('allSpecialties')}</SelectItem>
               {specialties.map((specialty) => (
                 <SelectItem key={specialty} value={specialty}>
                   {t(specialty)}
