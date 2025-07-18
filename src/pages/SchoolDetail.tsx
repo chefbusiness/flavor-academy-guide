@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { SocialShareButtons } from '@/components/SocialShareButtons';
+import { FloatingSocialShare } from '@/components/FloatingSocialShare';
 import { SchoolTestimonials } from '@/components/SchoolTestimonials';
 import { SchoolLocation } from '@/components/SchoolLocation';
 import { SchoolImageGallery } from '@/components/SchoolImageGallery';
@@ -226,6 +226,13 @@ const SchoolDetailContent = () => {
       
       <Header />
       
+      {/* Floating Social Share Component */}
+      <FloatingSocialShare
+        schoolName={school.name}
+        description={school.description}
+        url={fullUrl}
+      />
+      
       <main className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-6xl mx-auto">
           <Breadcrumbs items={breadcrumbItems} />
@@ -234,38 +241,27 @@ const SchoolDetailContent = () => {
           <article className="mt-4 space-y-8">
             <header className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <div className="space-y-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-gradient mb-2">
-                      {school.name}
-                    </h1>
-                    <h2 className="text-xl text-muted-foreground mb-4">
-                      {language === 'es'
-                        ? `Escuela de Cocina en ${school.city}, ${t(school.country)}`
-                        : `Culinary School in ${school.city}, ${t(school.country)}`
-                      }
-                    </h2>
-                    <div className="flex items-center space-x-4 mb-4">
-                      <Badge variant="secondary">
-                        {t(school.type)}
-                      </Badge>
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-5 h-5 text-amber-500 fill-current" />
-                        <span className="font-medium">{school.rating}</span>
-                        <span className="text-sm text-muted-foreground">
-                          ({formatNumber(Math.floor(school.studentsCount / 10))} {language === 'es' ? 'reseñas' : 'reviews'})
-                        </span>
-                      </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-gradient mb-2">
+                    {school.name}
+                  </h1>
+                  <h2 className="text-xl text-muted-foreground mb-4">
+                    {language === 'es'
+                      ? `Escuela de Cocina en ${school.city}, ${t(school.country)}`
+                      : `Culinary School in ${school.city}, ${t(school.country)}`
+                    }
+                  </h2>
+                  <div className="flex items-center space-x-4 mb-4">
+                    <Badge variant="secondary">
+                      {t(school.type)}
+                    </Badge>
+                    <div className="flex items-center space-x-1">
+                      <Star className="w-5 h-5 text-amber-500 fill-current" />
+                      <span className="font-medium">{school.rating}</span>
+                      <span className="text-sm text-muted-foreground">
+                        ({formatNumber(Math.floor(school.studentsCount / 10))} {language === 'es' ? 'reseñas' : 'reviews'})
+                      </span>
                     </div>
-                  </div>
-                  
-                  {/* Social Share Buttons */}
-                  <div className="flex-shrink-0">
-                    <SocialShareButtons
-                      schoolName={school.name}
-                      description={school.description}
-                      url={fullUrl}
-                    />
                   </div>
                 </div>
 
