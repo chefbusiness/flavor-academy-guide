@@ -1,3 +1,4 @@
+
 export interface School {
   id: string;
   name: string;
@@ -23,6 +24,13 @@ export interface School {
   languages: string[];
   accreditation: string[];
   features: string[];
+  // New fields for enhanced functionality
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  programs?: string[];
+  gallery?: string[];
 }
 
 export interface SchoolFilters {

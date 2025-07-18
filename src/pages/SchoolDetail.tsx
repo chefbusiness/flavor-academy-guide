@@ -1,5 +1,5 @@
 
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useEffect } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
@@ -18,7 +18,9 @@ import {
   Award,
   Globe,
   DollarSign,
-  Share2
+  Share2,
+  GraduationCap,
+  Clock
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
@@ -32,6 +34,11 @@ const SchoolDetailContent = () => {
   const { slug } = useParams<{ slug: string }>();
   const { t, language } = useLanguage();
   const { generateSchoolSchema, generateBreadcrumbSchema } = useStructuredData();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!slug) {
     return <Navigate to="/" replace />;
@@ -108,6 +115,20 @@ const SchoolDetailContent = () => {
     // If local image fails, use Unsplash fallback
     const unsplashId = parseInt(school.id).toString().padStart(8, '0');
     target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=800&h=600&fit=crop&auto=format`;
+  };
+
+  // Sample programs data - will be replaced with real data from CSV
+  const getSamplePrograms = () => {
+    const programsMap: { [key: string]: string[] } = {
+      '1': ['Grado en Gastronomía', 'Máster en Innovación Culinaria', 'Especialización en Cocina Vasca'],
+      '2': ['Diseño Culinario', 'Arte y Gastronomía', 'Técnicas Avanzadas de Pastelería'],
+      '3': ['Cocina Tradicional Mexicana', 'Técnicas de Vanguardia', 'Gestión de Restaurantes'],
+      '4': ['Cocina Italiana Auténtica', 'Pasta y Risotto Profesional', 'Enología y Maridaje'],
+      '5': ['Cocina Francesa Clásica', 'Gestión Hotelera', 'Emprendimiento Gastronómico'],
+      '6': ['Grand Diplôme', 'Pâtisserie Avancée', 'Cuisine Professionnelle']
+    };
+    
+    return programsMap[school.id] || ['Programa Principal', 'Especialización Avanzada', 'Certificación Profesional'];
   };
 
   // Generate comprehensive structured data
@@ -197,12 +218,12 @@ const SchoolDetailContent = () => {
       
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           <Breadcrumbs items={breadcrumbItems} />
           
           {/* Hero Section with enhanced SEO structure */}
-          <article>
+          <article className="mt-8">
             <header className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <div className="space-y-6">
                 <div className="flex items-start justify-between">
@@ -329,6 +350,31 @@ const SchoolDetailContent = () => {
                 </div>
               </div>
             </header>
+
+            {/* New Programs Section */}
+            <section className="bg-gradient-card rounded-lg p-6 mb-8">
+              <h3 className="text-xl font-semibold mb-4 flex items-center">
+                <GraduationCap className="w-5 h-5 mr-2 text-primary" />
+                {language === 'es' ? 'Programas Destacados' : 'Featured Programs'}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {getSamplePrograms().map((program, index) => (
+                  <div key={index} className="bg-background/50 rounded-lg p-4 border border-border/50">
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-sm mb-1">{program}</h4>
+                        <p className="text-xs text-muted-foreground">
+                          {language === 'es' ? 'Programa certificado' : 'Certified program'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
 
             {/* Details Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

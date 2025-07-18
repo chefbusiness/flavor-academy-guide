@@ -1,241 +1,141 @@
-
+import { useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
-import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useStructuredData } from '@/hooks/useStructuredData';
-import { Button } from '@/components/ui/button';
-import { Mail, Globe, MessageCircle, Clock } from 'lucide-react';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
-const ContactContent = () => {
-  const { language } = useLanguage();
-  const { generateOrganizationSchema, generateBreadcrumbSchema } = useStructuredData();
+const Contact = () => {
+  const { t, language } = useLanguage();
 
-  const seoTitle = language === 'es' 
-    ? 'Contacto - Directorio Global de Escuelas de Cocina'
-    : 'Contact - Global Culinary Schools Directory';
-    
-  const seoDescription = language === 'es'
-    ? 'Contáctanos para sugerir escuelas, reportar información incorrecta o cualquier consulta sobre nuestro directorio de escuelas de cocina.'
-    : 'Contact us to suggest schools, report incorrect information, or any questions about our culinary schools directory.';
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const breadcrumbItems = [
-    { name: language === 'es' ? 'Inicio' : 'Home', url: 'https://escuelasdecocina.com/' },
-    { name: language === 'es' ? 'Contacto' : 'Contact' }
+    { label: t('home'), href: '/' },
+    { label: t('contact') }
   ];
 
-  const structuredData = [
-    generateOrganizationSchema,
-    generateBreadcrumbSchema(breadcrumbItems)
-  ];
+  const seoTitle = language === 'es' ? 'Contacto - Escuelas de Cocina' : 'Contact - Culinary Schools';
+  const seoDescription = language === 'es' ? 'Página de contacto de Escuelas de Cocina' : 'Contact page of Culinary Schools';
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title={seoTitle}
         description={seoDescription}
-        url={language === 'es' ? '/contacto' : '/contact'}
-        structuredData={structuredData}
+        keywords="contacto, escuelas de cocina, culinary schools"
+        url="/contacto"
+        type="website"
         locale={language === 'es' ? 'es_ES' : 'en_US'}
+        siteName="Directorio Global de Escuelas de Cocina"
       />
-      
+
       <Header />
-      
-      <main className="pt-20">
-        {/* Hero Section */}
-        <section className="py-20 bg-gradient-hero text-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                {language === 'es' ? 'Contacto' : 'Contact'}
-              </h1>
-              <p className="text-xl text-white/90">
-                {language === 'es'
-                  ? 'Estamos aquí para ayudarte con cualquier consulta sobre nuestro directorio'
-                  : 'We\'re here to help you with any questions about our directory'
-                }
-              </p>
-            </div>
-          </div>
-        </section>
 
-        {/* Contact Information */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                
-                {/* Contact Info */}
-                <div>
-                  <h2 className="text-3xl font-bold text-foreground mb-8">
-                    {language === 'es' ? 'Información de Contacto' : 'Contact Information'}
-                  </h2>
-                  
-                  <div className="space-y-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Mail className="h-6 w-6 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-1">
-                          {language === 'es' ? 'Correo Electrónico' : 'Email'}
-                        </h3>
-                        <a 
-                          href="mailto:info@escuelasdecocina.com"
-                          className="text-primary hover:underline"
-                        >
-                          info@escuelasdecocina.com
-                        </a>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {language === 'es' 
-                            ? 'Para consultas generales y sugerencias'
-                            : 'For general inquiries and suggestions'
-                          }
-                        </p>
-                      </div>
-                    </div>
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-3xl mx-auto">
+          <Breadcrumbs items={breadcrumbItems} />
 
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Globe className="h-6 w-6 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-1">
-                          {language === 'es' ? 'Sitio Web' : 'Website'}
-                        </h3>
-                        <p className="text-primary">escuelasdecocina.com</p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {language === 'es' 
-                            ? 'Directorio global de escuelas de cocina'
-                            : 'Global culinary schools directory'
-                          }
-                        </p>
-                      </div>
-                    </div>
+          <section className="mt-8">
+            <h1 className="text-3xl font-bold text-gradient mb-4">
+              {t('contactUs')}
+            </h1>
+            <p className="text-muted-foreground text-lg mb-6">
+              {t('contactDescription')}
+            </p>
 
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Clock className="h-6 w-6 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-1">
-                          {language === 'es' ? 'Tiempo de Respuesta' : 'Response Time'}
-                        </h3>
-                        <p className="text-muted-foreground">
-                          {language === 'es' 
-                            ? 'Respondemos en 24-48 horas'
-                            : 'We respond within 24-48 hours'
-                          }
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+            <div className="bg-gradient-card rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">
+                {t('contactInformation')}
+              </h2>
+
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <p className="text-muted-foreground">
+                    {t('address')}: 123 Main Street, City, Country
+                  </p>
                 </div>
 
-                {/* Contact Reasons */}
-                <div>
-                  <h2 className="text-3xl font-bold text-foreground mb-8">
-                    {language === 'es' ? '¿En qué podemos ayudarte?' : 'How can we help you?'}
-                  </h2>
-                  
-                  <div className="space-y-4">
-                    <div className="p-4 border border-border rounded-lg">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <MessageCircle className="h-5 w-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">
-                          {language === 'es' ? 'Sugerir una Escuela' : 'Suggest a School'}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {language === 'es'
-                          ? '¿Conoces una excelente escuela de cocina que no esté en nuestro directorio?'
-                          : 'Do you know an excellent culinary school that\'s not in our directory?'
-                        }
-                      </p>
-                    </div>
-
-                    <div className="p-4 border border-border rounded-lg">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <MessageCircle className="h-5 w-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">
-                          {language === 'es' ? 'Reportar Información Incorrecta' : 'Report Incorrect Information'}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {language === 'es'
-                          ? 'Ayúdanos a mantener la información actualizada y precisa'
-                          : 'Help us keep information updated and accurate'
-                        }
-                      </p>
-                    </div>
-
-                    <div className="p-4 border border-border rounded-lg">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <MessageCircle className="h-5 w-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">
-                          {language === 'es' ? 'Colaboraciones' : 'Partnerships'}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {language === 'es'
-                          ? '¿Eres una institución educativa interesada en aparecer en nuestro directorio?'
-                          : 'Are you an educational institution interested in being featured in our directory?'
-                        }
-                      </p>
-                    </div>
-
-                    <div className="p-4 border border-border rounded-lg">
-                      <div className="flex items-center space-x-3 mb-2">
-                        <MessageCircle className="h-5 w-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">
-                          {language === 'es' ? 'Soporte Técnico' : 'Technical Support'}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {language === 'es'
-                          ? '¿Experimentas problemas técnicos con el sitio web?'
-                          : 'Are you experiencing technical issues with the website?'
-                        }
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Section */}
-              <div className="mt-16 text-center p-8 bg-muted/30 rounded-lg">
-                <h3 className="text-2xl font-bold text-foreground mb-4">
-                  {language === 'es' ? '¿Listo para conectarte?' : 'Ready to connect?'}
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  {language === 'es'
-                    ? 'No dudes en contactarnos. Estamos aquí para ayudarte a encontrar la mejor formación culinaria.'
-                    : 'Don\'t hesitate to contact us. We\'re here to help you find the best culinary training.'
-                  }
-                </p>
-                <Button asChild size="lg">
-                  <a href="mailto:info@escuelasdecocina.com">
-                    <Mail className="mr-2 h-5 w-5" />
-                    {language === 'es' ? 'Enviar Email' : 'Send Email'}
+                <div className="flex items-center space-x-3">
+                  <Mail className="w-5 h-5 text-primary" />
+                  <a href="mailto:info@escuelasdecocina.com" className="text-primary hover:underline">
+                    info@escuelasdecocina.com
                   </a>
-                </Button>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <Phone className="w-5 h-5 text-primary" />
+                  <a href="tel:+15551234567" className="text-primary hover:underline">
+                    +1 (555) 123-4567
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+
+            <div className="bg-gradient-card rounded-lg p-6 mt-6">
+              <h2 className="text-xl font-semibold mb-4">
+                {t('sendUsAMessage')}
+              </h2>
+
+              <form className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-muted-foreground">
+                    {t('name')}
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    placeholder={t('yourName')}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-muted-foreground">
+                    {t('email')}
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    placeholder={t('yourEmail')}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-muted-foreground">
+                    {t('message')}
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={4}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    placeholder={t('yourMessage')}
+                  />
+                </div>
+
+                <div>
+                  <button
+                    type="submit"
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  >
+                    {t('sendMessage')}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+        </div>
       </main>
-      
+
       <Footer />
     </div>
-  );
-};
-
-const Contact = () => {
-  return (
-    <LanguageProvider>
-      <ContactContent />
-    </LanguageProvider>
   );
 };
 
