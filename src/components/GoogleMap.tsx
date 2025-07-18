@@ -1,8 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { School } from '@/types/school';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,15 +15,8 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showDebug, setShowDebug] = useState(false);
-  const [debugInfo, setDebugInfo] = useState<string[]>([]);
 
-  const addDebugInfo = (message: string) => {
-    console.log(`🗺️ ${message}`);
-    setDebugInfo(prev => [...prev, message]);
-  };
-
-  // Coordenadas predefinidas para las escuelas
+  // Coordenadas predefinidas para las escuelas principales
   const getSchoolCoordinates = (schoolId: string) => {
     const coordinates: { [key: string]: { lat: number; lng: number } } = {
       '1': { lat: 43.2627, lng: -2.9253 }, // Basque Culinary Center - Bilbao
@@ -55,7 +47,6 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
         <p class="text-sm text-gray-600 mb-2">${school.address}</p>
         <p class="text-sm text-gray-600 mb-3">${school.city}, ${school.country}</p>
         <p class="text-xs text-gray-500 mb-2">${coordsText}</p>
-        <p class="text-xs text-red-500">${errorMessage}</p>
         <a href="https://maps.google.com/?q=${encodeURIComponent(school.address + ', ' + school.city)}" 
            target="_blank" 
            class="mt-3 inline-flex items-center px-3 py-2 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
@@ -70,7 +61,7 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
     
     setIsLoading(true);
     setError(null);
-    addDebugInfo('Iniciando carga del mapa');
+    console.log('🗺️ Iniciando carga del mapa');
 
     try {
       // Paso 1: Obtener coordenadas predefinidas
@@ -79,14 +70,14 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
       let addressUsed = '';
 
       if (predefinedCoords) {
-        addDebugInfo(`Usando coordenadas predefinidas: ${predefinedCoords.lat}, ${predefinedCoords.lng}`);
+        console.log(`🗺️ Usando coordenadas predefinidas: ${predefinedCoords.lat}, ${predefinedCoords.lng}`);
         addressUsed = 'Coordenadas predefinidas';
       } else {
-        addDebugInfo('No hay coordenadas predefinidas, intentando geocodificación');
+        console.log('🗺️ No hay coordenadas predefinidas, intentando geocodificación');
       }
 
       // Paso 2: Obtener API key
-      addDebugInfo('Obteniendo API key de Google Maps');
+      console.log('🗺️ Obteniendo API key de Google Maps');
       const { data: apiKeyData, error: apiKeyError } = await supabase.functions.invoke('get-secret', {
         body: { name: 'GOOGLE_MAPS_API_KEY' }
       });
@@ -95,11 +86,11 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
         throw new Error('No se pudo obtener la API key de Google Maps');
       }
 
-      addDebugInfo('API key obtenida correctamente');
+      console.log('🗺️ API key obtenida correctamente');
 
       // Paso 3: Cargar Google Maps API
       if (!window.google) {
-        addDebugInfo('Cargando API de Google Maps');
+        console.log('🗺️ Cargando API de Google Maps');
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKeyData.GOOGLE_MAPS_API_KEY}&libraries=places`;
         script.async = true;
@@ -107,7 +98,7 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
         
         await new Promise<void>((resolve, reject) => {
           script.onload = () => {
-            addDebugInfo('API de Google Maps cargada');
+            console.log('🗺️ API de Google Maps cargada');
             resolve();
           };
           script.onerror = () => reject(new Error('Error al cargar Google Maps API'));
@@ -117,7 +108,7 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
 
       // Paso 4: Geocodificar si no tenemos coordenadas
       if (!coordinates) {
-        addDebugInfo('Iniciando geocodificación');
+        console.log('🗺️ Iniciando geocodificación');
         const geocoder = new (window.google as any).maps.Geocoder();
         
         const addressOptions = [
@@ -141,10 +132,10 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
 
             coordinates = result.geometry.location;
             addressUsed = address;
-            addDebugInfo(`Geocodificación exitosa con: ${address}`);
+            console.log(`🗺️ Geocodificación exitosa con: ${address}`);
             break;
           } catch (error) {
-            addDebugInfo(`Falló geocodificación con: ${address}`);
+            console.log(`🗺️ Falló geocodificación con: ${address}`);
             continue;
           }
         }
@@ -155,7 +146,7 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
       }
 
       // Paso 5: Crear el mapa
-      addDebugInfo('Creando mapa');
+      console.log('🗺️ Creando mapa');
       const mapOptions = {
         zoom: predefinedCoords ? 16 : (addressUsed.includes(school.address) ? 16 : 12),
         center: coordinates,
@@ -207,12 +198,12 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
         infoWindow.open(map, marker);
       });
 
-      addDebugInfo('Mapa creado exitosamente');
+      console.log('🗺️ Mapa creado exitosamente');
       setIsLoading(false);
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-      addDebugInfo(`Error: ${errorMessage}`);
+      console.log(`🗺️ Error: ${errorMessage}`);
       setError(errorMessage);
       createFallbackMap(errorMessage);
       setIsLoading(false);
@@ -255,38 +246,6 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({ school }) => {
         className="w-full h-80 rounded-lg overflow-hidden border"
         style={{ minHeight: '320px' }}
       />
-
-      {/* Botón de debug */}
-      <div className="flex justify-between items-center">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setShowDebug(!showDebug)}
-          className="text-xs"
-        >
-          {showDebug ? 'Ocultar' : 'Mostrar'} Debug
-        </Button>
-        
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={initializeMap}
-          className="text-xs"
-        >
-          <MapPin className="w-3 h-3 mr-1" />
-          Reintentar
-        </Button>
-      </div>
-
-      {/* Panel de debug */}
-      {showDebug && (
-        <div className="bg-gray-50 rounded-lg p-3 text-xs font-mono max-h-40 overflow-y-auto">
-          <h4 className="font-semibold mb-2">Debug Info:</h4>
-          {debugInfo.map((info, index) => (
-            <div key={index} className="text-gray-700">{info}</div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
