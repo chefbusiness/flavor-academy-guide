@@ -3,10 +3,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageProvider } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 
-const AboutUs = () => {
+const AboutUsContent = () => {
   const { t, language } = useLanguage();
 
   // Scroll to top when component mounts
@@ -176,6 +175,14 @@ const AboutUs = () => {
 
       <Footer />
     </div>
+  );
+};
+
+const AboutUs = () => {
+  return (
+    <LanguageProvider>
+      <AboutUsContent />
+    </LanguageProvider>
   );
 };
 

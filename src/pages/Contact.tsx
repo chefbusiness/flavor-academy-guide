@@ -3,12 +3,11 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageProvider } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const Contact = () => {
+const ContactContent = () => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
   
@@ -207,6 +206,14 @@ const Contact = () => {
 
       <Footer />
     </div>
+  );
+};
+
+const Contact = () => {
+  return (
+    <LanguageProvider>
+      <ContactContent />
+    </LanguageProvider>
   );
 };
 
