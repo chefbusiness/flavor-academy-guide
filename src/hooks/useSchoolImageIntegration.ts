@@ -37,8 +37,8 @@ export const useSchoolImageIntegration = (school: School) => {
   const { data: schoolImageData, isLoading, error } = useSchoolImage(schoolSlug);
 
   const getImageSource = useMemo(() => {
-    console.log(`🔍 PROCESANDO IMAGEN para ${school.name} (ID: ${school.id}, Slug: ${schoolSlug})`);
-    console.log(`📊 schoolImageData:`, schoolImageData);
+    console.log(`🔍 PROCESANDO IMAGEN para ${school.name} (ID: ${school.id}, Slug correcto: ${schoolSlug})`);
+    console.log(`📊 schoolImageData para slug "${schoolSlug}":`, schoolImageData);
     console.log(`⏳ isLoading:`, isLoading);
     console.log(`❌ error:`, error);
     
