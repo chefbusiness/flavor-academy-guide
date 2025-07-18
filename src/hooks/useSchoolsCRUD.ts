@@ -66,13 +66,28 @@ export const useSchoolById = (id: string) => {
   return useQuery({
     queryKey: ['school', id],
     queryFn: async (): Promise<School | null> => {
-      const { data, error } = await supabase
+      // Primero intentar buscar por UUID (id real)
+      let { data, error } = await supabase
         .from('schools')
         .select('*')
         .eq('id', id)
         .maybeSingle();
 
-      if (error) throw error;
+      // Si no se encuentra y el ID no es un UUID válido, buscar por legacy_id
+      if (!data && error?.message?.includes('invalid input syntax for type uuid')) {
+        const { data: legacyData, error: legacyError } = await supabase
+          .from('schools')
+          .select('*')
+          .eq('legacy_id', id)
+          .maybeSingle();
+        
+        data = legacyData;
+        error = legacyError;
+      }
+
+      if (error && !error.message?.includes('invalid input syntax for type uuid')) {
+        throw error;
+      }
       
       return data ? convertDatabaseSchoolToSchool(data as DatabaseSchool) : null;
     },
