@@ -1,6 +1,7 @@
 import React from 'react';
 import { SchoolImageManager } from '@/components/SchoolImageManager';
 import { UploadImagesButton } from '@/components/UploadImagesButton';
+import { UploadNewSchoolImages } from '@/components/UploadNewSchoolImages';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
@@ -17,6 +18,10 @@ export default function ImageManager() {
             Sube todas las imágenes de las escuelas al storage de Supabase y actualiza las URLs en la base de datos.
           </p>
           <UploadImagesButton />
+        </div>
+        
+        <div className="mb-8">
+          <UploadNewSchoolImages />
         </div>
         
         <SchoolImageManager />

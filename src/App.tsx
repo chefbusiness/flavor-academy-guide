@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import CookiesPolicy from "./pages/CookiesPolicy";
 import NotFound from "./pages/NotFound";
+import ImageManager from "./pages/ImageManager";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,9 @@ const App = () => (
             <Route path="/cookies-policy" element={<CookiesPolicy />} />
             <Route path="/terminos-uso" element={<TermsOfUse />} />
             <Route path="/terms-of-use" element={<TermsOfUse />} />
+            
+            {/* Image Manager */}
+            <Route path="/image-manager" element={<ImageManager />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

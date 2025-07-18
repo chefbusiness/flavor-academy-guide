@@ -20,7 +20,16 @@ const schoolIdToSlug: Record<string, string> = {
   '14': 'egibide-mendizorrotza',
   '15': 'sualai',
   '16': 'koilara-gastronomia',
-  '17': 'escuela-de-cocina-eshbi-ribera'
+  '17': 'escuela-de-cocina-eshbi-ribera',
+  '18': 'hosteleria-de-leioa',
+  '19': 'escuela-de-cocina-bilbao-laratz',
+  '20': 'farmacook',
+  '21': 'keicook',
+  '22': 'escuela-superior-de-hosteleria-bilbao',
+  '23': 'aula-gastronomica-mercado-de-la-ribera',
+  '24': 'escuela-de-cocina-malaespera',
+  '25': 'sukaldikas-escuela-de-cocina-macrobiotica',
+  '26': 'bsc-formacion'
 };
 
 export const useSchoolImageIntegration = (school: School) => {
