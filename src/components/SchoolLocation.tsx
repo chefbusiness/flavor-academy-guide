@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Navigation, Car, Train } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { School } from '@/types/school';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SchoolLocationProps {
   school: School;
@@ -14,29 +15,115 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // For now, we'll show a placeholder map
-    // In a real implementation, you would integrate Google Maps API here
-    const initMap = () => {
+    const initMap = async () => {
       if (!mapRef.current) return;
       
-      // Create a simple visual placeholder
-      const mapElement = mapRef.current;
-      mapElement.innerHTML = `
-        <div class="w-full h-64 bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex items-center justify-center relative overflow-hidden">
-          <div class="absolute inset-0 opacity-20">
-            <div class="w-full h-full" style="background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');"></div>
-          </div>
-          <div class="text-center z-10">
-            <div class="w-8 h-8 bg-red-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-              </svg>
+      try {
+        // Get the Google Maps API key from Supabase secrets
+        const { data } = await supabase.functions.invoke('get-secret', {
+          body: { name: 'GOOGLE_MAPS_API_KEY' }
+        });
+
+        if (!data?.GOOGLE_MAPS_API_KEY) {
+          throw new Error('Google Maps API key not found');
+        }
+
+        // Load Google Maps API if not already loaded
+        if (!window.google) {
+          const script = document.createElement('script');
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${data.GOOGLE_MAPS_API_KEY}&libraries=places`;
+          script.async = true;
+          script.defer = true;
+          
+          await new Promise<void>((resolve, reject) => {
+            script.onload = () => resolve();
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+
+        // Geocode the school address to get coordinates
+        const geocoder = new (window.google as any).maps.Geocoder();
+        const address = `${school.address}, ${school.city}, ${school.country}`;
+        
+        geocoder.geocode({ address }, (results: any[], status: string) => {
+          if (status === 'OK' && results && results[0]) {
+            const location = results[0].geometry.location;
+            
+            // Create the map
+            const map = new (window.google as any).maps.Map(mapRef.current!, {
+              zoom: 15,
+              center: location,
+              mapTypeId: 'roadmap',
+              styles: [
+                {
+                  featureType: 'poi',
+                  elementType: 'labels',
+                  stylers: [{ visibility: 'on' }]
+                }
+              ]
+            });
+
+            // Add a marker for the school
+            const marker = new (window.google as any).maps.Marker({
+              position: location,
+              map: map,
+              title: school.name,
+              icon: {
+                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                    <path fill="#ef4444" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                `),
+                scaledSize: new (window.google as any).maps.Size(32, 32)
+              }
+            });
+
+            // Add info window
+            const infoWindow = new (window.google as any).maps.InfoWindow({
+              content: `
+                <div class="p-2">
+                  <h3 class="font-semibold text-sm">${school.name}</h3>
+                  <p class="text-xs text-gray-600">${school.address}</p>
+                  <p class="text-xs text-gray-600">${school.city}, ${school.country}</p>
+                </div>
+              `
+            });
+
+            // Show info window when marker is clicked
+            marker.addListener('click', () => {
+              infoWindow.open(map, marker);
+            });
+
+          } else {
+            throw new Error('Geocoding failed: ' + status);
+          }
+        });
+
+      } catch (error) {
+        console.error('Error loading Google Maps:', error);
+        // Fallback to placeholder map
+        const mapElement = mapRef.current;
+        if (mapElement) {
+          mapElement.innerHTML = `
+            <div class="w-full h-64 bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex items-center justify-center relative overflow-hidden">
+              <div class="absolute inset-0 opacity-20">
+                <div class="w-full h-full" style="background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');"></div>
+              </div>
+              <div class="text-center z-10">
+                <div class="w-8 h-8 bg-red-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-700">${school.name}</p>
+                <p class="text-xs text-gray-500">${school.city}, ${school.country}</p>
+                <p class="text-xs text-red-500 mt-1">Map temporarily unavailable</p>
+              </div>
             </div>
-            <p class="text-sm font-medium text-gray-700">${school.name}</p>
-            <p class="text-xs text-gray-500">${school.city}, ${school.country}</p>
-          </div>
-        </div>
-      `;
+          `;
+        }
+      }
     };
 
     initMap();
