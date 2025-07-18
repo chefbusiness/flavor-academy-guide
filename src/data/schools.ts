@@ -272,6 +272,276 @@ export const schools: School[] = [
     }
   },
   {
+    id: '18',
+    name: 'HOSTELERIA DE LEIOA',
+    description: 'Centro de formación profesional especializado en hostelería ubicado en el campus universitario de Leioa, con amplias instalaciones y programas integrales.',
+    country: 'spain',
+    city: 'Leioa',
+    address: 'Campus Universitario, s/n, 48940 Leioa, Biscay',
+    website: 'http://www.hostelerialeioa.net/',
+    email: 'compras@hostelerialeioa.net',
+    phone: '+34 946 01 24 46',
+    type: 'institute',
+    specialties: ['hospitality', 'culinaryArts'],
+    founded: 1995,
+    studentsCount: 800,
+    programsCount: 12,
+    image: '/api/placeholder/400/300',
+    rating: 4.5,
+    tuitionRange: {
+      min: 3000,
+      max: 8000,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'Euskera'],
+    accreditation: ['Gobierno Vasco', 'FP Oficial'],
+    features: ['Servicios en las instalaciones', 'Acceso para sillas de ruedas', 'Aparcamiento adaptado'],
+    coordinates: {
+      lat: 43.3321956,
+      lng: -2.9709277
+    }
+  },
+  {
+    id: '19',
+    name: 'Escuela de cocina Bilbao Laratz',
+    description: 'Centro de formación culinaria con titulación privada, amplitud de horarios y prácticas en restaurantes, dirigida por mujeres emprendedoras.',
+    country: 'spain',
+    city: 'Bilbao',
+    address: 'Nicolás Alcorta Kalea, 5, Errekalde, 48003 Bilbao, Bizkaia',
+    website: 'https://www.escueladecocinabilbao.com/',
+    email: 'info@escueladecocinabilbao.com',
+    phone: '+34 688 65 05 54',
+    type: 'academy',
+    specialties: ['culinaryArts'],
+    founded: 2008,
+    studentsCount: 120,
+    programsCount: 6,
+    image: '/api/placeholder/400/300',
+    rating: 4.9,
+    tuitionRange: {
+      min: 1200,
+      max: 3500,
+      currency: 'EUR'
+    },
+    languages: ['Español'],
+    accreditation: ['Titulación Privada'],
+    features: ['Horarios flexibles', 'Prácticas en restaurantes', 'De propietarias mujeres', 'Acceso para sillas de ruedas'],
+    coordinates: {
+      lat: 43.2562409,
+      lng: -2.9346859
+    }
+  },
+  {
+    id: '20',
+    name: 'FARMACOOK',
+    description: 'Escuela de cocina ubicada en Eibar, especializada en formación culinaria con enfoque práctico y moderno.',
+    country: 'spain',
+    city: 'Eibar',
+    address: 'Ego-Gain Kalea, 16, 20600 Eibar, Gipuzkoa',
+    website: '',
+    email: '',
+    phone: '+34 690 30 29 25',
+    type: 'academy',
+    specialties: ['culinaryArts'],
+    founded: 2012,
+    studentsCount: 80,
+    programsCount: 4,
+    image: '/api/placeholder/400/300',
+    rating: 4.2,
+    tuitionRange: {
+      min: 800,
+      max: 2000,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'Euskera'],
+    accreditation: ['Certificación Local'],
+    features: ['Horarios amplios', 'Clases prácticas'],
+    coordinates: {
+      lat: 43.1844558,
+      lng: -2.4770932
+    }
+  },
+  {
+    id: '21',
+    name: 'Keicook',
+    description: 'Iniciativa gastronómica ubicada en el Mercado de Abastos de Vitoria-Gasteiz, que busca dar valor y prestigio social al núcleo comercial local.',
+    country: 'spain',
+    city: 'Vitoria-Gasteiz',
+    address: 'Gasteizko Merkatua, C. Jesús Guridi, 1-A, 2ª planta Edificio, 01004 Vitoria-Gasteiz, Álava',
+    website: 'https://keicook.com/',
+    email: 'info@keicook.com',
+    phone: '+34 945 60 30 00',
+    type: 'academy',
+    specialties: ['culinaryArts', 'hospitality'],
+    founded: 2018,
+    studentsCount: 100,
+    programsCount: 8,
+    image: '/api/placeholder/400/300',
+    rating: 4.0,
+    tuitionRange: {
+      min: 600,
+      max: 1800,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'Euskera'],
+    accreditation: ['Fundación Abastos'],
+    features: ['Amigable con LGTBI+', 'Espacio seguro transgénero', 'Adecuado para niños', 'Acceso para sillas de ruedas'],
+    coordinates: {
+      lat: 42.8444967,
+      lng: -2.6666428
+    }
+  },
+  {
+    id: '22',
+    name: 'Escuela Superior de Hostelería Bilbao',
+    description: 'Centro de formación en hostelería con amplia experiencia, instalaciones completas y aparcamiento propio en Bilbao.',
+    country: 'spain',
+    city: 'Bilbao',
+    address: 'Enekuri Artxanda Errepidea, 3, Deusto, 48015 Bilbao, Bizkaia',
+    website: 'http://www.escuelahosteleria.com/',
+    email: 'rcenteno@escuelahosteleria.com',
+    phone: '+34 944 74 51 10',
+    type: 'institute',
+    specialties: ['hospitality', 'culinaryArts'],
+    founded: 1985,
+    studentsCount: 600,
+    programsCount: 15,
+    image: '/api/placeholder/400/300',
+    rating: 4.7,
+    tuitionRange: {
+      min: 4000,
+      max: 9000,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'English'],
+    accreditation: ['FP Oficial', 'Gobierno Vasco'],
+    features: ['Aparcamiento gratuito', 'Servicios en instalaciones', 'Acceso para sillas de ruedas'],
+    coordinates: {
+      lat: 43.2794458,
+      lng: -2.9409914
+    }
+  },
+  {
+    id: '23',
+    name: 'Aula Gastronómica Mercado de La Ribera',
+    description: 'Aula gastronómica ubicada en el famoso Mercado de La Ribera de Bilbao, ofreciendo cursos de cocina en un entorno histórico único.',
+    country: 'spain',
+    city: 'Bilbao',
+    address: 'Erribera Kalea, Ibaiondo, 48005 Bilbao, Bizkaia',
+    website: 'https://www.escuelahosteleria.com/cursos-cocina-bilbao/',
+    email: 'rcenteno@escuelahosteleria.com',
+    phone: '+34 944 74 51 10',
+    type: 'academy',
+    specialties: ['culinaryArts', 'hospitality'],
+    founded: 2010,
+    studentsCount: 200,
+    programsCount: 6,
+    image: '/api/placeholder/400/300',
+    rating: 4.8,
+    tuitionRange: {
+      min: 800,
+      max: 2500,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'Euskera'],
+    accreditation: ['Ayuntamiento de Bilbao'],
+    features: ['Ubicación histórica', 'Mercado tradicional', 'Acceso para sillas de ruedas'],
+    coordinates: {
+      lat: 43.2555217,
+      lng: -2.9239506
+    }
+  },
+  {
+    id: '24',
+    name: 'Escuela de Cocina Malaespera',
+    description: 'Escuela de cocina ubicada en el corazón de Bilbao, especializada en cursos gastronómicos con horarios amplios y ambiente acogedor.',
+    country: 'spain',
+    city: 'Bilbao',
+    address: 'Santiago de Compostela Kalea, 15, Ibaiondo, 48003 Bilbao, Bizkaia',
+    website: 'https://txokomalaespera.com/cursos-de-cocina/',
+    email: '',
+    phone: '+34 650 61 80 54',
+    type: 'academy',
+    specialties: ['culinaryArts'],
+    founded: 2015,
+    studentsCount: 60,
+    programsCount: 4,
+    image: '/api/placeholder/400/300',
+    rating: 5.0,
+    tuitionRange: {
+      min: 500,
+      max: 1500,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'Euskera'],
+    accreditation: ['Certificación Local'],
+    features: ['Horarios amplios', 'Ambiente acogedor', 'Acceso para sillas de ruedas'],
+    coordinates: {
+      lat: 43.2495737,
+      lng: -2.9289751
+    }
+  },
+  {
+    id: '25',
+    name: 'Sukaldikas Escuela de Cocina Macrobiótica y Saludable',
+    description: 'Escuela especializada en cocina energética macrobiótica y vegana, donde la cocina se convierte en alquimia saludable.',
+    country: 'spain',
+    city: 'Bilbao',
+    address: 'Bilbao, Bizkaia',
+    website: 'http://www.sukaldikas.com/',
+    email: 'info@sukaldikas.com',
+    phone: '+34 616 20 34 07',
+    type: 'academy',
+    specialties: ['culinaryArts'],
+    founded: 2013,
+    studentsCount: 150,
+    programsCount: 8,
+    image: '/api/placeholder/400/300',
+    rating: 4.2,
+    tuitionRange: {
+      min: 600,
+      max: 2000,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'Euskera'],
+    accreditation: ['Certificación Macrobiótica'],
+    features: ['Cocina macrobiótica', 'Alimentación vegana', 'Enfoque energético'],
+    coordinates: {
+      lat: 43.2194496,
+      lng: -2.9314664
+    }
+  },
+  {
+    id: '26',
+    name: 'BSC FORMACIÓN',
+    description: 'Centro de formación gastronómica especializado en cocina vasca, dirigido por mujeres emprendedoras con apoyo integral a empresas del sector hostelero.',
+    country: 'spain',
+    city: 'Bilbao',
+    address: 'Bilbao, Bizkaia',
+    website: 'http://www.bscformacion.com/',
+    email: 'info@bscformacion.com',
+    phone: '+34 946 34 21 91',
+    type: 'institute',
+    specialties: ['culinaryArts', 'hospitality'],
+    founded: 2016,
+    studentsCount: 300,
+    programsCount: 10,
+    image: '/api/placeholder/400/300',
+    rating: 5.0,
+    tuitionRange: {
+      min: 1500,
+      max: 4000,
+      currency: 'EUR'
+    },
+    languages: ['Español', 'Euskera'],
+    accreditation: ['Gobierno Vasco', 'Cámara de Comercio'],
+    features: ['De propietarias mujeres', 'Clases online', 'Amigable con LGTBI+', 'Apoyo empresarial'],
+    coordinates: {
+      lat: 43.263664,
+      lng: -2.9357266
+    }
+  },
+  {
     id: '2',
     name: 'Instituto Europeo di Design - Madrid',
     description: 'Escuela de diseño y gastronomía con enfoque creativo e innovador en las artes culinarias.',
