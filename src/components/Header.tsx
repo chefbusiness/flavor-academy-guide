@@ -37,11 +37,6 @@ export const Header = () => {
       label: language === 'es' ? 'Contacto' : 'Contact',
       href: language === 'es' ? '/contacto' : '/contact',
       key: 'contact'
-    },
-    {
-      label: language === 'es' ? 'Gestión Imágenes' : 'Image Manager',
-      href: '/image-manager',
-      key: 'image-manager'
     }
   ];
 
