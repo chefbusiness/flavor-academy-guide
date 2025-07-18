@@ -63,70 +63,101 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
           console.log('✅ API de Google Maps ya estaba cargada');
         }
 
-        // Geocode the school address to get coordinates
-        console.log('🔍 Geocodificando dirección:', `${school.address}, ${school.city}, ${school.country}`);
+        // Try multiple geocoding approaches
+        console.log('🔍 Intentando geocodificar con diferentes enfoques...');
         const geocoder = new (window.google as any).maps.Geocoder();
-        const address = `${school.address}, ${school.city}, ${school.country}`;
         
-        geocoder.geocode({ address }, (results: any[], status: string) => {
-          console.log('📍 Resultado de geocodificación:', { status, results, resultsLength: results?.length });
-          
-          if (status === 'OK' && results && results.length > 0) {
-            const location = results[0].geometry.location;
-            console.log('✅ Coordenadas encontradas:', location.lat(), location.lng());
-            
-            // Create the map
-            const map = new (window.google as any).maps.Map(mapRef.current!, {
-              zoom: 15,
-              center: location,
-              mapTypeId: 'roadmap',
-              styles: [
-                {
-                  featureType: 'poi',
-                  elementType: 'labels',
-                  stylers: [{ visibility: 'on' }]
-                }
-              ]
-            });
+        // Try different address formats
+        const addressOptions = [
+          `${school.address}, ${school.city}, ${school.country}`,
+          `${school.city}, ${school.country}`,
+          `${school.city}, España`, // Fallback for Spanish schools
+          school.city
+        ];
 
-            // Add a marker for the school
-            const marker = new (window.google as any).maps.Marker({
-              position: location,
-              map: map,
-              title: school.name,
-              icon: {
-                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
-                    <path fill="#ef4444" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                `),
-                scaledSize: new (window.google as any).maps.Size(32, 32)
+        const tryGeocode = async (address: string): Promise<any> => {
+          return new Promise((resolve, reject) => {
+            geocoder.geocode({ address }, (results: any[], status: string) => {
+              console.log(`📍 Probando dirección: "${address}" - Status: ${status}`);
+              if (status === 'OK' && results && results.length > 0) {
+                resolve(results[0]);
+              } else {
+                reject(new Error(`Geocoding failed for "${address}": ${status}`));
               }
             });
+          });
+        };
 
-            // Add info window
-            const infoWindow = new (window.google as any).maps.InfoWindow({
-              content: `
-                <div class="p-2">
-                  <h3 class="font-semibold text-sm">${school.name}</h3>
-                  <p class="text-xs text-gray-600">${school.address}</p>
-                  <p class="text-xs text-gray-600">${school.city}, ${school.country}</p>
-                </div>
-              `
-            });
+        let location = null;
+        let usedAddress = '';
 
-            // Show info window when marker is clicked
-            marker.addListener('click', () => {
-              infoWindow.open(map, marker);
-            });
+        // Try each address format until one works
+        for (const address of addressOptions) {
+          try {
+            const result = await tryGeocode(address);
+            location = result.geometry.location;
+            usedAddress = address;
+            console.log('✅ Geocodificación exitosa con:', usedAddress);
+            console.log('✅ Coordenadas encontradas:', location.lat(), location.lng());
+            break;
+          } catch (error) {
+            console.log(`❌ Falló con: "${address}"`);
+            continue;
+          }
+        }
 
-            console.log('✅ Mapa creado exitosamente');
+        if (!location) {
+          throw new Error('No se pudo geocodificar ninguna de las direcciones proporcionadas');
+        }
 
-          } else {
-            console.error('❌ Error en geocodificación:', status);
-            throw new Error('Geocoding failed: ' + status);
+        // Create the map
+        const map = new (window.google as any).maps.Map(mapRef.current!, {
+          zoom: usedAddress.includes(school.address) ? 16 : 12, // Zoom closer if we have exact address
+          center: location,
+          mapTypeId: 'roadmap',
+          styles: [
+            {
+              featureType: 'poi',
+              elementType: 'labels',
+              stylers: [{ visibility: 'on' }]
+            }
+          ]
+        });
+
+        // Add a marker for the school
+        const marker = new (window.google as any).maps.Marker({
+          position: location,
+          map: map,
+          title: school.name,
+          icon: {
+            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+                <path fill="#ef4444" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            `),
+            scaledSize: new (window.google as any).maps.Size(32, 32)
           }
         });
+
+        // Add info window
+        const infoWindow = new (window.google as any).maps.InfoWindow({
+          content: `
+            <div class="p-2">
+              <h3 class="font-semibold text-sm">${school.name}</h3>
+              <p class="text-xs text-gray-600">${school.address}</p>
+              <p class="text-xs text-gray-600">${school.city}, ${school.country}</p>
+              ${usedAddress !== `${school.address}, ${school.city}, ${school.country}` ? 
+                `<p class="text-xs text-orange-500 mt-1">Ubicación aproximada basada en: ${usedAddress}</p>` : ''}
+            </div>
+          `
+        });
+
+        // Show info window when marker is clicked
+        marker.addListener('click', () => {
+          infoWindow.open(map, marker);
+        });
+
+        console.log('✅ Mapa creado exitosamente');
 
       } catch (error) {
         console.error('❌ Error general al cargar Google Maps:', error);
