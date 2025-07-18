@@ -9,6 +9,9 @@ import Index from "./pages/Index";
 import SchoolDetail from "./pages/SchoolDetail";
 import AboutUs from "./pages/AboutUs";
 import Contact from "./pages/Contact";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
+import CookiesPolicy from "./pages/CookiesPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,13 +36,13 @@ const App = () => (
             <Route path="/contacto" element={<Contact />} />
             <Route path="/contact" element={<Contact />} />
             
-            {/* Legal pages - placeholder routes for now */}
-            <Route path="/politica-privacidad" element={<NotFound />} />
-            <Route path="/privacy-policy" element={<NotFound />} />
-            <Route path="/politica-cookies" element={<NotFound />} />
-            <Route path="/cookies-policy" element={<NotFound />} />
-            <Route path="/terminos-uso" element={<NotFound />} />
-            <Route path="/terms-of-use" element={<NotFound />} />
+            {/* Legal pages */}
+            <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/politica-cookies" element={<CookiesPolicy />} />
+            <Route path="/cookies-policy" element={<CookiesPolicy />} />
+            <Route path="/terminos-uso" element={<TermsOfUse />} />
+            <Route path="/terms-of-use" element={<TermsOfUse />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
