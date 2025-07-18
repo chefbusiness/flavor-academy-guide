@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +20,7 @@ export const Hero = ({ onSearch }: { onSearch: (query: string) => void }) => {
   const totalSpecialties = new Set(schools.flatMap(school => school.specialties)).size;
 
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden mt-8">
       {/* Background Gradient */}
       <div className="absolute inset-0 gradient-hero"></div>
       
@@ -30,7 +31,7 @@ export const Hero = ({ onSearch }: { onSearch: (query: string) => void }) => {
         }} />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 text-center">
+      <div className="relative z-10 container mx-auto px-4 text-center py-16">
         <div className="max-w-4xl mx-auto">
           {/* Hero Title */}
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">

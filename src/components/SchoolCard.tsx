@@ -1,20 +1,30 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Calendar, Users, BookOpen, Star, ExternalLink } from 'lucide-react';
 import { School } from '@/types/school';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { generateSlug } from '@/utils/slugUtils';
+import { useNavigate } from 'react-router-dom';
 
 interface SchoolCardProps {
   school: School;
-  onViewDetails: (school: School) => void;
+  onViewDetails?: (school: School) => void;
 }
 
-export const SchoolCard = ({ school, onViewDetails }: SchoolCardProps) => {
-  const { t } = useLanguage();
+export const SchoolCard = ({ school }: SchoolCardProps) => {
+  const { t, language } = useLanguage();
+  const navigate = useNavigate();
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('es-ES').format(num);
+  };
+
+  const handleViewDetails = () => {
+    const slug = generateSlug(school.name);
+    const route = language === 'es' ? `/escuela/${slug}` : `/school/${slug}`;
+    navigate(route);
   };
 
   return (
@@ -95,7 +105,7 @@ export const SchoolCard = ({ school, onViewDetails }: SchoolCardProps) => {
           <Button 
             variant="outline" 
             className="flex-1"
-            onClick={() => onViewDetails(school)}
+            onClick={handleViewDetails}
           >
             {t('viewDetails')}
           </Button>

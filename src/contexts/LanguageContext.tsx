@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export type Language = 'es' | 'en';
@@ -19,7 +20,7 @@ const translations = {
     contact: 'Contacto',
     
     // Hero Section
-    heroTitle: 'Directorio Global de Escuelas Culinarias',
+    heroTitle: 'Directorio Global de Escuelas de Cocina',
     heroSubtitle: 'Descubre las mejores escuelas de cocina, universidades gastronómicas y institutos de hospitalidad del mundo',
     searchPlaceholder: 'Buscar escuelas, ciudades o países...',
     exploreButton: 'Explorar Escuelas',
