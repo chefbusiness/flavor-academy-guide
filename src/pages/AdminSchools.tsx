@@ -42,6 +42,7 @@ import {
   Search,
   Plus
 } from 'lucide-react';
+import { MigrateStaticDataButton } from '@/components/MigrateStaticDataButton';
 
 export default function AdminSchools() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -142,12 +143,15 @@ export default function AdminSchools() {
                   Administra las escuelas de cocina registradas en el sistema
                 </p>
               </div>
-              <Button asChild>
-                <Link to="/admin/schools/create">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Crear Escuela
-                </Link>
-              </Button>
+              <div className="flex gap-2">
+                <MigrateStaticDataButton />
+                <Button asChild>
+                  <Link to="/admin/schools/create">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Crear Escuela
+                  </Link>
+                </Button>
+              </div>
             </div>
 
             {/* Controles de búsqueda y paginación */}

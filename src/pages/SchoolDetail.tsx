@@ -32,8 +32,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useStructuredData } from '@/hooks/useStructuredData';
 import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
-import { schools } from '@/data/schools';
-import { findSchoolBySlug } from '@/utils/slugUtils';
+import { useSchoolBySlug } from '@/hooks/useSchoolBySlug';
 
 const SchoolDetailContent = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -49,9 +48,20 @@ const SchoolDetailContent = () => {
     return <Navigate to="/" replace />;
   }
 
-  const school = findSchoolBySlug(slug, schools);
+  const { data: school, isLoading, error } = useSchoolBySlug(slug);
 
-  if (!school) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">{t('loading')}...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !school) {
     return <Navigate to="/" replace />;
   }
 
@@ -88,23 +98,9 @@ const SchoolDetailContent = () => {
     }
   };
 
-  // Enhanced description generation
-  const generateEnhancedDescription = () => {
-    const baseDesc = school.description;
-    const specialtiesText = school.specialties.map(s => t(s)).join(', ');
-    const foundedText = language === 'es' 
-      ? `Fundada en ${school.founded}, esta prestigiosa institución`
-      : `Founded in ${school.founded}, this prestigious institution`;
-    
-    const methodologyText = language === 'es'
-      ? 'combina técnicas tradicionales con innovación culinaria moderna, ofreciendo una formación integral que prepara a los estudiantes para destacar en la industria gastronómica internacional.'
-      : 'combines traditional techniques with modern culinary innovation, offering comprehensive training that prepares students to excel in the international gastronomic industry.';
-    
-    const facilitiesText = language === 'es'
-      ? `Con más de ${formatNumber(school.studentsCount)} estudiantes y ${school.programsCount} programas especializados, cuenta con instalaciones de última generación y un equipo docente de reconocidos profesionales del sector.`
-      : `With over ${formatNumber(school.studentsCount)} students and ${school.programsCount} specialized programs, it features state-of-the-art facilities and a teaching staff of renowned industry professionals.`;
-    
-    return `${foundedText} ${methodologyText} ${facilitiesText} ${language === 'es' ? 'Especializada en' : 'Specialized in'} ${specialtiesText}.`;
+  // Usar la descripción directamente de la base de datos
+  const getSchoolDescription = () => {
+    return school.description;
   };
 
   // Sample programs data - will be replaced with real data from CSV
@@ -150,7 +146,7 @@ const SchoolDetailContent = () => {
     ? `${school.name} - Escuela de Cocina en ${school.city}, ${t(school.country)} | ${school.founded}`
     : `${school.name} - Culinary School in ${school.city}, ${t(school.country)} | ${school.founded}`;
     
-  const enhancedDescription = generateEnhancedDescription();
+  const schoolDescription = getSchoolDescription();
   
   const seoKeywords = [
     school.name,
@@ -189,7 +185,7 @@ const SchoolDetailContent = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title={seoTitle}
-        description={enhancedDescription}
+        description={schoolDescription}
         keywords={seoKeywords}
         url={currentUrl}
         type="article"
@@ -249,7 +245,7 @@ const SchoolDetailContent = () => {
                 {/* Enhanced Description */}
                 <div className="prose prose-gray max-w-none">
                   <p className="text-muted-foreground text-lg leading-relaxed">
-                    {enhancedDescription}
+                    {schoolDescription}
                   </p>
                 </div>
 
