@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,7 +7,6 @@ import { School } from '@/types/school';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { generateSlug } from '@/utils/slugUtils';
 import { useNavigate } from 'react-router-dom';
-import { getSchoolImageUrl, getSchoolImageAltText } from '@/utils/imageMapping';
 import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
 import { CountryFlag } from '@/components/CountryFlag';
 
@@ -18,7 +18,7 @@ interface SchoolCardProps {
 export const SchoolCard = ({ school }: SchoolCardProps) => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
-  const { getImageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school);
+  const { imageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school);
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('es-ES').format(num);
@@ -52,7 +52,7 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
       <CardHeader className="p-0">
         <div className="relative overflow-hidden rounded-t-lg h-48 bg-gradient-to-br from-primary/20 to-accent/20">
           <img 
-            src={getImageSource}
+            src={imageSource}
             alt={altText}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={handleImageError}
