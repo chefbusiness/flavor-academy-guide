@@ -69,6 +69,8 @@ export const convertDatabaseSchoolToSchool = (dbSchool: DatabaseSchool): School 
     } : undefined,
     programs: JSON.parse(dbSchool.programs || '[]'),
     gallery: JSON.parse(dbSchool.gallery || '[]'),
+    slug: dbSchool.slug,
+    is_active: dbSchool.is_active,
   };
 };
 

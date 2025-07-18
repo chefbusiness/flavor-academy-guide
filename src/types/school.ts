@@ -31,6 +31,8 @@ export interface School {
   };
   programs?: string[];
   gallery?: string[];
+  slug?: string;
+  is_active?: boolean;
 }
 
 export interface SchoolFilters {

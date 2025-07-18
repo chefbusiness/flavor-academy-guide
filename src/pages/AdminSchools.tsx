@@ -198,7 +198,7 @@ export default function AdminSchools() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {filteredSchools.filter(s => s.id).length}
+                  {filteredSchools.filter(s => s.is_active).length}
                 </div>
               </CardContent>
             </Card>
@@ -258,8 +258,8 @@ export default function AdminSchools() {
                       <TableCell>{school.founded}</TableCell>
                       <TableCell>{school.rating}/5</TableCell>
                       <TableCell>
-                        <Badge variant={school.id ? "default" : "secondary"}>
-                          {school.id ? "Activa" : "Inactiva"}
+                        <Badge variant={school.is_active ? "default" : "secondary"}>
+                          {school.is_active ? "Activa" : "Inactiva"}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -269,7 +269,7 @@ export default function AdminSchools() {
                             size="sm"
                             asChild
                           >
-                            <Link to={`/school/${school.id}`}>
+                            <Link to={`/school/${school.slug || school.id}`}>
                               <Eye className="h-4 w-4" />
                             </Link>
                           </Button>
@@ -285,10 +285,10 @@ export default function AdminSchools() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleToggleStatus(school.id, !!school.id, school.name)}
+                            onClick={() => handleToggleStatus(school.id, school.is_active, school.name)}
                             disabled={toggleStatusMutation.isPending}
                           >
-                            {school.id ? (
+                            {school.is_active ? (
                               <ToggleRight className="h-4 w-4 text-green-600" />
                             ) : (
                               <ToggleLeft className="h-4 w-4 text-gray-400" />
