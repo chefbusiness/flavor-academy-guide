@@ -137,8 +137,8 @@ const ContactContent = () => {
                     <Phone className="w-5 h-5 text-primary" />
                     <div>
                       <p className="font-medium">{language === 'es' ? 'Teléfono' : 'Phone'}</p>
-                      <a href="tel:+34123456789" className="text-primary hover:underline text-sm">
-                        +34 123 456 789
+                      <a href="tel:+34744717942" className="text-primary hover:underline text-sm">
+                        +34 744 717 942
                       </a>
                     </div>
                   </div>
