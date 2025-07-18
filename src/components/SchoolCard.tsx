@@ -7,6 +7,7 @@ import { School } from '@/types/school';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { generateSlug } from '@/utils/slugUtils';
 import { useNavigate } from 'react-router-dom';
+import { getSchoolImageUrl, getSchoolImageAltText } from '@/utils/imageMapping';
 
 interface SchoolCardProps {
   school: School;
@@ -32,12 +33,12 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
       <CardHeader className="p-0">
         <div className="relative overflow-hidden rounded-t-lg h-48 bg-gradient-to-br from-primary/20 to-accent/20">
           <img 
-            src={school.image} 
-            alt={school.name}
+            src={getSchoolImageUrl(school.id) || school.image} 
+            alt={getSchoolImageAltText(school.name)}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = `https://images.unsplash.com/photo-1556909114-${school.id.padStart(8, '0')}?w=400&h=300&fit=crop&auto=format`;
+              target.src = school.image || `https://images.unsplash.com/photo-1556909114-${school.id.padStart(8, '0')}?w=400&h=300&fit=crop&auto=format`;
             }}
           />
           <div className="absolute top-4 right-4">
