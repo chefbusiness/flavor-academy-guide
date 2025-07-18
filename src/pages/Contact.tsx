@@ -25,8 +25,8 @@ const ContactContent = () => {
   }, []);
 
   const breadcrumbItems = [
-    { label: t('home'), href: '/' },
-    { label: t('contact') }
+    { label: language === 'es' ? 'Inicio' : 'Home', href: '/' },
+    { label: language === 'es' ? 'Contacto' : 'Contact' }
   ];
 
   const seoTitle = language === 'es' ? 'Contacto - Escuelas de Cocina' : 'Contact - Culinary Schools';
@@ -91,57 +91,70 @@ const ContactContent = () => {
 
       <Header />
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto">
+      <main className="container mx-auto px-4 pt-24 pb-12">
+        <div className="max-w-4xl mx-auto">
           <Breadcrumbs items={breadcrumbItems} />
 
-          <section className="mt-8">
-            <h1 className="text-3xl font-bold text-gradient mb-4">
-              {t('contactUs')}
-            </h1>
-            <p className="text-muted-foreground text-lg mb-6">
-              {t('contactDescription')}
-            </p>
+          <section className="mt-4">
+            <header className="mb-8">
+              <h1 className="text-4xl font-bold text-gradient mb-6">
+                {language === 'es' ? 'Contacto' : 'Contact Us'}
+              </h1>
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                {language === 'es' 
+                  ? 'Ponte en contacto con nosotros para cualquier consulta sobre nuestro directorio de escuelas de cocina. Estamos aquí para ayudarte a encontrar la institución culinaria perfecta para tu formación.'
+                  : 'Get in touch with us for any inquiries about our culinary schools directory. We are here to help you find the perfect culinary institution for your education.'
+                }
+              </p>
+            </header>
 
-            <div className="bg-gradient-card rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                {t('contactInformation')}
-              </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="bg-gradient-card rounded-lg p-6 border border-border/50">
+                <h2 className="text-2xl font-semibold mb-6">
+                  {language === 'es' ? 'Información de Contacto' : 'Contact Information'}
+                </h2>
 
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <MapPin className="w-5 h-5 text-primary" />
-                  <p className="text-muted-foreground">
-                    {t('address')}: 123 Main Street, City, Country
-                  </p>
-                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    <div>
+                      <p className="font-medium">{language === 'es' ? 'Dirección' : 'Address'}</p>
+                      <p className="text-muted-foreground text-sm">Madrid, España</p>
+                    </div>
+                  </div>
 
-                <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-primary" />
-                  <a href="mailto:info@escuelasdecocina.com" className="text-primary hover:underline">
-                    info@escuelasdecocina.com
-                  </a>
-                </div>
+                  <div className="flex items-center space-x-3">
+                    <Mail className="w-5 h-5 text-primary" />
+                    <div>
+                      <p className="font-medium">{language === 'es' ? 'Email' : 'Email'}</p>
+                      <a href="mailto:info@escuelasdecocina.com" className="text-primary hover:underline text-sm">
+                        info@escuelasdecocina.com
+                      </a>
+                    </div>
+                  </div>
 
-                <div className="flex items-center space-x-3">
-                  <Phone className="w-5 h-5 text-primary" />
-                  <a href="tel:+15551234567" className="text-primary hover:underline">
-                    +1 (555) 123-4567
-                  </a>
+                  <div className="flex items-center space-x-3">
+                    <Phone className="w-5 h-5 text-primary" />
+                    <div>
+                      <p className="font-medium">{language === 'es' ? 'Teléfono' : 'Phone'}</p>
+                      <a href="tel:+34123456789" className="text-primary hover:underline text-sm">
+                        +34 123 456 789
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-gradient-card rounded-lg p-6 mt-6">
-              <h2 className="text-xl font-semibold mb-4">
-                {t('sendUsAMessage')}
-              </h2>
+              <div className="bg-gradient-card rounded-lg p-6 border border-border/50">
+                <h2 className="text-2xl font-semibold mb-6">
+                  {language === 'es' ? 'Envíanos un Mensaje' : 'Send Us a Message'}
+                </h2>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-muted-foreground">
-                    {t('name')}
-                  </label>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+                      {language === 'es' ? 'Nombre' : 'Name'}
+                    </label>
                   <input
                     type="text"
                     id="name"
@@ -149,15 +162,15 @@ const ContactContent = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder={t('yourName')}
+                      placeholder={language === 'es' ? 'Tu nombre' : 'Your name'}
                     required
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-muted-foreground">
-                    {t('email')}
-                  </label>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                      {language === 'es' ? 'Email' : 'Email'}
+                    </label>
                   <input
                     type="email"
                     id="email"
@@ -165,15 +178,15 @@ const ContactContent = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder={t('yourEmail')}
+                      placeholder={language === 'es' ? 'tu@email.com' : 'your@email.com'}
                     required
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-muted-foreground">
-                    {t('message')}
-                  </label>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
+                      {language === 'es' ? 'Mensaje' : 'Message'}
+                    </label>
                   <textarea
                     id="message"
                     name="message"
@@ -181,7 +194,7 @@ const ContactContent = () => {
                     value={formData.message}
                     onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder={t('yourMessage')}
+                      placeholder={language === 'es' ? 'Tu mensaje aquí...' : 'Your message here...'}
                     required
                   />
                 </div>
@@ -192,13 +205,14 @@ const ContactContent = () => {
                     disabled={isSubmitting}
                     className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting 
-                      ? (language === 'es' ? 'Enviando...' : 'Sending...')
-                      : t('sendMessage')
-                    }
+                      {isSubmitting 
+                        ? (language === 'es' ? 'Enviando...' : 'Sending...')
+                        : (language === 'es' ? 'Enviar Mensaje' : 'Send Message')
+                      }
                   </button>
-                </div>
-              </form>
+                  </div>
+                </form>
+              </div>
             </div>
           </section>
         </div>

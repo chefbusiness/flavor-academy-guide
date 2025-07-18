@@ -14,8 +14,8 @@ const AboutUsContent = () => {
   }, []);
 
   const breadcrumbItems = [
-    { label: t('home'), href: '/' },
-    { label: t('aboutUs') }
+    { label: language === 'es' ? 'Inicio' : 'Home', href: '/' },
+    { label: language === 'es' ? 'Sobre Nosotros' : 'About Us' }
   ];
 
   const currentUrl = `/${language === 'es' ? 'sobre-nosotros' : 'about-us'}`;
@@ -47,14 +47,14 @@ const AboutUsContent = () => {
 
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+      <main className="container mx-auto px-4 pt-24 pb-12">
+        <div className="max-w-4xl mx-auto">
           <Breadcrumbs items={breadcrumbItems} />
 
-          <article className="mt-8">
-            <header className="mb-6">
-              <h1 className="text-3xl font-bold text-gradient mb-4">
-                {t('aboutUs')}
+          <article className="mt-4">
+            <header className="mb-8">
+              <h1 className="text-4xl font-bold text-gradient mb-6">
+                {language === 'es' ? 'Sobre Nosotros' : 'About Us'}
               </h1>
               <p className="text-muted-foreground text-lg">
                 {language === 'es'

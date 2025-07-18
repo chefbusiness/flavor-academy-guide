@@ -53,10 +53,10 @@ const PrivacyPolicyContent = () => {
 
           <article className="mt-4">
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-gradient mb-4">
+              <h1 className="text-4xl font-bold text-gradient mb-6">
                 {language === 'es' ? 'Política de Privacidad' : 'Privacy Policy'}
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-lg">
                 {language === 'es' ? 'Última actualización: Enero 2024' : 'Last updated: January 2024'}
               </p>
             </header>
