@@ -19,6 +19,8 @@ import ImageManager from "./pages/ImageManager";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import AdminSetup from "./pages/AdminSetup";
+import AdminSchools from "./pages/AdminSchools";
+import AdminSchoolEdit from "./pages/AdminSchoolEdit";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +64,8 @@ const App = () => (
             {/* Admin Panel */}
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/setup" element={<AdminSetup />} />
+            <Route path="/admin/schools" element={<AdminSchools />} />
+            <Route path="/admin/schools/edit/:id" element={<AdminSchoolEdit />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

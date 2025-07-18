@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { useSchools } from '@/hooks/useSchoolsDatabase';
-import { Database, Users, School, Settings, BarChart3, FileText } from 'lucide-react';
+import { School, Settings, BarChart3, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Admin() {
@@ -31,23 +31,6 @@ export default function Admin() {
       value: 'Activo',
       icon: Settings,
       description: 'Sistema funcionando correctamente'
-    }
-  ];
-
-  const adminActions = [
-    {
-      title: 'Configuración Inicial',
-      description: 'Migrar datos estáticos a la base de datos',
-      icon: Database,
-      href: '/admin/setup',
-      color: 'bg-blue-500 hover:bg-blue-600'
-    },
-    {
-      title: 'Gestión de Imágenes',
-      description: 'Administrar imágenes de las escuelas',
-      icon: FileText,
-      href: '/image-manager',
-      color: 'bg-green-500 hover:bg-green-600'
     }
   ];
 
@@ -86,31 +69,36 @@ export default function Admin() {
             ))}
           </div>
 
-          {/* Acciones de Administración */}
+          {/* Panel de Gestión Principal */}
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Acciones Rápidas</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {adminActions.map((action, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <action.icon className="h-5 w-5" />
-                      <span>{action.title}</span>
-                    </CardTitle>
-                    <CardDescription>
-                      {action.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Link to={action.href}>
-                      <Button className={`w-full ${action.color} text-white`}>
-                        Acceder
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <h2 className="text-2xl font-semibold mb-4">Gestión de Contenido</h2>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <School className="h-5 w-5" />
+                  <span>Gestión de Escuelas</span>
+                </CardTitle>
+                <CardDescription>
+                  Administra todas las escuelas de cocina: crear, editar, eliminar y gestionar contenido
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link to="/admin/schools" className="flex-1">
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-white">
+                      <Users className="mr-2 h-4 w-4" />
+                      Ver Todas las Escuelas
+                    </Button>
+                  </Link>
+                  <Link to="/admin/schools/create" className="flex-1">
+                    <Button variant="outline" className="w-full">
+                      <School className="mr-2 h-4 w-4" />
+                      Crear Nueva Escuela
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Información del Sistema */}
@@ -141,6 +129,12 @@ export default function Admin() {
                   <h4 className="font-medium text-sm text-muted-foreground">Autenticación</h4>
                   <p className="text-sm">Supabase Auth</p>
                 </div>
+              </div>
+              
+              <div className="pt-4 border-t">
+                <p className="text-sm text-muted-foreground">
+                  <strong>Estado del MVP:</strong> Sistema listo para deployment en Netlify y conexión de dominio personalizado.
+                </p>
               </div>
             </CardContent>
           </Card>
