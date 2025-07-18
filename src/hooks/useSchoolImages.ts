@@ -34,13 +34,18 @@ export const useSchoolImage = (schoolId: string) => {
   return useQuery({
     queryKey: ['school-image', schoolId],
     queryFn: async (): Promise<SchoolImage | null> => {
+      console.log(`🔍 Consultando Supabase para school_id: ${schoolId}`);
+      
       const { data, error } = await supabase
         .from('school_images')
         .select('*')
         .eq('school_id', schoolId)
         .maybeSingle();
 
+      console.log(`📊 Resultado de Supabase para ${schoolId}:`, { data, error });
+
       if (error) {
+        console.error(`❌ Error en consulta Supabase para ${schoolId}:`, error);
         throw error;
       }
       return data;
