@@ -37,43 +37,30 @@ export const useSchoolImageIntegration = (school: School) => {
   const { data: schoolImageData, isLoading, error } = useSchoolImage(schoolSlug);
 
   const getImageSource = useMemo(() => {
-    console.log(`🔍 PROCESANDO IMAGEN para ${school.name} (ID: ${school.id}, Slug correcto: ${schoolSlug})`);
-    console.log(`📊 schoolImageData para slug "${schoolSlug}":`, schoolImageData);
-    console.log(`⏳ isLoading:`, isLoading);
-    console.log(`❌ error:`, error);
-    
-    // Don't process while loading
-    if (isLoading) {
-      console.log(`⏳ ESPERANDO CARGA para ${school.name}...`);
-      const localImage = getSchoolImageUrl(school.id);
-      return localImage || '/api/placeholder/400/300';
-    }
+    console.log(`🔥 SCHOOL CARD INTEGRATION ${school.name} (ID: ${school.id})`);
+    console.log(`🔥 schoolSlug: ${schoolSlug}`);
+    console.log(`🔥 schoolImageData:`, schoolImageData);
+    console.log(`🔥 isLoading: ${isLoading}, error:`, error);
     
     // First priority: Use Supabase Storage image if available
-    if (schoolImageData?.image_url) {
-      console.log(`✅ USANDO SUPABASE: ${school.name} -> ${schoolImageData.image_url}`);
+    if (schoolImageData?.image_url && !isLoading) {
+      console.log(`🔥 ✅ USANDO SUPABASE: ${school.name}`);
       return schoolImageData.image_url;
     }
     
-    console.log(`❌ NO HAY DATOS DE SUPABASE para ${school.name} (slug: ${schoolSlug})`);
+    console.log(`🔥 ❌ FALLBACK para ${school.name}`);
     
-    // Second priority: Use local image mapping (this is the main fallback now)
+    // Fallback to local image mapping
     const localImage = getSchoolImageUrl(school.id);
     if (localImage) {
-      console.log(`📁 USANDO LOCAL: ${school.name} -> ${localImage}`);
+      console.log(`🔥 📁 USANDO LOCAL: ${school.name}`);
       return localImage;
     }
     
-    // Third priority: Use school.image property
-    if (school.image && school.image !== '/api/placeholder/400/300') {
-      console.log(`🔗 USANDO SCHOOL.IMAGE: ${school.name} -> ${school.image}`);
-      return school.image;
-    }
-    
-    // Finally, use Unsplash with a consistent seed based on school ID
+    // Final fallback to Unsplash
     const unsplashId = parseInt(school.id).toString().padStart(8, '0');
     const fallbackUrl = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=400&h=300&fit=crop&auto=format`;
-    console.log(`🌐 USANDO UNSPLASH: ${school.name} -> ${fallbackUrl}`);
+    console.log(`🔥 🌐 USANDO UNSPLASH: ${school.name}`);
     return fallbackUrl;
   }, [school.id, school.image, school.name, schoolImageData, schoolSlug, isLoading, error]);
 
