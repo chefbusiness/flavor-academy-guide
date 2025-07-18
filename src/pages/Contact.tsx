@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
@@ -6,9 +6,19 @@ import { SEOHead } from '@/components/SEOHead';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Contact = () => {
   const { t, language } = useLanguage();
+  const { toast } = useToast();
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -22,6 +32,51 @@ const Contact = () => {
 
   const seoTitle = language === 'es' ? 'Contacto - Escuelas de Cocina' : 'Contact - Culinary Schools';
   const seoDescription = language === 'es' ? 'Página de contacto de Escuelas de Cocina' : 'Contact page of Culinary Schools';
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Simple validation
+      if (!formData.name || !formData.email || !formData.message) {
+        toast({
+          title: language === 'es' ? 'Error' : 'Error',
+          description: language === 'es' ? 'Por favor completa todos los campos' : 'Please fill in all fields',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      // Simulate form submission (replace with actual API call)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: language === 'es' ? 'Mensaje enviado' : 'Message sent',
+        description: language === 'es' ? 'Gracias por contactarnos. Te responderemos pronto.' : 'Thank you for contacting us. We will reply soon.',
+      });
+      
+      // Reset form
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      toast({
+        title: language === 'es' ? 'Error' : 'Error',
+        description: language === 'es' ? 'Hubo un error al enviar el mensaje' : 'There was an error sending the message',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -83,7 +138,7 @@ const Contact = () => {
                 {t('sendUsAMessage')}
               </h2>
 
-              <form className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-muted-foreground">
                     {t('name')}
@@ -91,8 +146,12 @@ const Contact = () => {
                   <input
                     type="text"
                     id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
                     placeholder={t('yourName')}
+                    required
                   />
                 </div>
 
@@ -103,8 +162,12 @@ const Contact = () => {
                   <input
                     type="email"
                     id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
                     placeholder={t('yourEmail')}
+                    required
                   />
                 </div>
 
@@ -114,18 +177,26 @@ const Contact = () => {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
                     rows={4}
+                    value={formData.message}
+                    onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
                     placeholder={t('yourMessage')}
+                    required
                   />
                 </div>
 
                 <div>
                   <button
                     type="submit"
-                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                    disabled={isSubmitting}
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {t('sendMessage')}
+                    {isSubmitting 
+                      ? (language === 'es' ? 'Enviando...' : 'Sending...')
+                      : t('sendMessage')
+                    }
                   </button>
                 </div>
               </form>

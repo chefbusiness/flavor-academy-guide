@@ -69,22 +69,86 @@ const AboutUs = () => {
               <h2 className="text-2xl font-semibold mb-3">
                 {language === 'es' ? 'Nuestra Misión' : 'Our Mission'}
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground mb-4">
                 {language === 'es'
                   ? 'Facilitar el acceso a información detallada y actualizada sobre escuelas de cocina, programas y oportunidades educativas en gastronomía a nivel global.'
                   : 'To facilitate access to detailed and updated information on culinary schools, programs, and educational opportunities in gastronomy worldwide.'
+                }
+              </p>
+              <p className="text-muted-foreground">
+                {language === 'es'
+                  ? 'Creemos que la educación culinaria de calidad debe ser accesible para todos los aspirantes a chef, independientemente de su ubicación geográfica o trasfondo económico. Por eso hemos creado esta plataforma integral que reúne las mejores instituciones culinarias del mundo.'
+                  : 'We believe that quality culinary education should be accessible to all aspiring chefs, regardless of their geographic location or economic background. That is why we have created this comprehensive platform that brings together the world\'s best culinary institutions.'
                 }
               </p>
             </section>
 
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-3">
+                {language === 'es' ? 'Nuestros Valores' : 'Our Values'}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-gradient-card rounded-lg p-4">
+                  <h3 className="font-semibold mb-2">
+                    {language === 'es' ? 'Excelencia' : 'Excellence'}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {language === 'es'
+                      ? 'Seleccionamos cuidadosamente las mejores escuelas de cocina del mundo, garantizando estándares de calidad excepcionales.'
+                      : 'We carefully select the world\'s best culinary schools, ensuring exceptional quality standards.'
+                    }
+                  </p>
+                </div>
+                <div className="bg-gradient-card rounded-lg p-4">
+                  <h3 className="font-semibold mb-2">
+                    {language === 'es' ? 'Transparencia' : 'Transparency'}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {language === 'es'
+                      ? 'Proporcionamos información clara, precisa y actualizada sobre programas, costos y requisitos de admisión.'
+                      : 'We provide clear, accurate and updated information about programs, costs and admission requirements.'
+                    }
+                  </p>
+                </div>
+                <div className="bg-gradient-card rounded-lg p-4">
+                  <h3 className="font-semibold mb-2">
+                    {language === 'es' ? 'Accesibilidad' : 'Accessibility'}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {language === 'es'
+                      ? 'Hacemos que la búsqueda de educación culinaria sea fácil y accesible para estudiantes de todo el mundo.'
+                      : 'We make the search for culinary education easy and accessible for students from all over the world.'
+                    }
+                  </p>
+                </div>
+                <div className="bg-gradient-card rounded-lg p-4">
+                  <h3 className="font-semibold mb-2">
+                    {language === 'es' ? 'Innovación' : 'Innovation'}
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    {language === 'es'
+                      ? 'Utilizamos tecnología avanzada para crear la mejor experiencia de búsqueda y comparación de escuelas.'
+                      : 'We use advanced technology to create the best search and comparison experience for schools.'
+                    }
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="mb-8">
+              <h2 className="text-2xl font-semibold mb-3">
                 {language === 'es' ? 'Nuestro Equipo' : 'Our Team'}
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground mb-4">
                 {language === 'es'
                   ? 'Un grupo de profesionales de la gastronomía y la tecnología unidos por la pasión de impulsar la educación culinaria y el talento emergente.'
                   : 'A group of gastronomy and technology professionals united by the passion to promote culinary education and emerging talent.'
+                }
+              </p>
+              <p className="text-muted-foreground">
+                {language === 'es'
+                  ? 'Nuestro equipo está compuesto por chefs experimentados, educadores culinarios, desarrolladores de software y especialistas en marketing digital, todos comprometidos con la misión de hacer que la educación culinaria sea más accesible y transparente.'
+                  : 'Our team is composed of experienced chefs, culinary educators, software developers and digital marketing specialists, all committed to the mission of making culinary education more accessible and transparent.'
                 }
               </p>
             </section>
