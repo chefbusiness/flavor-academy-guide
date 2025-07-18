@@ -29,7 +29,11 @@ console.log('🔍 Verificando si migración REAL ya se ejecutó...')
 const hasRealMigrationExecuted = localStorage.getItem(REAL_MIGRATION_KEY) === 'true'
 console.log('🔍 Migración REAL ya ejecutada:', hasRealMigrationExecuted)
 
-if (!hasRealMigrationExecuted) {
+// Forzar nueva migración ahora que tenemos la clave de OpenAI
+localStorage.removeItem(REAL_MIGRATION_KEY)
+console.log('🔄 Forzando nueva migración real con clave OpenAI...')
+
+if (!hasRealMigrationExecuted || true) {
   console.log('🚀 Ejecutando migración REAL...')
   // Limpiar migración antigua
   localStorage.removeItem('school-images-migration-executed')
