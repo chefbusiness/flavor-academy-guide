@@ -17,6 +17,7 @@ import CookiesPolicy from "./pages/CookiesPolicy";
 import NotFound from "./pages/NotFound";
 import ImageManager from "./pages/ImageManager";
 import Auth from "./pages/Auth";
+import AdminSetup from "./pages/AdminSetup";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,9 @@ const App = () => (
             {/* Authentication */}
             <Route path="/auth" element={<Auth />} />
             <Route path="/login" element={<Auth />} />
+            
+            {/* Admin Setup */}
+            <Route path="/admin/setup" element={<AdminSetup />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
