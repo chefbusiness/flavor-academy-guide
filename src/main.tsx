@@ -5,7 +5,7 @@ import { SitemapGenerator } from './components/SitemapGenerator'
 import './index.css'
 
 // Import and execute image migration automatically
-import './utils/executeMigration'
+import './utils/executeRealMigration'
 
 // Generate sitemap on app load
 const root = createRoot(document.getElementById("root")!);
