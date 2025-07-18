@@ -19,36 +19,61 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
       if (!mapRef.current) return;
       
       try {
+        console.log('🗺️ Iniciando carga del mapa de Google Maps...');
+        
         // Get the Google Maps API key from Supabase secrets
-        const { data } = await supabase.functions.invoke('get-secret', {
+        const { data, error } = await supabase.functions.invoke('get-secret', {
           body: { name: 'GOOGLE_MAPS_API_KEY' }
         });
 
+        console.log('🔑 Respuesta del edge function:', { data, error });
+
+        if (error) {
+          console.error('❌ Error al obtener la API key:', error);
+          throw new Error('Error al obtener la API key de Google Maps');
+        }
+
         if (!data?.GOOGLE_MAPS_API_KEY) {
+          console.error('❌ API key no encontrada en la respuesta:', data);
           throw new Error('Google Maps API key not found');
         }
 
+        console.log('✅ API key obtenida correctamente');
+
         // Load Google Maps API if not already loaded
         if (!window.google) {
+          console.log('📦 Cargando API de Google Maps...');
           const script = document.createElement('script');
           script.src = `https://maps.googleapis.com/maps/api/js?key=${data.GOOGLE_MAPS_API_KEY}&libraries=places`;
           script.async = true;
           script.defer = true;
           
           await new Promise<void>((resolve, reject) => {
-            script.onload = () => resolve();
-            script.onerror = reject;
+            script.onload = () => {
+              console.log('✅ API de Google Maps cargada correctamente');
+              resolve();
+            };
+            script.onerror = (error) => {
+              console.error('❌ Error al cargar API de Google Maps:', error);
+              reject(error);
+            };
             document.head.appendChild(script);
           });
+        } else {
+          console.log('✅ API de Google Maps ya estaba cargada');
         }
 
         // Geocode the school address to get coordinates
+        console.log('🔍 Geocodificando dirección:', `${school.address}, ${school.city}, ${school.country}`);
         const geocoder = new (window.google as any).maps.Geocoder();
         const address = `${school.address}, ${school.city}, ${school.country}`;
         
         geocoder.geocode({ address }, (results: any[], status: string) => {
+          console.log('📍 Resultado de geocodificación:', { status, results });
+          
           if (status === 'OK' && results && results[0]) {
             const location = results[0].geometry.location;
+            console.log('✅ Coordenadas encontradas:', location.lat(), location.lng());
             
             // Create the map
             const map = new (window.google as any).maps.Map(mapRef.current!, {
@@ -95,13 +120,16 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
               infoWindow.open(map, marker);
             });
 
+            console.log('✅ Mapa creado exitosamente');
+
           } else {
+            console.error('❌ Error en geocodificación:', status);
             throw new Error('Geocoding failed: ' + status);
           }
         });
 
       } catch (error) {
-        console.error('Error loading Google Maps:', error);
+        console.error('❌ Error general al cargar Google Maps:', error);
         // Fallback to placeholder map
         const mapElement = mapRef.current;
         if (mapElement) {
@@ -118,7 +146,7 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
                 </div>
                 <p class="text-sm font-medium text-gray-700">${school.name}</p>
                 <p class="text-xs text-gray-500">${school.city}, ${school.country}</p>
-                <p class="text-xs text-red-500 mt-1">Map temporarily unavailable</p>
+                <p class="text-xs text-red-500 mt-1">Error cargando mapa: ${error.message}</p>
               </div>
             </div>
           `;
