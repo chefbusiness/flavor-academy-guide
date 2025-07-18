@@ -63,14 +63,17 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
             <CountryFlag country={school.country} size="sm" />
           </div>
           
-          <div className="absolute top-4 right-4">
-            <Badge variant="secondary" className="bg-white/90 text-primary">
+          {/* Type Badge - Top Right */}
+          <div className="absolute top-3 right-3">
+            <Badge variant="secondary" className="bg-white/90 text-primary h-6 px-2 text-xs">
               {t(school.type)}
             </Badge>
           </div>
-          <div className="absolute top-4 left-4 flex items-center space-x-1 bg-white/90 rounded-full px-2 py-1 ml-10">
+          
+          {/* Rating - Bottom Left */}
+          <div className="absolute bottom-3 left-3 flex items-center space-x-1 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1 h-6 shadow-sm">
             <Star className="w-4 h-4 text-amber-500 fill-current" />
-            <span className="text-sm font-medium">{school.rating}</span>
+            <span className="text-xs font-medium">{school.rating}</span>
           </div>
         </div>
       </CardHeader>

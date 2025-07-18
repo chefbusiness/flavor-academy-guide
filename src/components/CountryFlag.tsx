@@ -16,9 +16,9 @@ export const CountryFlag: React.FC<CountryFlagProps> = ({
   const isoCode = getCountryISO(country);
   
   const sizeClasses = {
-    sm: 'w-6 h-4', // 24x16px
-    md: 'w-8 h-5', // 32x20px  
-    lg: 'w-10 h-7' // 40x28px
+    sm: 'w-8 h-6', // 32x24px - Aumentado para mejor visibilidad
+    md: 'w-10 h-7', // 40x28px  
+    lg: 'w-12 h-8' // 48x32px
   };
 
   // Using Unicode flag emojis as fallback for better compatibility
@@ -34,13 +34,13 @@ export const CountryFlag: React.FC<CountryFlagProps> = ({
     <div 
       className={`
         ${sizeClasses[size]} 
-        bg-white/90 backdrop-blur-sm rounded-sm border border-white/20 
-        flex items-center justify-center text-xs font-medium shadow-sm
+        bg-white/90 backdrop-blur-sm rounded-md border border-white/20 
+        flex items-center justify-center text-sm font-medium shadow-sm
         ${className}
       `}
       title={`${country} flag`}
     >
-      <span className="leading-none">
+      <span className="leading-none text-lg">
         {getFlagEmoji(isoCode)}
       </span>
     </div>
