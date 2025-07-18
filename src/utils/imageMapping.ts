@@ -15,6 +15,16 @@ import egibideMendizorrotza from '@/assets/schools/egibide-mendizorrotza.jpg';
 import sualai from '@/assets/schools/sualai.jpg';
 import koilaraGastronomia from '@/assets/schools/koilara-gastronomia.jpg';
 import eshbiRibera from '@/assets/schools/eshbi-ribera.jpg';
+// New Basque schools
+import hosteleriaLeioa from '@/assets/schools/hosteleria-de-leioa.jpg';
+import escuelaBilbaoLaratz from '@/assets/schools/escuela-de-cocina-bilbao-laratz.jpg';
+import farmacook from '@/assets/schools/farmacook.jpg';
+import keicook from '@/assets/schools/keicook.jpg';
+import escuelaHosteleriaBilbao from '@/assets/schools/escuela-superior-de-hosteleria-bilbao.jpg';
+import aulaGastronomicaRibera from '@/assets/schools/aula-gastronomica-mercado-de-la-ribera.jpg';
+import escuelaMalaespera from '@/assets/schools/escuela-de-cocina-malaespera.jpg';
+import sukaldikas from '@/assets/schools/sukaldikas-escuela-de-cocina-macrobiotica.jpg';
+import bscFormacion from '@/assets/schools/bsc-formacion.jpg';
 
 // Mapping of school IDs to their corresponding images - using correct numeric IDs
 export const schoolImageMapping: Record<string, string> = {
@@ -33,6 +43,16 @@ export const schoolImageMapping: Record<string, string> = {
   '15': sualai,                  // Sualai
   '16': koilaraGastronomia,      // Koilara Gastronomía
   '17': eshbiRibera,             // Escuela de cocina - ESHBI Ribera
+  // New Basque schools
+  '18': hosteleriaLeioa,         // HOSTELERIA DE LEIOA
+  '19': escuelaBilbaoLaratz,     // Escuela de cocina Bilbao Laratz
+  '20': farmacook,               // FARMACOOK
+  '21': keicook,                 // Keicook
+  '22': escuelaHosteleriaBilbao, // Escuela Superior de Hostelería Bilbao
+  '23': aulaGastronomicaRibera,  // Aula Gastronómica Mercado de La Ribera
+  '24': escuelaMalaespera,       // Escuela de Cocina Malaespera
+  '25': sukaldikas,              // Sukaldikas Escuela de Cocina Macrobiótica
+  '26': bscFormacion,            // BSC FORMACIÓN
 };
 
 // Function to get school image URL by ID
