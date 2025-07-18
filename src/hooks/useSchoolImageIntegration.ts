@@ -34,11 +34,20 @@ const schoolIdToSlug: Record<string, string> = {
 
 export const useSchoolImageIntegration = (school: School) => {
   const schoolSlug = schoolIdToSlug[school.id] || generateSlug(school.name);
-  const { data: schoolImageData } = useSchoolImage(schoolSlug);
+  const { data: schoolImageData, isLoading, error } = useSchoolImage(schoolSlug);
 
   const getImageSource = useMemo(() => {
-    console.log(`🔍 Procesando imagen para ${school.name} (ID: ${school.id}, Slug: ${schoolSlug})`);
-    console.log(`📊 Datos de Supabase:`, schoolImageData);
+    console.log(`🔍 PROCESANDO IMAGEN para ${school.name} (ID: ${school.id}, Slug: ${schoolSlug})`);
+    console.log(`📊 schoolImageData:`, schoolImageData);
+    console.log(`⏳ isLoading:`, isLoading);
+    console.log(`❌ error:`, error);
+    
+    // Don't process while loading
+    if (isLoading) {
+      console.log(`⏳ ESPERANDO CARGA para ${school.name}...`);
+      const localImage = getSchoolImageUrl(school.id);
+      return localImage || '/api/placeholder/400/300';
+    }
     
     // First priority: Use Supabase Storage image if available
     if (schoolImageData?.image_url) {
@@ -46,7 +55,7 @@ export const useSchoolImageIntegration = (school: School) => {
       return schoolImageData.image_url;
     }
     
-    console.log(`❌ NO HAY DATOS DE SUPABASE para ${school.name} (buscando con slug: ${schoolSlug})`);
+    console.log(`❌ NO HAY DATOS DE SUPABASE para ${school.name} (slug: ${schoolSlug})`);
     
     // Second priority: Use local image mapping (this is the main fallback now)
     const localImage = getSchoolImageUrl(school.id);
@@ -66,7 +75,7 @@ export const useSchoolImageIntegration = (school: School) => {
     const fallbackUrl = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=400&h=300&fit=crop&auto=format`;
     console.log(`🌐 USANDO UNSPLASH: ${school.name} -> ${fallbackUrl}`);
     return fallbackUrl;
-  }, [school.id, school.image, school.name, schoolImageData, schoolSlug]);
+  }, [school.id, school.image, school.name, schoolImageData, schoolSlug, isLoading, error]);
 
   const getFallbackImageSource = useMemo(() => {
     return [
