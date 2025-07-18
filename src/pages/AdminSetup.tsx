@@ -3,6 +3,7 @@ import { AdminProtectedRoute } from '@/components/AdminProtectedRoute';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { MigrationComponent } from '@/components/MigrationComponent';
+import { ImageMigrationComponent } from '@/components/ImageMigrationComponent';
 
 export default function AdminSetup() {
   return (
@@ -21,7 +22,10 @@ export default function AdminSetup() {
             </p>
           </div>
           
-          <MigrationComponent />
+          <div className="space-y-8">
+            <MigrationComponent />
+            <ImageMigrationComponent />
+          </div>
         </div>
         
         <Footer />
