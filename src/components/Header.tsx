@@ -1,12 +1,16 @@
 
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAdminRole } from '@/hooks/useAdminRole';
 import { Button } from '@/components/ui/button';
-import { Globe, Menu, X, ChefHat } from 'lucide-react';
+import { Globe, Menu, X, ChefHat, Settings, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export const Header = () => {
   const { language, toggleLanguage } = useLanguage();
+  const { signOut } = useAuth();
+  const { isAuthenticated, isAdmin } = useAdminRole();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -71,8 +75,46 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Language Toggle & Mobile Menu */}
+          {/* Admin Access & Language Toggle & Mobile Menu */}
           <div className="flex items-center space-x-4">
+            {/* Admin Panel Access */}
+            {isAuthenticated && isAdmin && (
+              <Link to="/admin">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden md:flex items-center space-x-1"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span className="text-sm">Admin</span>
+                </Button>
+              </Link>
+            )}
+            
+            {/* Auth Buttons */}
+            {isAuthenticated ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={signOut}
+                className="hidden md:flex items-center space-x-1"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="text-sm">Salir</span>
+              </Button>
+            ) : (
+              <Link to="/auth">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden md:flex items-center space-x-1"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span className="text-sm">Admin</span>
+                </Button>
+              </Link>
+            )}
+            
             <Button
               variant="ghost"
               size="sm"
@@ -130,6 +172,38 @@ export const Header = () => {
                 <Globe className="h-4 w-4" />
                 <span className="text-sm">{language.toUpperCase()}</span>
               </Button>
+              
+              {/* Mobile Admin Access */}
+              {isAuthenticated && isAdmin && (
+                <Link
+                  to="/admin"
+                  className="block text-sm font-medium text-muted-foreground hover:text-primary"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Panel Admin
+                </Link>
+              )}
+              
+              {/* Mobile Auth */}
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    signOut();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="block text-sm font-medium text-muted-foreground hover:text-primary text-left"
+                >
+                  Cerrar Sesión
+                </button>
+              ) : (
+                <Link
+                  to="/auth"
+                  className="block text-sm font-medium text-muted-foreground hover:text-primary"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Acceso Admin
+                </Link>
+              )}
             </nav>
           </div>
         )}

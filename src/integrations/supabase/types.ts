@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       school_images: {
         Row: {
           alt_text: string | null
@@ -22,6 +49,7 @@ export type Database = {
           image_type: string
           image_url: string
           school_id: string
+          school_uuid: string | null
           updated_at: string
         }
         Insert: {
@@ -31,6 +59,7 @@ export type Database = {
           image_type: string
           image_url: string
           school_id: string
+          school_uuid?: string | null
           updated_at?: string
         }
         Update: {
@@ -40,19 +69,172 @@ export type Database = {
           image_type?: string
           image_url?: string
           school_id?: string
+          school_uuid?: string | null
           updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "school_images_school_uuid_fkey"
+            columns: ["school_uuid"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schools: {
+        Row: {
+          accreditation: Json
+          address: string
+          city: string
+          coordinates_lat: number | null
+          coordinates_lng: number | null
+          country: string
+          created_at: string
+          description: string
+          email: string
+          features: Json
+          founded: number
+          gallery: Json | null
+          id: string
+          image: string | null
+          is_active: boolean
+          languages: Json
+          legacy_id: string | null
+          name: string
+          phone: string
+          programs: Json | null
+          programs_count: number
+          rating: number
+          slug: string | null
+          specialties: Json
+          students_count: number
+          tuition_currency: string
+          tuition_max: number
+          tuition_min: number
+          type: string
+          updated_at: string
+          website: string
+        }
+        Insert: {
+          accreditation?: Json
+          address: string
+          city: string
+          coordinates_lat?: number | null
+          coordinates_lng?: number | null
+          country: string
+          created_at?: string
+          description: string
+          email: string
+          features?: Json
+          founded: number
+          gallery?: Json | null
+          id?: string
+          image?: string | null
+          is_active?: boolean
+          languages?: Json
+          legacy_id?: string | null
+          name: string
+          phone: string
+          programs?: Json | null
+          programs_count?: number
+          rating?: number
+          slug?: string | null
+          specialties?: Json
+          students_count?: number
+          tuition_currency?: string
+          tuition_max?: number
+          tuition_min?: number
+          type: string
+          updated_at?: string
+          website: string
+        }
+        Update: {
+          accreditation?: Json
+          address?: string
+          city?: string
+          coordinates_lat?: number | null
+          coordinates_lng?: number | null
+          country?: string
+          created_at?: string
+          description?: string
+          email?: string
+          features?: Json
+          founded?: number
+          gallery?: Json | null
+          id?: string
+          image?: string | null
+          is_active?: boolean
+          languages?: Json
+          legacy_id?: string | null
+          name?: string
+          phone?: string
+          programs?: Json | null
+          programs_count?: number
+          rating?: number
+          slug?: string | null
+          specialties?: Json
+          students_count?: number
+          tuition_currency?: string
+          tuition_max?: number
+          tuition_min?: number
+          type?: string
+          updated_at?: string
+          website?: string
+        }
         Relationships: []
+      }
+      user_roles: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { user_id: string }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "super_admin" | "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -179,6 +361,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["super_admin", "admin", "user"],
+    },
   },
 } as const

@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { AuthProvider } from './contexts/AuthContext';
 import Index from "./pages/Index";
 import SchoolDetail from "./pages/SchoolDetail";
 import AboutUs from "./pages/AboutUs";
@@ -15,6 +16,7 @@ import TermsOfUse from "./pages/TermsOfUse";
 import CookiesPolicy from "./pages/CookiesPolicy";
 import NotFound from "./pages/NotFound";
 import ImageManager from "./pages/ImageManager";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <LanguageProvider>
+            <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/escuela/:slug" element={<SchoolDetail />} />
@@ -50,9 +53,14 @@ const App = () => (
             {/* Image Manager */}
             <Route path="/image-manager" element={<ImageManager />} />
             
+            {/* Authentication */}
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/login" element={<Auth />} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </AuthProvider>
           </LanguageProvider>
         </BrowserRouter>
       </TooltipProvider>
