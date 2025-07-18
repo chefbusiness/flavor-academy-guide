@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -219,12 +218,12 @@ const SchoolDetailContent = () => {
       
       <Header />
       
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 pt-24 pb-12">
         <div className="max-w-6xl mx-auto">
           <Breadcrumbs items={breadcrumbItems} />
           
           {/* Hero Section with enhanced SEO structure */}
-          <article className="mt-8">
+          <article className="mt-4">
             <header className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <div className="space-y-6">
                 <div className="flex items-start justify-between">

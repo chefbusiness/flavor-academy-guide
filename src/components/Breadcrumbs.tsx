@@ -16,10 +16,10 @@ export const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
   const { t } = useLanguage();
 
   return (
-    <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
+    <nav className="flex items-center space-x-2 text-sm mb-6 bg-background/95 backdrop-blur-sm rounded-lg border border-border/50 px-4 py-3 shadow-sm">
       <Link 
         to="/" 
-        className="flex items-center hover:text-primary transition-colors"
+        className="flex items-center hover:text-primary transition-colors text-foreground/80 hover:text-foreground"
       >
         <Home className="w-4 h-4 mr-1" />
         {t('home')}
@@ -27,11 +27,11 @@ export const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
       
       {items.map((item, index) => (
         <div key={index} className="flex items-center space-x-2">
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground" />
           {item.href ? (
             <Link 
               to={item.href} 
-              className="hover:text-primary transition-colors"
+              className="hover:text-primary transition-colors text-foreground/80 hover:text-foreground"
             >
               {item.label}
             </Link>
