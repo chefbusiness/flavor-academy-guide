@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Globe, Menu, X } from 'lucide-react';
+import { Globe, Menu, X, ChefHat } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export const Header = () => {
@@ -27,6 +27,16 @@ export const Header = () => {
       label: language === 'es' ? 'Directorio' : 'Directory',
       href: '/#directory',
       key: 'directory'
+    },
+    {
+      label: language === 'es' ? 'Sobre Nosotros' : 'About Us',
+      href: language === 'es' ? '/sobre-nosotros' : '/about-us',
+      key: 'about'
+    },
+    {
+      label: language === 'es' ? 'Contacto' : 'Contact',
+      href: language === 'es' ? '/contacto' : '/contact',
+      key: 'contact'
     }
   ];
 
@@ -37,7 +47,7 @@ export const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-hero rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">EC</span>
+              <ChefHat className="h-5 w-5 text-white" />
             </div>
             <span className="font-bold text-foreground text-lg">
               {language === 'es' ? 'Escuelas de Cocina' : 'Culinary Schools'}
