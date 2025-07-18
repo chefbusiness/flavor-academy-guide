@@ -1,24 +1,91 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>flavor-academy-guide</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
-
-    <meta property="og:title" content="flavor-academy-guide" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    
+    <!-- DNS Prefetch for performance -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//images.unsplash.com">
+    
+    <!-- Preconnect to critical domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Theme and app configuration -->
+    <meta name="theme-color" content="#0EA5E9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Escuelas de Cocina">
+    <meta name="application-name" content="Directorio Global de Escuelas de Cocina">
+    
+    <!-- Microsoft specific -->
+    <meta name="msapplication-TileColor" content="#0EA5E9">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- Default meta tags (will be overridden by React Helmet) -->
+    <title>Directorio Global de Escuelas de Cocina</title>
+    <meta name="description" content="Descubre las mejores escuelas de cocina del mundo">
+    
+    <!-- Default Open Graph (will be overridden) -->
+    <meta property="og:title" content="Directorio Global de Escuelas de Cocina" />
+    <meta property="og:description" content="Descubre las mejores escuelas de cocina del mundo" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
+    <meta property="og:image" content="/og-default.jpg" />
+    
+    <!-- Default Twitter Card (will be overridden) -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:site" content="@escuelascocina" />
+    
+    <!-- Performance optimization -->
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Security headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Structured data for the website -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Directorio Global de Escuelas de Cocina",
+      "alternateName": "Global Culinary Schools Directory",
+      "url": "https://escuelasdecocina.com",
+      "description": "Encuentra las mejores escuelas de cocina del mundo",
+      "inLanguage": ["es", "en"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://escuelasdecocina.com/?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Directorio Global de Escuelas de Cocina",
+        "logo": "https://escuelasdecocina.com/logo.png"
+      }
+    }
+    </script>
   </body>
 </html>

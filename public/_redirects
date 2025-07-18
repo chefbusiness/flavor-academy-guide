@@ -1,0 +1,7 @@
+
+# Handle client-side routing for React SPA
+/*    /index.html   200
+
+# Specific redirects for SEO
+/escuela/* /index.html 200
+/school/* /index.html 200
