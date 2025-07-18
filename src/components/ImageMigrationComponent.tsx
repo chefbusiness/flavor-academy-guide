@@ -100,9 +100,9 @@ export function ImageMigrationComponent() {
         </Button>
 
         {result && (
-          <Alert className={result.success ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
+          <Alert className={result.success !== false ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
             <AlertDescription>
-              {result.success ? (
+              {result.success !== false ? (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-600" />
