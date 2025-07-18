@@ -20,7 +20,7 @@ export const Hero = ({ onSearch }: { onSearch: (query: string) => void }) => {
   const totalSpecialties = new Set(schools.flatMap(school => school.specialties)).size;
 
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden mt-8">
+    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-20">
       {/* Background Gradient */}
       <div className="absolute inset-0 gradient-hero"></div>
       

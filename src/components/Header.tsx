@@ -27,16 +27,6 @@ export const Header = () => {
       label: language === 'es' ? 'Directorio' : 'Directory',
       href: '/#directory',
       key: 'directory'
-    },
-    {
-      label: language === 'es' ? 'Sobre Nosotros' : 'About Us',
-      href: language === 'es' ? '/sobre-nosotros' : '/about-us',
-      key: 'about'
-    },
-    {
-      label: language === 'es' ? 'Contacto' : 'Contact',
-      href: language === 'es' ? '/contacto' : '/contact',
-      key: 'contact'
     }
   ];
 
