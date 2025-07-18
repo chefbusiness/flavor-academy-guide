@@ -111,12 +111,26 @@ export const useUpdateSchool = () => {
         updated_at: new Date().toISOString(),
       };
 
-      const { data: result, error } = await supabase
+      // Primero intentar actualizar por UUID (id real)
+      let { data: result, error } = await supabase
         .from('schools')
         .update(updateData)
         .eq('id', id)
         .select()
         .single();
+
+      // Si no se encuentra y el ID no es un UUID válido, actualizar por legacy_id
+      if (error?.message?.includes('invalid input syntax for type uuid')) {
+        const { data: legacyResult, error: legacyError } = await supabase
+          .from('schools')
+          .update(updateData)
+          .eq('legacy_id', id)
+          .select()
+          .single();
+        
+        result = legacyResult;
+        error = legacyError;
+      }
 
       if (error) throw error;
       return result;
