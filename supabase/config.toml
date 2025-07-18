@@ -1,1 +1,10 @@
 project_id = "kbeeuzqdvpsyzyovinyp"
+
+[functions.upload-school-images]
+verify_jwt = false
+
+[functions.get-school-images]
+verify_jwt = false
+
+[functions.upload-school-image]
+verify_jwt = false

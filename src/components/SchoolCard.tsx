@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { generateSlug } from '@/utils/slugUtils';
 import { useNavigate } from 'react-router-dom';
 import { getSchoolImageUrl, getSchoolImageAltText } from '@/utils/imageMapping';
+import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
 
 interface SchoolCardProps {
   school: School;
@@ -17,6 +18,7 @@ interface SchoolCardProps {
 export const SchoolCard = ({ school }: SchoolCardProps) => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const { getImageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school);
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('es-ES').format(num);
@@ -28,38 +30,21 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
     navigate(route);
   };
 
-  // Improved image source logic with better fallback
-  const getImageSource = () => {
-    // First try local mapping
-    const localImage = getSchoolImageUrl(school.id);
-    if (localImage) {
-      return localImage;
-    }
-    
-    // Then fallback to school.image property
-    if (school.image && school.image !== '/api/placeholder/400/300') {
-      return school.image;
-    }
-    
-    // Finally, use Unsplash with a consistent seed based on school ID
-    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
-    return `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=400&h=300&fit=crop&auto=format`;
-  };
-
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
+    const fallbackSources = getFallbackImageSource;
     
-    // If local image fails, try the school.image property
-    if (target.src === getSchoolImageUrl(school.id)) {
-      if (school.image && school.image !== '/api/placeholder/400/300') {
-        target.src = school.image;
-        return;
-      }
+    // Find the next available fallback source
+    const currentIndex = fallbackSources.indexOf(target.src);
+    const nextIndex = currentIndex + 1;
+    
+    if (nextIndex < fallbackSources.length) {
+      target.src = fallbackSources[nextIndex];
+    } else {
+      // Final fallback to Unsplash
+      const unsplashId = parseInt(school.id).toString().padStart(8, '0');
+      target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=400&h=300&fit=crop&auto=format`;
     }
-    
-    // Final fallback to Unsplash
-    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
-    target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=400&h=300&fit=crop&auto=format`;
   };
 
   return (
@@ -67,8 +52,8 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
       <CardHeader className="p-0">
         <div className="relative overflow-hidden rounded-t-lg h-48 bg-gradient-to-br from-primary/20 to-accent/20">
           <img 
-            src={getImageSource()}
-            alt={getSchoolImageAltText(school.name)}
+            src={getImageSource}
+            alt={altText}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={handleImageError}
           />
