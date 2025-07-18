@@ -11,12 +11,16 @@ import { SEOHead } from '@/components/SEOHead';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useStructuredData } from '@/hooks/useStructuredData';
+import { useImageMigrationDebug } from '@/hooks/useImageMigrationDebug';
 import { School, SchoolFilters } from '@/types/school';
 import { schools } from '@/data/schools';
 
 const IndexContent = () => {
   const { language, t } = useLanguage();
   const { generateOrganizationSchema, generateWebsiteSchema } = useStructuredData();
+  
+  // Debug image migration status
+  useImageMigrationDebug();
   
   const [filters, setFilters] = useState<SchoolFilters>({
     country: '',
