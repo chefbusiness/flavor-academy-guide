@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -6,6 +7,11 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { SocialShareButtons } from '@/components/SocialShareButtons';
+import { SchoolTestimonials } from '@/components/SchoolTestimonials';
+import { SchoolLocation } from '@/components/SchoolLocation';
+import { SchoolImageGallery } from '@/components/SchoolImageGallery';
+import { SchoolStatistics } from '@/components/SchoolStatistics';
 import { 
   MapPin, 
   Calendar, 
@@ -18,9 +24,9 @@ import {
   Award,
   Globe,
   DollarSign,
-  Share2,
   GraduationCap,
-  Clock
+  Clock,
+  TrendingUp
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
@@ -66,22 +72,6 @@ const SchoolDetailContent = () => {
     }).format(amount);
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: school.name,
-          text: school.description,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.log('Error sharing:', err);
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-    }
-  };
-
   // Enhanced image source logic with the new system
   const getImageSource = () => {
     // First try Supabase image
@@ -117,6 +107,25 @@ const SchoolDetailContent = () => {
     target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=800&h=600&fit=crop&auto=format`;
   };
 
+  // Enhanced description generation
+  const generateEnhancedDescription = () => {
+    const baseDesc = school.description;
+    const specialtiesText = school.specialties.map(s => t(s)).join(', ');
+    const foundedText = language === 'es' 
+      ? `Fundada en ${school.founded}, esta prestigiosa institución`
+      : `Founded in ${school.founded}, this prestigious institution`;
+    
+    const methodologyText = language === 'es'
+      ? 'combina técnicas tradicionales con innovación culinaria moderna, ofreciendo una formación integral que prepara a los estudiantes para destacar en la industria gastronómica internacional.'
+      : 'combines traditional techniques with modern culinary innovation, offering comprehensive training that prepares students to excel in the international gastronomic industry.';
+    
+    const facilitiesText = language === 'es'
+      ? `Con más de ${formatNumber(school.studentsCount)} estudiantes y ${school.programsCount} programas especializados, cuenta con instalaciones de última generación y un equipo docente de reconocidos profesionales del sector.`
+      : `With over ${formatNumber(school.studentsCount)} students and ${school.programsCount} specialized programs, it features state-of-the-art facilities and a teaching staff of renowned industry professionals.`;
+    
+    return `${foundedText} ${methodologyText} ${facilitiesText} ${language === 'es' ? 'Especializada en' : 'Specialized in'} ${specialtiesText}.`;
+  };
+
   // Sample programs data - will be replaced with real data from CSV
   const getSamplePrograms = () => {
     const programsMap: { [key: string]: string[] } = {
@@ -149,6 +158,7 @@ const SchoolDetailContent = () => {
 
   // Enhanced SEO optimization
   const currentUrl = `/${language === 'es' ? 'escuela' : 'school'}/${slug}`;
+  const fullUrl = `https://escuelasdecocina.com${currentUrl}`;
   const alternateUrls = [
     { lang: 'es', url: `https://escuelasdecocina.com/escuela/${slug}` },
     { lang: 'en', url: `https://escuelasdecocina.com/school/${slug}` },
@@ -159,10 +169,8 @@ const SchoolDetailContent = () => {
     ? `${school.name} - Escuela de Cocina en ${school.city}, ${t(school.country)} | ${school.founded}`
     : `${school.name} - Culinary School in ${school.city}, ${t(school.country)} | ${school.founded}`;
     
-  const seoDescription = language === 'es'
-    ? `${school.description} Ubicada en ${school.city}, ${t(school.country)}. Fundada en ${school.founded}. ${formatNumber(school.studentsCount)} estudiantes. Especialidades: ${school.specialties.map(s => t(s)).join(', ')}. Rating: ${school.rating}/5 estrellas.`
-    : `${school.description} Located in ${school.city}, ${t(school.country)}. Founded in ${school.founded}. ${formatNumber(school.studentsCount)} students. Specialties: ${school.specialties.map(s => t(s)).join(', ')}. Rating: ${school.rating}/5 stars.`;
-
+  const enhancedDescription = generateEnhancedDescription();
+  
   const seoKeywords = [
     school.name,
     `escuela de cocina ${school.city}`,
@@ -200,7 +208,7 @@ const SchoolDetailContent = () => {
     <div className="min-h-screen bg-background">
       <SEOHead
         title={seoTitle}
-        description={seoDescription}
+        description={enhancedDescription}
         keywords={seoKeywords}
         url={currentUrl}
         type="article"
@@ -223,7 +231,7 @@ const SchoolDetailContent = () => {
           <Breadcrumbs items={breadcrumbItems} />
           
           {/* Hero Section with enhanced SEO structure */}
-          <article className="mt-4">
+          <article className="mt-4 space-y-8">
             <header className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <div className="space-y-6">
                 <div className="flex items-start justify-between">
@@ -250,20 +258,21 @@ const SchoolDetailContent = () => {
                       </div>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleShare}
-                    className="flex-shrink-0"
-                    aria-label={language === 'es' ? 'Compartir escuela' : 'Share school'}
-                  >
-                    <Share2 className="w-4 h-4" />
-                  </Button>
+                  
+                  {/* Social Share Buttons */}
+                  <div className="flex-shrink-0">
+                    <SocialShareButtons
+                      schoolName={school.name}
+                      description={school.description}
+                      url={fullUrl}
+                    />
+                  </div>
                 </div>
 
+                {/* Enhanced Description */}
                 <div className="prose prose-gray max-w-none">
                   <p className="text-muted-foreground text-lg leading-relaxed">
-                    {school.description}
+                    {enhancedDescription}
                   </p>
                 </div>
 
@@ -351,8 +360,18 @@ const SchoolDetailContent = () => {
               </div>
             </header>
 
+            {/* Image Gallery Section */}
+            <SchoolImageGallery
+              schoolName={school.name}
+              mainImage={getImageSource()}
+              schoolId={school.id}
+            />
+
+            {/* Statistics Section */}
+            <SchoolStatistics school={school} />
+
             {/* New Programs Section */}
-            <section className="bg-gradient-card rounded-lg p-6 mb-8">
+            <section className="bg-gradient-card rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-4 flex items-center">
                 <GraduationCap className="w-5 h-5 mr-2 text-primary" />
                 {language === 'es' ? 'Programas Destacados' : 'Featured Programs'}
@@ -440,7 +459,7 @@ const SchoolDetailContent = () => {
             </div>
 
             {/* Features */}
-            <section className="bg-gradient-card rounded-lg p-6 mt-8">
+            <section className="bg-gradient-card rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-4">
                 {language === 'es' ? 'Características Destacadas' : 'Featured Characteristics'}
               </h3>
@@ -453,6 +472,12 @@ const SchoolDetailContent = () => {
                 ))}
               </div>
             </section>
+
+            {/* Testimonials Section */}
+            <SchoolTestimonials school={school} />
+
+            {/* Location Section */}
+            <SchoolLocation school={school} />
 
             {/* Action Buttons */}
             <footer className="flex flex-col sm:flex-row gap-4 mt-8 pt-8 border-t">
