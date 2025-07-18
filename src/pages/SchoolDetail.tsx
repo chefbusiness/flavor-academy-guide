@@ -1,5 +1,7 @@
+
 import { useParams, Navigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
@@ -21,6 +23,8 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useStructuredData } from '@/hooks/useStructuredData';
+import { useSchoolImage } from '@/hooks/useSchoolImages';
+import { getSchoolImageUrl, getSchoolImageAltText } from '@/utils/imageMapping';
 import { schools } from '@/data/schools';
 import { findSchoolBySlug } from '@/utils/slugUtils';
 
@@ -38,6 +42,9 @@ const SchoolDetailContent = () => {
   if (!school) {
     return <Navigate to="/" replace />;
   }
+
+  // Use the new image system
+  const { data: schoolImageData, isLoading: imageLoading } = useSchoolImage(school.id);
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat(language === 'es' ? 'es-ES' : 'en-US').format(num);
@@ -66,6 +73,41 @@ const SchoolDetailContent = () => {
     } else {
       navigator.clipboard.writeText(window.location.href);
     }
+  };
+
+  // Enhanced image source logic with the new system
+  const getImageSource = () => {
+    // First try Supabase image
+    if (schoolImageData?.image_url) {
+      return schoolImageData.image_url;
+    }
+    
+    // Then try local mapping
+    const localImage = getSchoolImageUrl(school.id);
+    if (localImage) {
+      return localImage;
+    }
+    
+    // Finally fallback to Unsplash
+    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
+    return `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=800&h=600&fit=crop&auto=format`;
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    
+    // If Supabase image fails, try local mapping
+    if (schoolImageData?.image_url && target.src === schoolImageData.image_url) {
+      const localImage = getSchoolImageUrl(school.id);
+      if (localImage) {
+        target.src = localImage;
+        return;
+      }
+    }
+    
+    // If local image fails, use Unsplash fallback
+    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
+    target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=800&h=600&fit=crop&auto=format`;
   };
 
   // Generate comprehensive structured data
@@ -149,7 +191,7 @@ const SchoolDetailContent = () => {
         publishedTime={`${school.founded}-01-01T00:00:00Z`}
         modifiedTime={new Date().toISOString()}
         additionalMeta={additionalMeta}
-        image={school.image}
+        image={getImageSource()}
         twitterCard="summary_large_image"
       />
       
@@ -245,18 +287,22 @@ const SchoolDetailContent = () => {
               </div>
 
               <div className="space-y-6">
-                {/* Main Image with proper alt text for SEO */}
+                {/* Main Image with improved loading and fallback system */}
                 <figure className="relative overflow-hidden rounded-lg h-80 bg-gradient-to-br from-primary/20 to-accent/20">
+                  {imageLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
+                      <div className="animate-pulse text-muted-foreground">
+                        {language === 'es' ? 'Cargando imagen...' : 'Loading image...'}
+                      </div>
+                    </div>
+                  )}
                   <img 
-                    src={school.image} 
-                    alt={`${school.name} - ${language === 'es' ? 'Escuela de cocina en' : 'Culinary school in'} ${school.city}, ${t(school.country)}`}
+                    src={getImageSource()} 
+                    alt={getSchoolImageAltText(school.name)}
                     className="w-full h-full object-cover"
                     itemProp="image"
                     loading="eager"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = `https://images.unsplash.com/photo-1556909114-${school.id.padStart(8, '0')}?w=800&h=600&fit=crop&auto=format`;
-                    }}
+                    onError={handleImageError}
                   />
                   <figcaption className="sr-only">
                     {school.name} {language === 'es' ? 'instalaciones' : 'facilities'}
@@ -384,6 +430,8 @@ const SchoolDetailContent = () => {
           </article>
         </div>
       </main>
+      
+      <Footer />
     </div>
   );
 };
