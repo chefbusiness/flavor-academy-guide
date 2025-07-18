@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -12,6 +11,7 @@ import { SchoolTestimonials } from '@/components/SchoolTestimonials';
 import { SchoolLocation } from '@/components/SchoolLocation';
 import { SchoolImageGallery } from '@/components/SchoolImageGallery';
 import { SchoolStatistics } from '@/components/SchoolStatistics';
+import { CountryFlag } from '@/components/CountryFlag';
 import { 
   MapPin, 
   Calendar, 
@@ -56,7 +56,6 @@ const SchoolDetailContent = () => {
     return <Navigate to="/" replace />;
   }
 
-  // Use the new image system
   const { data: schoolImageData, isLoading: imageLoading } = useSchoolImage(school.id);
 
   const formatNumber = (num: number) => {
@@ -330,6 +329,12 @@ const SchoolDetailContent = () => {
                     loading="eager"
                     onError={handleImageError}
                   />
+                  
+                  {/* Country Flag - Top Left */}
+                  <div className="absolute top-4 left-4">
+                    <CountryFlag country={school.country} size="md" />
+                  </div>
+                  
                   <figcaption className="sr-only">
                     {school.name} {language === 'es' ? 'instalaciones' : 'facilities'}
                   </figcaption>

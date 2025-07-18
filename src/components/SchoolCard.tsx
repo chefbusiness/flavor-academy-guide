@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +8,7 @@ import { generateSlug } from '@/utils/slugUtils';
 import { useNavigate } from 'react-router-dom';
 import { getSchoolImageUrl, getSchoolImageAltText } from '@/utils/imageMapping';
 import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
+import { CountryFlag } from '@/components/CountryFlag';
 
 interface SchoolCardProps {
   school: School;
@@ -57,12 +57,18 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={handleImageError}
           />
+          
+          {/* Country Flag - Top Left */}
+          <div className="absolute top-3 left-3">
+            <CountryFlag country={school.country} size="sm" />
+          </div>
+          
           <div className="absolute top-4 right-4">
             <Badge variant="secondary" className="bg-white/90 text-primary">
               {t(school.type)}
             </Badge>
           </div>
-          <div className="absolute top-4 left-4 flex items-center space-x-1 bg-white/90 rounded-full px-2 py-1">
+          <div className="absolute top-4 left-4 flex items-center space-x-1 bg-white/90 rounded-full px-2 py-1 ml-10">
             <Star className="w-4 h-4 text-amber-500 fill-current" />
             <span className="text-sm font-medium">{school.rating}</span>
           </div>
