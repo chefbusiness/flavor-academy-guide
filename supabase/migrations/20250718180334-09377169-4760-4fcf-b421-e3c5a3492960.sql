@@ -1,0 +1,12 @@
+-- Insertar datos de escuelas vascas en la tabla school_images
+INSERT INTO public.school_images (school_id, image_url, image_type, alt_text)
+VALUES 
+  ('on-egin-academia-de-cocina', 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrXzM11Jl5_VK9I2NrjRD5cmvJEs3wcyAF5rqqzvUlB3erzS67_7SPD2rSrGrrsWGJ-XFK5e8Vw1JCssawq1SL-9CCPUKQcpPfEsu3xk0MrESiQeEcoXJWV2QKGVEBi1KSaEzqkLA=w800-h500-k-no', 'real', 'Imagen de On - Egin Academia De Cocina en Vitoria-Gasteiz'),
+  ('basque-culinary-center', 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4npy3N1vYxb6Ac8IvGj_cbA7HE5IDZY_21xU17dZPKonT8yiimlX4c53r_BLjwLnKo6KACUFV2a8ZAyOu4IehS4wmPNQnFwRO7TgZja7yMcMepJ4JtAtreWhaS249QPzNYUmbZ9j=w800-h500-k-no', 'real', 'Imagen del Basque Culinary Center en San Sebastián'),
+  ('hazten-eta-jolasten', 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqyVuj5lL6endDCU1Hjgoq2ibmNpEEEdMmKPy_UjknnDMQw46odyhB_H8Vraans4eI4B-crF3HMFj-727xJ-SxguY6dvQZEjtEUSX98pQJWw0hmmn1tyUipch15g0m0IIXaDIB6=w800-h500-k-no', 'real', 'Imagen de Hazten eta Jolasten - Escuela de cocina'),
+  ('escuela-de-cocina-aingeru-etxebarria', 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrcm1SRJN5Xj7IGKCBfZL3MvGw7JYiGqVfVuD1BvenNzuqM4tGmMWTgNPtefU5BybU9-q4AfNUeUpByxJS58CSoHE9YlypUYFl0hgls8y7UAYGgCG0RkvxbO5HIGHd_zltj_-ENtA=w800-h500-k-no', 'real', 'Imagen de Escuela de Cocina Aingeru Etxebarria en Bilbao'),
+  ('escuela-de-hosteleria-de-gamarra', 'https://lh3.googleusercontent.com/p/AF1QipNTY40VIr5t29L5SHqYGIpW3jPgmjeyMWDDp7HP=w800-h500-k-no', 'real', 'Imagen de Escuela de Hostelería de Gamarra en Vitoria-Gasteiz'),
+  ('egibide-mendizorrotza', 'https://lh3.googleusercontent.com/p/AF1QipNR59SQZpRy51NDzkHg7ty8wRK2YDh_rheYcDIE=w800-h500-k-no', 'real', 'Imagen de Egibide - Mendizorrotza en Vitoria-Gasteiz'),
+  ('sualai', 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nqiFHcxFpyDek5lbmjXHAlGbh_NssDVSZHY4fIDIlV1WYu4LnvacXFBdgn0k2_VWbLerFrWfmJDuZqOCQXfNpGxX1RMca0qJ3kh2FgHO8zoBtoNcGB0EGHx4WlQMBpIcbMN_aqa=w800-h500-k-no', 'real', 'Imagen de Sualai - Escuela de hostelería en Vitoria-Gasteiz'),
+  ('koilara-gastronomia', 'https://lh3.googleusercontent.com/p/AF1QipPm6fft_WXAJUaRAoQrXGy67fTtpH01mTbm4W7S=w800-h500-k-no', 'real', 'Imagen de Koilara Gastronomía en Bilbao'),
+  ('escuela-de-cocina-eshbi-ribera', 'https://lh3.googleusercontent.com/p/AF1QipMFyqy4dV-dD0BV4vEAk447_kpOhL-iraNNSRJp=w800-h500-k-no', 'real', 'Imagen de Escuela de cocina - ESHBI Ribera en Bilbao');
