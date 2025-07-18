@@ -4,6 +4,9 @@ import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { Filters } from '@/components/Filters';
 import { SchoolCard } from '@/components/SchoolCard';
+import { FAQ } from '@/components/FAQ';
+import { CTASection } from '@/components/CTASection';
+import { Footer } from '@/components/Footer';
 import { SEOHead } from '@/components/SEOHead';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -55,10 +58,38 @@ const IndexContent = () => {
     ? 'escuelas de cocina, universidades gastronómicas, institutos culinarios, formación culinaria, chef profesional, gastronomía, hospitalidad, escuelas cocina España, escuelas cocina México, escuelas cocina Italia, escuelas cocina Francia, directorio gastronómico'
     : 'culinary schools, gastronomic universities, culinary institutes, culinary training, professional chef, gastronomy, hospitality, culinary schools Spain, culinary schools Mexico, culinary schools Italy, culinary schools France, gastronomic directory';
 
-  // Multiple structured data schemas
+  // Multiple structured data schemas including FAQPage
+  const faqSchemaData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": language === 'es' ? "¿Cómo seleccionan las escuelas incluidas en el directorio?" : "How do you select the schools included in the directory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": language === 'es' 
+            ? "Evaluamos cada institución basándonos en criterios rigurosos: acreditación oficial, calidad de instalaciones, prestigio del profesorado, empleabilidad de graduados, programas académicos reconocidos y opiniones de estudiantes."
+            : "We evaluate each institution based on rigorous criteria: official accreditation, facility quality, faculty prestige, graduate employability, recognized academic programs, and student reviews."
+        }
+      },
+      {
+        "@type": "Question", 
+        "name": language === 'es' ? "¿Con qué frecuencia se actualiza la información?" : "How frequently is the information updated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": language === 'es'
+            ? "Actualizamos constantemente nuestra base de datos. La información de cada escuela se revisa mensualmente, incluyendo programas, costos, requisitos de admisión y datos de contacto."
+            : "We constantly update our database. Each school's information is reviewed monthly, including programs, costs, admission requirements, and contact details."
+        }
+      }
+    ]
+  };
+
   const combinedStructuredData = [
     generateOrganizationSchema,
     generateWebsiteSchema,
+    faqSchemaData,
     {
       "@context": "https://schema.org",
       "@type": "ItemList",
@@ -187,6 +218,12 @@ const IndexContent = () => {
           </div>
         </div>
       </section>
+
+      <CTASection />
+      
+      <FAQ />
+      
+      <Footer />
     </div>
   );
 };

@@ -16,7 +16,7 @@ const translations = {
     // Navigation
     home: 'Inicio',
     directory: 'Directorio',
-    about: 'Acerca de',
+    about: 'Sobre Nosotros',
     contact: 'Contacto',
     
     // Hero Section
@@ -71,13 +71,32 @@ const translations = {
     // Stats
     totalSchools: 'escuelas registradas',
     countries: 'países',
-    specialties: 'especialidades'
+    specialties: 'especialidades',
+
+    // FAQ
+    faqTitle: 'Preguntas Frecuentes',
+    faqSubtitle: 'Resolvemos las dudas más comunes sobre nuestro directorio de escuelas de cocina',
+
+    // CTA Section
+    ctaTitle: '¿Listo para profesionalizar tu carrera culinaria?',
+    ctaSubtitle: 'Accede a información detallada de las mejores escuelas de cocina del mundo',
+    
+    // Footer
+    footerDescription: 'La herramienta profesional para encontrar las mejores escuelas de cocina del mundo',
+    footerIdea: 'Una idea original del Chef John Guerrero',
+    quickLinks: 'Enlaces Rápidos',
+    legal: 'Legal',
+    ourPartners: 'Nuestros Aliados',
+    privacyPolicy: 'Política de Privacidad',
+    cookiesPolicy: 'Política de Cookies',
+    termsOfUse: 'Términos de Uso',
+    allRightsReserved: 'Todos los derechos reservados'
   },
   en: {
     // Navigation
     home: 'Home',
     directory: 'Directory',
-    about: 'About',
+    about: 'About Us',
     contact: 'Contact',
     
     // Hero Section
@@ -132,7 +151,26 @@ const translations = {
     // Stats
     totalSchools: 'registered schools',
     countries: 'countries',
-    specialties: 'specialties'
+    specialties: 'specialties',
+
+    // FAQ
+    faqTitle: 'Frequently Asked Questions',
+    faqSubtitle: 'We answer the most common questions about our culinary schools directory',
+
+    // CTA Section
+    ctaTitle: 'Ready to professionalize your culinary career?',
+    ctaSubtitle: 'Access detailed information from the world\'s best culinary schools',
+    
+    // Footer
+    footerDescription: 'The professional tool to find the world\'s best culinary schools',
+    footerIdea: 'An original idea by Chef John Guerrero',
+    quickLinks: 'Quick Links',
+    legal: 'Legal',
+    ourPartners: 'Our Partners',
+    privacyPolicy: 'Privacy Policy',
+    cookiesPolicy: 'Cookies Policy',
+    termsOfUse: 'Terms of Use',
+    allRightsReserved: 'All rights reserved'
   }
 };
 
