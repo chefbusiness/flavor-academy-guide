@@ -3,9 +3,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 
-const CookiesPolicy = () => {
+const CookiesPolicyContent = () => {
   const { language } = useLanguage();
 
   // Scroll to top when component mounts
@@ -178,6 +178,14 @@ const CookiesPolicy = () => {
 
       <Footer />
     </div>
+  );
+};
+
+const CookiesPolicy = () => {
+  return (
+    <LanguageProvider>
+      <CookiesPolicyContent />
+    </LanguageProvider>
   );
 };
 

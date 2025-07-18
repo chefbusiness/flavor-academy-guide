@@ -3,9 +3,9 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { SEOHead } from '@/components/SEOHead';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 
-const TermsOfUse = () => {
+const TermsOfUseContent = () => {
   const { language } = useLanguage();
 
   // Scroll to top when component mounts
@@ -166,6 +166,14 @@ const TermsOfUse = () => {
 
       <Footer />
     </div>
+  );
+};
+
+const TermsOfUse = () => {
+  return (
+    <LanguageProvider>
+      <TermsOfUseContent />
+    </LanguageProvider>
   );
 };
 
