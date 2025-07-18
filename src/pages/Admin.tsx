@@ -5,24 +5,24 @@ import { Footer } from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAdminRole } from '@/hooks/useAdminRole';
-import { useSchoolsDatabase } from '@/hooks/useSchoolsDatabase';
+import { useSchools } from '@/hooks/useSchoolsDatabase';
 import { Database, Users, School, Settings, BarChart3, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Admin() {
   const { isSuperAdmin } = useAdminRole();
-  const { data: schools, isLoading } = useSchoolsDatabase();
+  const { schools, loading } = useSchools();
 
   const stats = [
     {
       title: 'Escuelas Totales',
-      value: isLoading ? '...' : schools?.length || 0,
+      value: loading ? '...' : schools?.length || 0,
       icon: School,
       description: 'Escuelas registradas en el sistema'
     },
     {
       title: 'Países',
-      value: isLoading ? '...' : new Set(schools?.map(s => s.country)).size || 0,
+      value: loading ? '...' : new Set(schools?.map(s => s.country)).size || 0,
       icon: BarChart3,
       description: 'Países con escuelas registradas'
     },
