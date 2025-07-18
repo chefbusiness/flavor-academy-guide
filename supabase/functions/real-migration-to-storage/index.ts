@@ -193,7 +193,7 @@ serve(async (req) => {
         console.log(`🔄 Procesando ${school.schoolName} (${school.schoolId})...`)
         
         let imageBlob: Blob | null = null
-        let imageSource = 'unknown'
+        let imageSource = 'real' // Por defecto será 'real' si viene de Google, 'ai_generated' si es de IA
 
         // PASO 1: Intentar descargar desde Google
         if (school.googleUrl) {
@@ -202,7 +202,7 @@ serve(async (req) => {
             const googleResponse = await fetch(school.googleUrl)
             if (googleResponse.ok) {
               imageBlob = await googleResponse.blob()
-              imageSource = 'google'
+              imageSource = 'real' // Google = 'real' (permitido en check constraint)
               console.log(`✅ Imagen descargada de Google: ${imageBlob.size} bytes`)
             } else {
               console.log(`❌ Google falló: ${googleResponse.status} ${googleResponse.statusText}`)
@@ -258,7 +258,7 @@ serve(async (req) => {
             
             if (localResponse.ok) {
               imageBlob = await localResponse.blob()
-              imageSource = 'local'
+              imageSource = 'real' // Local también es 'real' (imagen real aunque sea local)
               console.log(`✅ Imagen local obtenida: ${imageBlob.size} bytes`)
             } else {
               console.log(`❌ Imagen local falló: ${localResponse.status}`)
