@@ -69,9 +69,9 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
         const address = `${school.address}, ${school.city}, ${school.country}`;
         
         geocoder.geocode({ address }, (results: any[], status: string) => {
-          console.log('📍 Resultado de geocodificación:', { status, results });
+          console.log('📍 Resultado de geocodificación:', { status, results, resultsLength: results?.length });
           
-          if (status === 'OK' && results && results[0]) {
+          if (status === 'OK' && results && results.length > 0) {
             const location = results[0].geometry.location;
             console.log('✅ Coordenadas encontradas:', location.lat(), location.lng());
             
