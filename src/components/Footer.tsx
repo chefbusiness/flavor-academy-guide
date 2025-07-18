@@ -29,13 +29,13 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-slate-900 text-white">
+    <footer className="bg-slate-800 text-white">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
           {/* Primera columna - Información principal */}
           <div className="lg:col-span-1">
-            <h3 className="text-xl font-bold mb-4 text-yellow-400">
+            <h3 className="text-xl font-bold mb-4 text-accent">
               {language === 'es' ? 'Directorio Global de Escuelas de Cocina' : 'Global Culinary Schools Directory'}
             </h3>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">
@@ -48,13 +48,13 @@ export const Footer = () => {
               <p className="mb-1">
                 {language === 'es' ? 'Una idea original del' : 'An original idea by'}
               </p>
-              <p className="font-semibold text-yellow-400">Chef John Guerrero</p>
+              <p className="font-semibold text-accent">Chef John Guerrero</p>
             </div>
           </div>
 
           {/* Segunda columna - Enlaces rápidos */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-yellow-400">
+            <h4 className="text-lg font-semibold mb-4 text-accent">
               {language === 'es' ? 'Enlaces Rápidos' : 'Quick Links'}
             </h4>
             <ul className="space-y-2 text-sm">
@@ -83,7 +83,7 @@ export const Footer = () => {
 
           {/* Tercera columna - Legal */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-yellow-400">
+            <h4 className="text-lg font-semibold mb-4 text-accent">
               {language === 'es' ? 'Legal' : 'Legal'}
             </h4>
             <ul className="space-y-2 text-sm">
@@ -107,7 +107,7 @@ export const Footer = () => {
 
           {/* Cuarta columna - Nuestros Aliados */}
           <div>
-            <h4 className="text-lg font-semibold mb-4 text-yellow-400">
+            <h4 className="text-lg font-semibold mb-4 text-accent">
               {language === 'es' ? 'Nuestros Aliados' : 'Our Partners'}
             </h4>
             <ul className="space-y-3 text-sm">
