@@ -31,8 +31,7 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useStructuredData } from '@/hooks/useStructuredData';
-import { useSchoolImage } from '@/hooks/useSchoolImages';
-import { getSchoolImageUrl, getSchoolImageAltText } from '@/utils/imageMapping';
+import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
 import { schools } from '@/data/schools';
 import { findSchoolBySlug } from '@/utils/slugUtils';
 
@@ -56,7 +55,8 @@ const SchoolDetailContent = () => {
     return <Navigate to="/" replace />;
   }
 
-  const { data: schoolImageData, isLoading: imageLoading } = useSchoolImage(school.id);
+  // Use the same image integration system as SchoolCard
+  const { imageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school);
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat(language === 'es' ? 'es-ES' : 'en-US').format(num);
@@ -71,39 +71,21 @@ const SchoolDetailContent = () => {
     }).format(amount);
   };
 
-  // Enhanced image source logic with the new system
-  const getImageSource = () => {
-    // First try Supabase image
-    if (schoolImageData?.image_url) {
-      return schoolImageData.image_url;
-    }
-    
-    // Then try local mapping
-    const localImage = getSchoolImageUrl(school.id);
-    if (localImage) {
-      return localImage;
-    }
-    
-    // Finally fallback to Unsplash
-    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
-    return `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=800&h=600&fit=crop&auto=format`;
-  };
-
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
+    const fallbackSources = getFallbackImageSource;
     
-    // If Supabase image fails, try local mapping
-    if (schoolImageData?.image_url && target.src === schoolImageData.image_url) {
-      const localImage = getSchoolImageUrl(school.id);
-      if (localImage) {
-        target.src = localImage;
-        return;
-      }
+    // Find the next available fallback source
+    const currentIndex = fallbackSources.indexOf(target.src);
+    const nextIndex = currentIndex + 1;
+    
+    if (nextIndex < fallbackSources.length) {
+      target.src = fallbackSources[nextIndex];
+    } else {
+      // Final fallback to Unsplash
+      const unsplashId = parseInt(school.id).toString().padStart(8, '0');
+      target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=800&h=600&fit=crop&auto=format`;
     }
-    
-    // If local image fails, use Unsplash fallback
-    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
-    target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=800&h=600&fit=crop&auto=format`;
   };
 
   // Enhanced description generation
@@ -219,7 +201,7 @@ const SchoolDetailContent = () => {
         publishedTime={`${school.founded}-01-01T00:00:00Z`}
         modifiedTime={new Date().toISOString()}
         additionalMeta={additionalMeta}
-        image={getImageSource()}
+        image={imageSource}
         twitterCard="summary_large_image"
       />
       
@@ -312,18 +294,11 @@ const SchoolDetailContent = () => {
               </div>
 
               <div className="space-y-6">
-                {/* Main Image with improved loading and fallback system */}
+                {/* Main Image with integrated system - FIXED */}
                 <figure className="relative overflow-hidden rounded-lg h-80 bg-gradient-to-br from-primary/20 to-accent/20">
-                  {imageLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
-                      <div className="animate-pulse text-muted-foreground">
-                        {language === 'es' ? 'Cargando imagen...' : 'Loading image...'}
-                      </div>
-                    </div>
-                  )}
                   <img 
-                    src={getImageSource()} 
-                    alt={getSchoolImageAltText(school.name)}
+                    src={imageSource}
+                    alt={altText}
                     className="w-full h-full object-cover"
                     itemProp="image"
                     loading="eager"
@@ -364,7 +339,7 @@ const SchoolDetailContent = () => {
             {/* Image Gallery Section */}
             <SchoolImageGallery
               schoolName={school.name}
-              mainImage={getImageSource()}
+              mainImage={imageSource}
               schoolId={school.id}
             />
 
