@@ -1,3 +1,4 @@
+
 // Import all school images as ES6 modules
 import basqueCulinaryCenter from '@/assets/schools/basque-culinary-center.jpg';
 import centroAmbrosía from '@/assets/schools/centro-culinario-ambrosia.jpg';
@@ -6,14 +7,14 @@ import leCordonBleuParis from '@/assets/schools/le-cordon-bleu-paris.jpg';
 import almaColorno from '@/assets/schools/alma-colorno.jpg';
 import iedMadrid from '@/assets/schools/ied-madrid.jpg';
 
-// Mapping of school IDs to their corresponding images
+// Mapping of school IDs to their corresponding images - using correct numeric IDs
 export const schoolImageMapping: Record<string, string> = {
-  'basque-culinary-center': basqueCulinaryCenter,
-  'centro-culinario-ambrosia': centroAmbrosía,
-  'institut-paul-bocuse': institutPaulBocuse,
-  'le-cordon-bleu-paris': leCordonBleuParis,
-  'alma-colorno': almaColorno,
-  'ied-madrid': iedMadrid,
+  '1': basqueCulinaryCenter,     // Basque Culinary Center
+  '2': iedMadrid,                // Instituto Europeo di Design - Madrid
+  '3': centroAmbrosía,           // Centro Culinario Ambrosía
+  '4': almaColorno,              // ALMA - La Scuola Internazionale di Cucina Italiana
+  '5': institutPaulBocuse,       // Institut Paul Bocuse
+  '6': leCordonBleuParis,        // Le Cordon Bleu Paris
 };
 
 // Function to get school image URL by ID

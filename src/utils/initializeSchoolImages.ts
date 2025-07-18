@@ -1,15 +1,29 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { schoolImageMapping } from './imageMapping';
 
 // Function to initialize school images in the database
 export const initializeSchoolImages = async () => {
   try {
-    const schoolImages = Object.entries(schoolImageMapping).map(([schoolId, imageUrl]) => ({
-      school_id: schoolId,
-      image_url: imageUrl,
-      image_type: schoolId === 'basque-culinary-center' ? 'real' : 'ai_generated',
-      alt_text: `${schoolId.replace(/-/g, ' ')} culinary school building`,
-    }));
+    // Create school images data using the corrected mapping
+    const schoolImages = Object.entries(schoolImageMapping).map(([schoolId, imageUrl]) => {
+      // Get school names for better alt text
+      const schoolNames: Record<string, string> = {
+        '1': 'Basque Culinary Center',
+        '2': 'Instituto Europeo di Design Madrid',
+        '3': 'Centro Culinario Ambrosía',
+        '4': 'ALMA La Scuola Internazionale di Cucina Italiana',
+        '5': 'Institut Paul Bocuse',
+        '6': 'Le Cordon Bleu Paris'
+      };
+
+      return {
+        school_id: schoolId,
+        image_url: imageUrl,
+        image_type: schoolId === '1' ? 'real' : 'ai_generated',
+        alt_text: `${schoolNames[schoolId] || `School ${schoolId}`} - Culinary school building`,
+      };
+    });
 
     const { data, error } = await supabase
       .from('school_images')

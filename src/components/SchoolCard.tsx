@@ -28,18 +28,49 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
     navigate(route);
   };
 
+  // Improved image source logic with better fallback
+  const getImageSource = () => {
+    // First try local mapping
+    const localImage = getSchoolImageUrl(school.id);
+    if (localImage) {
+      return localImage;
+    }
+    
+    // Then fallback to school.image property
+    if (school.image && school.image !== '/api/placeholder/400/300') {
+      return school.image;
+    }
+    
+    // Finally, use Unsplash with a consistent seed based on school ID
+    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
+    return `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=400&h=300&fit=crop&auto=format`;
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    
+    // If local image fails, try the school.image property
+    if (target.src === getSchoolImageUrl(school.id)) {
+      if (school.image && school.image !== '/api/placeholder/400/300') {
+        target.src = school.image;
+        return;
+      }
+    }
+    
+    // Final fallback to Unsplash
+    const unsplashId = parseInt(school.id).toString().padStart(8, '0');
+    target.src = `https://images.unsplash.com/photo-1556909114-${unsplashId}?w=400&h=300&fit=crop&auto=format`;
+  };
+
   return (
     <Card className="group hover:shadow-elegant transition-all duration-300 hover:-translate-y-1 gradient-card border-0 h-full">
       <CardHeader className="p-0">
         <div className="relative overflow-hidden rounded-t-lg h-48 bg-gradient-to-br from-primary/20 to-accent/20">
           <img 
-            src={getSchoolImageUrl(school.id) || school.image} 
+            src={getImageSource()}
             alt={getSchoolImageAltText(school.name)}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = school.image || `https://images.unsplash.com/photo-1556909114-${school.id.padStart(8, '0')}?w=400&h=300&fit=crop&auto=format`;
-            }}
+            onError={handleImageError}
           />
           <div className="absolute top-4 right-4">
             <Badge variant="secondary" className="bg-white/90 text-primary">
