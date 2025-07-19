@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { School } from '@/types/school';
@@ -15,7 +16,7 @@ export interface DatabaseSchool {
   email: string;
   phone: string;
   type: 'university' | 'institute' | 'academy' | 'college';
-  specialties: string; // JSON string
+  specialties: string | string[]; // Can be JSON string or already parsed array
   founded: number;
   students_count: number;
   programs_count: number;
@@ -24,62 +25,111 @@ export interface DatabaseSchool {
   tuition_min: number;
   tuition_max: number;
   tuition_currency: string;
-  languages: string; // JSON string
-  accreditation: string; // JSON string
-  features: string; // JSON string
-  features_en: string; // JSON string
-  accreditation_en: string; // JSON string
-  specialties_en: string; // JSON string
+  languages: string | string[]; // Can be JSON string or already parsed array
+  accreditation: string | string[]; // Can be JSON string or already parsed array
+  features: string | string[]; // Can be JSON string or already parsed array
+  features_en: string | string[]; // Can be JSON string or already parsed array
+  accreditation_en: string | string[]; // Can be JSON string or already parsed array
+  specialties_en: string | string[]; // Can be JSON string or already parsed array
   coordinates_lat: number | null;
   coordinates_lng: number | null;
-  programs: string; // JSON string
-  gallery: string; // JSON string
+  programs: string | string[]; // Can be JSON string or already parsed array
+  gallery: string | string[]; // Can be JSON string or already parsed array
   slug: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
 }
 
+// Safe JSON parser that handles both strings and already-parsed data
+const safeJsonParse = (value: any): any[] => {
+  console.log('🔍 [safeJsonParse] Processing value:', { value, type: typeof value });
+  
+  // If it's null or undefined, return empty array
+  if (value === null || value === undefined) {
+    console.log('📝 [safeJsonParse] Value is null/undefined, returning empty array');
+    return [];
+  }
+  
+  // If it's already an array, return it directly
+  if (Array.isArray(value)) {
+    console.log('✅ [safeJsonParse] Value is already an array:', value);
+    return value;
+  }
+  
+  // If it's a string, try to parse it
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      console.log('✅ [safeJsonParse] Successfully parsed JSON string:', parsed);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      console.error('❌ [safeJsonParse] Failed to parse JSON string:', value, error);
+      return [];
+    }
+  }
+  
+  // For any other type, return empty array
+  console.log('⚠️ [safeJsonParse] Unexpected value type, returning empty array');
+  return [];
+};
+
 // Función para convertir de formato DB a formato School
 export const convertDatabaseSchoolToSchool = (dbSchool: DatabaseSchool): School => {
-  return {
-    id: dbSchool.legacy_id || dbSchool.id,
-    name: dbSchool.name,
-    description: dbSchool.description,
-    description_en: dbSchool.description_en,
-    country: dbSchool.country,
-    city: dbSchool.city,
-    address: dbSchool.address,
-    website: dbSchool.website,
-    email: dbSchool.email,
-    phone: dbSchool.phone,
-    type: dbSchool.type,
-    specialties: JSON.parse(dbSchool.specialties),
-    specialties_en: dbSchool.specialties_en ? JSON.parse(dbSchool.specialties_en) : null,
-    founded: dbSchool.founded,
-    studentsCount: dbSchool.students_count,
-    programsCount: dbSchool.programs_count,
-    image: dbSchool.image || '/api/placeholder/400/300',
-    rating: dbSchool.rating,
-    tuitionRange: {
-      min: dbSchool.tuition_min,
-      max: dbSchool.tuition_max,
-      currency: dbSchool.tuition_currency,
-    },
-    languages: JSON.parse(dbSchool.languages),
-    accreditation: JSON.parse(dbSchool.accreditation),
-    accreditation_en: dbSchool.accreditation_en ? JSON.parse(dbSchool.accreditation_en) : null,
-    features: JSON.parse(dbSchool.features),
-    features_en: dbSchool.features_en ? JSON.parse(dbSchool.features_en) : null,
-    coordinates: dbSchool.coordinates_lat && dbSchool.coordinates_lng ? {
-      lat: dbSchool.coordinates_lat,
-      lng: dbSchool.coordinates_lng,
-    } : undefined,
-    programs: JSON.parse(dbSchool.programs || '[]'),
-    gallery: JSON.parse(dbSchool.gallery || '[]'),
-    slug: dbSchool.slug,
-    is_active: dbSchool.is_active,
-  };
+  console.log('🔄 [convertDatabaseSchoolToSchool] Converting school:', dbSchool.name);
+  console.log('📊 [convertDatabaseSchoolToSchool] Raw specialties:', dbSchool.specialties);
+  console.log('📊 [convertDatabaseSchoolToSchool] Raw features:', dbSchool.features);
+  console.log('📊 [convertDatabaseSchoolToSchool] Raw languages:', dbSchool.languages);
+  
+  try {
+    const convertedSchool: School = {
+      id: dbSchool.legacy_id || dbSchool.id,
+      name: dbSchool.name,
+      description: dbSchool.description,
+      description_en: dbSchool.description_en,
+      country: dbSchool.country,
+      city: dbSchool.city,
+      address: dbSchool.address,
+      website: dbSchool.website,
+      email: dbSchool.email,
+      phone: dbSchool.phone,
+      type: dbSchool.type,
+      specialties: safeJsonParse(dbSchool.specialties),
+      specialties_en: dbSchool.specialties_en ? safeJsonParse(dbSchool.specialties_en) : null,
+      founded: dbSchool.founded,
+      studentsCount: dbSchool.students_count,
+      programsCount: dbSchool.programs_count,
+      image: dbSchool.image || '/api/placeholder/400/300',
+      rating: dbSchool.rating,
+      tuitionRange: {
+        min: dbSchool.tuition_min,
+        max: dbSchool.tuition_max,
+        currency: dbSchool.tuition_currency,
+      },
+      languages: safeJsonParse(dbSchool.languages),
+      accreditation: safeJsonParse(dbSchool.accreditation),
+      accreditation_en: dbSchool.accreditation_en ? safeJsonParse(dbSchool.accreditation_en) : null,
+      features: safeJsonParse(dbSchool.features),
+      features_en: dbSchool.features_en ? safeJsonParse(dbSchool.features_en) : null,
+      coordinates: dbSchool.coordinates_lat && dbSchool.coordinates_lng ? {
+        lat: dbSchool.coordinates_lat,
+        lng: dbSchool.coordinates_lng,
+      } : undefined,
+      programs: safeJsonParse(dbSchool.programs || []),
+      gallery: safeJsonParse(dbSchool.gallery || []),
+      slug: dbSchool.slug,
+      is_active: dbSchool.is_active,
+    };
+    
+    console.log('✅ [convertDatabaseSchoolToSchool] Successfully converted school:', convertedSchool.name);
+    console.log('📝 [convertDatabaseSchoolToSchool] Converted specialties:', convertedSchool.specialties);
+    
+    return convertedSchool;
+  } catch (error) {
+    console.error('❌ [convertDatabaseSchoolToSchool] Error converting school:', error);
+    console.error('🔍 [convertDatabaseSchoolToSchool] Failed for school:', dbSchool);
+    throw error;
+  }
 };
 
 export const useSchools = () => {
