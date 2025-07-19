@@ -7,6 +7,7 @@ export interface DatabaseSchool {
   legacy_id: string | null;
   name: string;
   description: string;
+  description_en: string | null;
   country: string;
   city: string;
   address: string;
@@ -42,6 +43,7 @@ export const convertDatabaseSchoolToSchool = (dbSchool: DatabaseSchool): School 
     id: dbSchool.legacy_id || dbSchool.id,
     name: dbSchool.name,
     description: dbSchool.description,
+    description_en: dbSchool.description_en,
     country: dbSchool.country,
     city: dbSchool.city,
     address: dbSchool.address,
