@@ -44,11 +44,20 @@ const SchoolDetailContent = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  console.log('🎯 SchoolDetail - URL slug:', slug);
+
   if (!slug) {
+    console.log('❌ No slug provided, redirecting to home');
     return <Navigate to="/" replace />;
   }
 
   const { data: school, isLoading, error } = useSchoolBySlug(slug);
+
+  console.log('📊 SchoolDetail - Query state:', { 
+    school: school?.name, 
+    isLoading, 
+    error: error?.message 
+  });
 
   // Use the same image integration system as SchoolCard - moved before conditional returns
   const { imageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school || {
@@ -75,6 +84,7 @@ const SchoolDetailContent = () => {
   });
 
   if (isLoading) {
+    console.log('⏳ Loading school data...');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -86,8 +96,11 @@ const SchoolDetailContent = () => {
   }
 
   if (error || !school) {
+    console.log('❌ Error or no school found, redirecting to home:', { error: error?.message, school: !!school });
     return <Navigate to="/" replace />;
   }
+
+  console.log('✅ School loaded successfully:', school.name);
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat(language === 'es' ? 'es-ES' : 'en-US').format(num);
@@ -119,7 +132,6 @@ const SchoolDetailContent = () => {
     }
   };
 
-  // Get school description based on current language
   const getSchoolDescription = () => {
     if (language === 'en' && school.description_en) {
       return school.description_en;
@@ -127,7 +139,6 @@ const SchoolDetailContent = () => {
     return school.description;
   };
 
-  // Updated programs data with translations
   const getSamplePrograms = () => {
     const programsMap: { [key: string]: string[] } = {
       '1': [
@@ -165,7 +176,6 @@ const SchoolDetailContent = () => {
     return programsMap[school.id] || [t('gastronomyDegree'), t('culinaryDesign'), t('classicFrench')];
   };
 
-  // Function to translate language names
   const translateLanguage = (lang: string) => {
     const langMap: { [key: string]: string } = {
       'Español': t('spanish'),
@@ -183,7 +193,6 @@ const SchoolDetailContent = () => {
     return langMap[lang] || lang;
   };
 
-  // Generate comprehensive structured data
   const schoolStructuredData = generateSchoolSchema(school);
   
   const breadcrumbStructuredData = generateBreadcrumbSchema([
@@ -199,7 +208,6 @@ const SchoolDetailContent = () => {
     { label: school.name }
   ];
 
-  // Enhanced SEO optimization
   const currentUrl = `/${language === 'es' ? 'escuela' : 'school'}/${slug}`;
   const fullUrl = `https://escuelasdecocina.com${currentUrl}`;
   const alternateUrls = [
@@ -269,7 +277,6 @@ const SchoolDetailContent = () => {
       
       <Header />
       
-      {/* Floating Social Share Component */}
       <FloatingSocialShare
         schoolName={school.name}
         description={school.description}
@@ -280,7 +287,6 @@ const SchoolDetailContent = () => {
         <div className="max-w-6xl mx-auto">
           <Breadcrumbs items={breadcrumbItems} />
           
-          {/* Hero Section with enhanced SEO structure */}
           <article className="mt-4 space-y-8">
             <header className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <div className="space-y-6">
@@ -308,14 +314,12 @@ const SchoolDetailContent = () => {
                   </div>
                 </div>
 
-                {/* Enhanced Description */}
                 <div className="prose prose-gray max-w-none">
                   <p className="text-muted-foreground text-lg leading-relaxed">
                     {schoolDescription}
                   </p>
                 </div>
 
-                {/* Contact Info with Schema markup considerations */}
                 <address className="space-y-3 not-italic">
                   <div className="flex items-center text-sm">
                     <MapPin className="w-4 h-4 mr-3 text-primary flex-shrink-0" />
@@ -356,7 +360,6 @@ const SchoolDetailContent = () => {
               </div>
 
               <div className="space-y-6">
-                {/* Main Image with integrated system - FIXED */}
                 <figure className="relative overflow-hidden rounded-lg h-80 bg-gradient-to-br from-primary/20 to-accent/20">
                   <img 
                     src={imageSource}
@@ -367,7 +370,6 @@ const SchoolDetailContent = () => {
                     onError={handleImageError}
                   />
                   
-                  {/* Country Flag - Top Left */}
                   <div className="absolute top-4 left-4">
                     <CountryFlag country={school.country} size="md" />
                   </div>
@@ -377,7 +379,6 @@ const SchoolDetailContent = () => {
                   </figcaption>
                 </figure>
 
-                {/* Quick Stats */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gradient-card rounded-lg p-4 text-center">
                     <Users className="w-8 h-8 text-primary mx-auto mb-2" />
@@ -398,17 +399,14 @@ const SchoolDetailContent = () => {
               </div>
             </header>
 
-            {/* Image Gallery Section */}
             <SchoolImageGallery
               schoolName={school.name}
               mainImage={imageSource}
               schoolId={school.id}
             />
 
-            {/* Statistics Section */}
             <SchoolStatistics school={school} />
 
-            {/* Updated Programs Section */}
             <section className="bg-gradient-card rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-4 flex items-center">
                 <GraduationCap className="w-5 h-5 mr-2 text-primary" />
@@ -433,9 +431,7 @@ const SchoolDetailContent = () => {
               </div>
             </section>
 
-            {/* Details Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Specialties */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
                   {t('specialties')}
@@ -449,7 +445,6 @@ const SchoolDetailContent = () => {
                 </div>
               </section>
 
-              {/* Languages */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
                   {t('instructionLanguages')}
@@ -464,7 +459,6 @@ const SchoolDetailContent = () => {
                 </div>
               </section>
 
-              {/* Tuition */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
                   {t('tuitionRange')}
@@ -480,7 +474,6 @@ const SchoolDetailContent = () => {
                 </div>
               </section>
 
-              {/* Accreditation */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
                   {t('accreditations')}
@@ -496,7 +489,6 @@ const SchoolDetailContent = () => {
               </section>
             </div>
 
-            {/* Features */}
             <section className="bg-gradient-card rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-4">
                 {t('featuredCharacteristics')}
@@ -511,13 +503,10 @@ const SchoolDetailContent = () => {
               </div>
             </section>
 
-            {/* Testimonials Section */}
             <SchoolTestimonials school={school} />
 
-            {/* Location Section */}
             <SchoolLocation school={school} />
 
-            {/* Action Buttons */}
             <footer className="flex flex-col sm:flex-row gap-4 mt-8 pt-8 border-t">
               <Button 
                 onClick={() => window.open(school.website, '_blank')}

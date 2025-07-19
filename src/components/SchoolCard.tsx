@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -25,8 +24,18 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
   };
 
   const handleViewDetails = () => {
-    const slug = generateSlug(school.name);
+    // Use the stored slug if available, otherwise generate one
+    const slug = school.slug || generateSlug(school.name);
+    console.log('🚀 Navigating to school:', {
+      schoolName: school.name,
+      schoolId: school.id,
+      storedSlug: school.slug,
+      generatedSlug: generateSlug(school.name),
+      finalSlug: slug
+    });
+    
     const route = language === 'es' ? `/escuela/${slug}` : `/school/${slug}`;
+    console.log('🗺️ Final route:', route);
     navigate(route);
   };
 
