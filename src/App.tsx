@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -35,8 +34,12 @@ const App = () => (
             <AuthProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/escuela/:slug" element={<SchoolDetail />} />
-            <Route path="/school/:slug" element={<SchoolDetail />} />
+            {/* Updated routes to use ID instead of slug */}
+            <Route path="/escuela/:id" element={<SchoolDetail />} />
+            <Route path="/school/:id" element={<SchoolDetail />} />
+            {/* Keep backward compatibility with slug routes */}
+            <Route path="/escuela/slug/:slug" element={<SchoolDetail />} />
+            <Route path="/school/slug/:slug" element={<SchoolDetail />} />
             
             {/* About Us routes */}
             <Route path="/sobre-nosotros" element={<AboutUs />} />

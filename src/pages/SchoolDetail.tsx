@@ -32,10 +32,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useStructuredData } from '@/hooks/useStructuredData';
 import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
-import { useSchoolBySlug } from '@/hooks/useSchoolBySlug';
+import { useSchoolById } from '@/hooks/useSchoolById';
 
 const SchoolDetailContent = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
   const { t, language } = useLanguage();
   const { generateSchoolSchema, generateBreadcrumbSchema } = useStructuredData();
 
@@ -44,14 +44,17 @@ const SchoolDetailContent = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  console.log('🎯 SchoolDetail - URL slug:', slug);
+  // Determine the identifier to use (id has priority over slug)
+  const identifier = id || slug;
+  
+  console.log('🎯 SchoolDetail - URL params:', { id, slug, identifier });
 
-  if (!slug) {
-    console.log('❌ No slug provided, redirecting to home');
+  if (!identifier) {
+    console.log('❌ No identifier provided, redirecting to home');
     return <Navigate to="/" replace />;
   }
 
-  const { data: school, isLoading, error } = useSchoolBySlug(slug);
+  const { data: school, isLoading, error } = useSchoolById(identifier);
 
   console.log('📊 SchoolDetail - Query state:', { 
     school: school?.name, 
@@ -208,12 +211,12 @@ const SchoolDetailContent = () => {
     { label: school.name }
   ];
 
-  const currentUrl = `/${language === 'es' ? 'escuela' : 'school'}/${slug}`;
+  const currentUrl = `/${language === 'es' ? 'escuela' : 'school'}/${identifier}`;
   const fullUrl = `https://escuelasdecocina.com${currentUrl}`;
   const alternateUrls = [
-    { lang: 'es', url: `https://escuelasdecocina.com/escuela/${slug}` },
-    { lang: 'en', url: `https://escuelasdecocina.com/school/${slug}` },
-    { lang: 'x-default', url: `https://escuelasdecocina.com/escuela/${slug}` }
+    { lang: 'es', url: `https://escuelasdecocina.com/escuela/${identifier}` },
+    { lang: 'en', url: `https://escuelasdecocina.com/school/${identifier}` },
+    { lang: 'x-default', url: `https://escuelasdecocina.com/escuela/${identifier}` }
   ];
 
   const seoTitle = language === 'es'

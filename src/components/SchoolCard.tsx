@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { MapPin, Calendar, Users, BookOpen, Star, ExternalLink } from 'lucide-react';
 import { School } from '@/types/school';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { generateSlug } from '@/utils/slugUtils';
 import { useNavigate } from 'react-router-dom';
 import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
 import { CountryFlag } from '@/components/CountryFlag';
@@ -24,17 +23,15 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
   };
 
   const handleViewDetails = () => {
-    // Use the stored slug if available, otherwise generate one
-    const slug = school.slug || generateSlug(school.name);
+    // Use the school ID directly for guaranteed navigation
+    const identifier = school.id;
     console.log('🚀 Navigating to school:', {
       schoolName: school.name,
       schoolId: school.id,
-      storedSlug: school.slug,
-      generatedSlug: generateSlug(school.name),
-      finalSlug: slug
+      identifier: identifier
     });
     
-    const route = language === 'es' ? `/escuela/${slug}` : `/school/${slug}`;
+    const route = language === 'es' ? `/escuela/${identifier}` : `/school/${identifier}`;
     console.log('🗺️ Final route:', route);
     navigate(route);
   };
