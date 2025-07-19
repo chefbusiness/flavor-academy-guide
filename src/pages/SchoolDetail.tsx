@@ -50,6 +50,30 @@ const SchoolDetailContent = () => {
 
   const { data: school, isLoading, error } = useSchoolBySlug(slug);
 
+  // Use the same image integration system as SchoolCard - moved before conditional returns
+  const { imageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school || {
+    id: '',
+    name: '',
+    description: '',
+    country: '',
+    city: '',
+    address: '',
+    website: '',
+    email: '',
+    phone: '',
+    type: 'academy' as const,
+    specialties: [],
+    founded: 0,
+    studentsCount: 0,
+    programsCount: 0,
+    image: '',
+    rating: 0,
+    tuitionRange: { min: 0, max: 0, currency: 'EUR' },
+    languages: [],
+    accreditation: [],
+    features: []
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -64,9 +88,6 @@ const SchoolDetailContent = () => {
   if (error || !school) {
     return <Navigate to="/" replace />;
   }
-
-  // Use the same image integration system as SchoolCard
-  const { imageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school);
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat(language === 'es' ? 'es-ES' : 'en-US').format(num);
