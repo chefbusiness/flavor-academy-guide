@@ -124,18 +124,60 @@ const SchoolDetailContent = () => {
     return school.description;
   };
 
-  // Sample programs data - will be replaced with real data from CSV
+  // Updated programs data with translations
   const getSamplePrograms = () => {
     const programsMap: { [key: string]: string[] } = {
-      '1': ['Grado en Gastronomía', 'Máster en Innovación Culinaria', 'Especialización en Cocina Vasca'],
-      '2': ['Diseño Culinario', 'Arte y Gastronomía', 'Técnicas Avanzadas de Pastelería'],
-      '3': ['Cocina Tradicional Mexicana', 'Técnicas de Vanguardia', 'Gestión de Restaurantes'],
-      '4': ['Cocina Italiana Auténtica', 'Pasta y Risotto Profesional', 'Enología y Maridaje'],
-      '5': ['Cocina Francesa Clásica', 'Gestión Hotelera', 'Emprendimiento Gastronómico'],
-      '6': ['Grand Diplôme', 'Pâtisserie Avancée', 'Cuisine Professionnelle']
+      '1': [
+        t('gastronomyDegree'),
+        t('culinaryInnovationMaster'),
+        t('basqueSpecialization')
+      ],
+      '2': [
+        t('culinaryDesign'),
+        t('artAndGastronomy'),
+        t('advancedPastry')
+      ],
+      '3': [
+        t('traditionalMexican'),
+        t('vanguardTechniques'),
+        t('restaurantManagement')
+      ],
+      '4': [
+        t('authenticItalian'),
+        t('professionalPasta'),
+        t('wineAndPairing')
+      ],
+      '5': [
+        t('classicFrench'),
+        t('hotelManagementCourse'),
+        t('gastronomicEntrepreneurship')
+      ],
+      '6': [
+        t('grandDiplome'),
+        t('advancedPatisserie'),
+        t('professionalCuisine')
+      ]
     };
     
-    return programsMap[school.id] || ['Programa Principal', 'Especialización Avanzada', 'Certificación Profesional'];
+    return programsMap[school.id] || [t('gastronomyDegree'), t('culinaryDesign'), t('classicFrench')];
+  };
+
+  // Function to translate language names
+  const translateLanguage = (lang: string) => {
+    const langMap: { [key: string]: string } = {
+      'Español': t('spanish'),
+      'English': t('english'),
+      'Français': t('french'),
+      'Italiano': t('italian'),
+      'Euskera': t('basque'),
+      'Catalán': t('catalan'),
+      'Spanish': t('spanish'),
+      'French': t('french'),
+      'Italian': t('italian'),
+      'Basque': t('basque'),
+      'Catalan': t('catalan')
+    };
+    return langMap[lang] || lang;
   };
 
   // Generate comprehensive structured data
@@ -257,7 +299,7 @@ const SchoolDetailContent = () => {
                       <Star className="w-5 h-5 text-amber-500 fill-current" />
                       <span className="font-medium">{school.rating}</span>
                       <span className="text-sm text-muted-foreground">
-                        ({formatNumber(Math.floor(school.studentsCount / 10))} {language === 'es' ? 'reseñas' : 'reviews'})
+                        ({formatNumber(Math.floor(school.studentsCount / 10))} {t('reviews')})
                       </span>
                     </div>
                   </div>
@@ -363,11 +405,11 @@ const SchoolDetailContent = () => {
             {/* Statistics Section */}
             <SchoolStatistics school={school} />
 
-            {/* New Programs Section */}
+            {/* Updated Programs Section */}
             <section className="bg-gradient-card rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-4 flex items-center">
                 <GraduationCap className="w-5 h-5 mr-2 text-primary" />
-                {language === 'es' ? 'Programas Destacados' : 'Featured Programs'}
+                {t('featuredPrograms')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {getSamplePrograms().map((program, index) => (
@@ -379,7 +421,7 @@ const SchoolDetailContent = () => {
                       <div>
                         <h4 className="font-medium text-sm mb-1">{program}</h4>
                         <p className="text-xs text-muted-foreground">
-                          {language === 'es' ? 'Programa certificado' : 'Certified program'}
+                          {t('certifiedProgram')}
                         </p>
                       </div>
                     </div>
@@ -393,7 +435,7 @@ const SchoolDetailContent = () => {
               {/* Specialties */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
-                  {language === 'es' ? 'Especialidades' : 'Specialties'}
+                  {t('specialties')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {school.specialties.map((specialty) => (
@@ -407,13 +449,13 @@ const SchoolDetailContent = () => {
               {/* Languages */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
-                  {language === 'es' ? 'Idiomas de Instrucción' : 'Languages of Instruction'}
+                  {t('instructionLanguages')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {school.languages.map((lang) => (
                     <Badge key={lang} variant="secondary">
                       <Globe className="w-3 h-3 mr-1" />
-                      {lang}
+                      {translateLanguage(lang)}
                     </Badge>
                   ))}
                 </div>
@@ -422,7 +464,7 @@ const SchoolDetailContent = () => {
               {/* Tuition */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
-                  {language === 'es' ? 'Rango de Matrícula' : 'Tuition Range'}
+                  {t('tuitionRange')}
                 </h3>
                 <div className="flex items-center space-x-2 text-lg">
                   <DollarSign className="w-5 h-5 text-primary" />
@@ -430,7 +472,7 @@ const SchoolDetailContent = () => {
                     {formatCurrency(school.tuitionRange.min, school.tuitionRange.currency)} - {formatCurrency(school.tuitionRange.max, school.tuitionRange.currency)}
                   </span>
                   <span className="text-sm text-muted-foreground">
-                    {language === 'es' ? 'por año' : 'per year'}
+                    {t('perYear')}
                   </span>
                 </div>
               </section>
@@ -438,7 +480,7 @@ const SchoolDetailContent = () => {
               {/* Accreditation */}
               <section className="bg-gradient-card rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">
-                  {language === 'es' ? 'Acreditaciones' : 'Accreditations'}
+                  {t('accreditations')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {school.accreditation.map((accred) => (
@@ -454,7 +496,7 @@ const SchoolDetailContent = () => {
             {/* Features */}
             <section className="bg-gradient-card rounded-lg p-6">
               <h3 className="text-xl font-semibold mb-4">
-                {language === 'es' ? 'Características Destacadas' : 'Featured Characteristics'}
+                {t('featuredCharacteristics')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {school.features.map((feature) => (
@@ -480,7 +522,7 @@ const SchoolDetailContent = () => {
                 size="lg"
               >
                 <ExternalLink className="w-5 h-5 mr-2" />
-                {language === 'es' ? 'Visitar Sitio Web Oficial' : 'Visit Official Website'}
+                {t('visitOfficialWebsite')}
               </Button>
               <Button 
                 variant="outline"
@@ -488,7 +530,7 @@ const SchoolDetailContent = () => {
                 size="lg"
               >
                 <Mail className="w-5 h-5 mr-2" />
-                {language === 'es' ? 'Contactar Directamente' : 'Contact Directly'}
+                {t('contactDirectly')}
               </Button>
             </footer>
           </article>

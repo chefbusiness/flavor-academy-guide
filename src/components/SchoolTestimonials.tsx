@@ -21,7 +21,7 @@ interface SchoolTestimonialsProps {
 }
 
 export const SchoolTestimonials: React.FC<SchoolTestimonialsProps> = ({ school }) => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,7 +125,7 @@ export const SchoolTestimonials: React.FC<SchoolTestimonialsProps> = ({ school }
     return (
       <section className="space-y-6">
         <h3 className="text-xl font-semibold">
-          {language === 'es' ? 'Opiniones de la Comunidad' : 'Community Reviews'}
+          {t('communityReviews')}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
@@ -145,7 +145,7 @@ export const SchoolTestimonials: React.FC<SchoolTestimonialsProps> = ({ school }
     <section className="space-y-6">
       <h3 className="text-xl font-semibold flex items-center">
         <Quote className="w-5 h-5 mr-2 text-primary" />
-        {language === 'es' ? 'Opiniones de la Comunidad' : 'Community Reviews'}
+        {t('communityReviews')}
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

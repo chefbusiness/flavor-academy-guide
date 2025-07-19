@@ -9,7 +9,7 @@ interface LocationInfoProps {
 }
 
 export const LocationInfo: React.FC<LocationInfoProps> = ({ school }) => {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="space-y-4">
@@ -19,10 +19,10 @@ export const LocationInfo: React.FC<LocationInfoProps> = ({ school }) => {
           <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
           <div>
             <p className="font-medium text-sm mb-1">
-              {language === 'es' ? 'Dirección:' : 'Address:'}
+              {t('address')}:
             </p>
             <p className="text-sm text-gray-700">{school.address}</p>
-            <p className="text-sm text-gray-700">{school.city}, {school.country}</p>
+            <p className="text-sm text-gray-700">{school.city}, {t(school.country)}</p>
           </div>
         </div>
       </div>
@@ -33,13 +33,10 @@ export const LocationInfo: React.FC<LocationInfoProps> = ({ school }) => {
           <Train className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
           <div>
             <h4 className="font-medium text-sm mb-1">
-              {language === 'es' ? 'Transporte Público' : 'Public Transport'}
+              {t('publicTransport')}
             </h4>
             <p className="text-sm text-gray-600">
-              {language === 'es' 
-                ? 'Accesible mediante metro, autobús y tranvía. Estaciones cercanas a 5-10 minutos a pie.'
-                : 'Accessible by metro, bus and tram. Nearby stations 5-10 minutes walk.'
-              }
+              {t('publicTransportInfo')}
             </p>
           </div>
         </div>
@@ -48,13 +45,10 @@ export const LocationInfo: React.FC<LocationInfoProps> = ({ school }) => {
           <Car className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
           <div>
             <h4 className="font-medium text-sm mb-1">
-              {language === 'es' ? 'En Vehículo Privado' : 'By Private Vehicle'}
+              {t('privateVehicle')}
             </h4>
             <p className="text-sm text-gray-600">
-              {language === 'es' 
-                ? 'Parking disponible en las cercanías. Fácil acceso desde las principales vías de la ciudad.'
-                : 'Parking available nearby. Easy access from main city roads.'
-              }
+              {t('privateVehicleInfo')}
             </p>
           </div>
         </div>
@@ -63,13 +57,10 @@ export const LocationInfo: React.FC<LocationInfoProps> = ({ school }) => {
           <Navigation className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
           <div>
             <h4 className="font-medium text-sm mb-1">
-              {language === 'es' ? 'Información Adicional' : 'Additional Information'}
+              {t('additionalInfo')}
             </h4>
             <p className="text-sm text-gray-600">
-              {language === 'es' 
-                ? 'Centro accesible para personas con movilidad reducida. Zona segura y bien iluminada.'
-                : 'Center accessible for people with reduced mobility. Safe and well-lit area.'
-              }
+              {t('additionalInfoText')}
             </p>
           </div>
         </div>

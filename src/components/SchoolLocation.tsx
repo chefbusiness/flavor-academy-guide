@@ -12,13 +12,13 @@ interface SchoolLocationProps {
 }
 
 export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <section className="space-y-6">
       <h3 className="text-xl font-semibold flex items-center">
         <MapPin className="w-5 h-5 mr-2 text-primary" />
-        {language === 'es' ? 'Ubicación y Acceso' : 'Location & Access'}
+        {t('locationAndAccess')}
       </h3>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -26,7 +26,7 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
-              {language === 'es' ? 'Mapa de Ubicación' : 'Location Map'}
+              {t('locationMap')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -38,7 +38,7 @@ export const SchoolLocation: React.FC<SchoolLocationProps> = ({ school }) => {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">
-              {language === 'es' ? 'Cómo Llegar' : 'How to Get There'}
+              {t('howToGetThere')}
             </CardTitle>
           </CardHeader>
           <CardContent>

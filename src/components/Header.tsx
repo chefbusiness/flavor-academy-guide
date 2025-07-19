@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminRole } from '@/hooks/useAdminRole';
@@ -8,69 +8,54 @@ import { Globe, Menu, X, ChefHat, Settings, LogOut, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export const Header = () => {
-  const { language, toggleLanguage } = useLanguage();
-  const { signOut } = useAuth();
-  const { isAuthenticated, isAdmin } = useAdminRole();
+  const { language, toggleLanguage, t } = useLanguage();
+  const { user, signOut } = useAuth();
+  const { isAdmin } = useAdminRole();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  
+  const isAuthenticated = !!user;
 
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.includes(path);
-  };
-
-  const navigationItems = [
-    {
-      label: language === 'es' ? 'Inicio' : 'Home',
-      href: '/',
-      key: 'home'
-    },
-    {
-      label: language === 'es' ? 'Directorio' : 'Directory',
-      href: '/#directory',
-      key: 'directory'
-    },
-    {
-      label: language === 'es' ? 'Sobre Nosotros' : 'About Us',
-      href: language === 'es' ? '/sobre-nosotros' : '/about-us',
-      key: 'about'
-    },
-    {
-      label: language === 'es' ? 'Contacto' : 'Contact',
-      href: language === 'es' ? '/contacto' : '/contact',
-      key: 'contact'
-    }
+  const navItems = [
+    { key: 'home', href: '/' },
+    { key: 'directory', href: '/' },
+    { key: 'about', href: '/about' },
+    { key: 'contact', href: '/contact' }
   ];
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-hero rounded-full flex items-center justify-center">
-              <ChefHat className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-bold text-foreground text-lg">
-              {language === 'es' ? 'Escuelas de Cocina' : 'Culinary Schools'}
+            <ChefHat className="h-8 w-8 text-primary" />
+            <span className="text-xl font-bold text-gradient">
+              Escuelas de Cocina
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navigationItems.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.key}
                 to={item.href}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(item.href.replace('/#', '/'))
+                  location.pathname === item.href
                     ? 'text-primary'
                     : 'text-muted-foreground'
                 }`}
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             ))}
           </nav>
@@ -81,45 +66,46 @@ export const Header = () => {
             {isAuthenticated && isAdmin && (
               <Link to="/admin">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="hidden md:flex items-center space-x-1"
                 >
                   <Settings className="h-4 w-4" />
-                  <span className="text-sm">Panel Admin</span>
+                  <span className="text-sm">{t('adminPanel')}</span>
                 </Button>
               </Link>
             )}
-            
-            {/* Auth Buttons */}
+
+            {/* Logout for authenticated users or Login for non-authenticated */}
             {isAuthenticated ? (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                onClick={signOut}
+                onClick={handleSignOut}
                 className="hidden md:flex items-center space-x-1"
               >
                 <LogOut className="h-4 w-4" />
-                <span className="text-sm">Cerrar Sesión</span>
+                <span className="text-sm">{t('logout')}</span>
               </Button>
             ) : (
               <Link to="/auth">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   className="hidden md:flex items-center space-x-1"
                 >
                   <User className="h-4 w-4" />
-                  <span className="text-sm">Iniciar Sesión</span>
+                  <span className="text-sm">{t('login')}</span>
                 </Button>
               </Link>
             )}
-            
+
+            {/* Language Toggle */}
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleLanguage}
-              className="hidden sm:flex items-center space-x-1"
+              className="hidden md:flex items-center space-x-1"
             >
               <Globe className="h-4 w-4" />
               <span className="text-sm">{language.toUpperCase()}</span>
@@ -141,35 +127,33 @@ export const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background">
-            <nav className="py-4 space-y-4">
-              {navigationItems.map((item) => (
+          <div className="md:hidden border-t bg-background/95 backdrop-blur">
+            <nav className="flex flex-col space-y-4 py-4">
+              {navItems.map((item) => (
                 <Link
                   key={item.key}
                   to={item.href}
-                  className={`block text-sm font-medium transition-colors hover:text-primary ${
-                    isActive(item.href.replace('/#', '/'))
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === item.href
                       ? 'text-primary'
                       : 'text-muted-foreground'
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.label}
+                  {t(item.key)}
                 </Link>
               ))}
               
+              {/* Mobile Language Toggle */}
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => {
-                  toggleLanguage();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="flex items-center space-x-1 mt-4"
+                onClick={toggleLanguage}
+                className="justify-start px-0"
               >
-                <Globe className="h-4 w-4" />
+                <Globe className="h-4 w-4 mr-2" />
                 <span className="text-sm">{language.toUpperCase()}</span>
               </Button>
               
@@ -180,20 +164,20 @@ export const Header = () => {
                   className="block text-sm font-medium text-muted-foreground hover:text-primary"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Panel Admin
+                  {t('adminPanel')}
                 </Link>
               )}
-              
-              {/* Mobile Auth */}
+
+              {/* Mobile Auth Controls */}
               {isAuthenticated ? (
                 <button
                   onClick={() => {
-                    signOut();
+                    handleSignOut();
                     setIsMobileMenuOpen(false);
                   }}
                   className="block text-sm font-medium text-muted-foreground hover:text-primary text-left"
                 >
-                  Cerrar Sesión
+                  {t('logout')}
                 </button>
               ) : (
                 <Link
@@ -201,7 +185,7 @@ export const Header = () => {
                   className="block text-sm font-medium text-muted-foreground hover:text-primary"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Iniciar Sesión
+                  {t('login')}
                 </Link>
               )}
             </nav>
