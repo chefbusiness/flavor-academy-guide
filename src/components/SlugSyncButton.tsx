@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { generateSlug } from '@/utils/slugUtils';
 import { useToast } from '@/hooks/use-toast';
-import { Sync, Loader2 } from 'lucide-react';
+import { RefreshCw, Loader2 } from 'lucide-react';
 
 export const SlugSyncButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -97,7 +97,7 @@ export const SlugSyncButton = () => {
       {isLoading ? (
         <Loader2 className="w-4 h-4 animate-spin" />
       ) : (
-        <Sync className="w-4 h-4" />
+        <RefreshCw className="w-4 h-4" />
       )}
       {isLoading ? 'Syncing Slugs...' : 'Sync School Slugs'}
     </Button>

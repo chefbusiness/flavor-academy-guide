@@ -20,12 +20,12 @@ import {
   Settings, 
   BarChart3,
   Globe,
-  Sync
+  RefreshCw
 } from 'lucide-react';
 
 const Admin = () => {
   const { user } = useAuth();
-  const { isAdmin, isLoading: roleLoading } = useAdminRole();
+  const { isAdmin, loading: roleLoading } = useAdminRole();
   const [stats, setStats] = useState({
     totalSchools: 0,
     activeSchools: 0,
