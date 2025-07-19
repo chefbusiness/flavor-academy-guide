@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
 import { CountryFlag } from '@/components/CountryFlag';
+import { generateSlug } from '@/utils/slugUtils';
 
 interface SchoolCardProps {
   school: School;
@@ -27,17 +27,16 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
     console.log('🚀 [SchoolCard] Navigation triggered for school:', {
       schoolName: school.name,
       schoolId: school.id,
-      schoolIdType: typeof school.id,
-      schoolIdLength: school.id?.length,
+      schoolSlug: school.slug,
       language: language
     });
     
-    // Use the school ID directly - this should always work
-    const identifier = school.id;
-    const route = language === 'es' ? `/escuela/${identifier}` : `/school/${identifier}`;
+    // Use slug if available, otherwise generate from name
+    const slug = school.slug || generateSlug(school.name);
+    const route = language === 'es' ? `/escuela/${slug}` : `/school/${slug}`;
     
     console.log('🗺️ [SchoolCard] Navigating to route:', route);
-    console.log('🔍 [SchoolCard] Using identifier:', identifier);
+    console.log('🔍 [SchoolCard] Using slug:', slug);
     
     navigate(route);
   };

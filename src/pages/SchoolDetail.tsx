@@ -32,10 +32,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useStructuredData } from '@/hooks/useStructuredData';
 import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
+import { useSchoolBySlug } from '@/hooks/useSchoolBySlug';
 import { useSchoolById } from '@/hooks/useSchoolById';
+import { generateSlug } from '@/utils/slugUtils';
 
 const SchoolDetailContent = () => {
-  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  const { slug, id } = useParams<{ slug?: string; id?: string }>();
   const { t, language } = useLanguage();
   const { generateSchoolSchema, generateBreadcrumbSchema } = useStructuredData();
 
@@ -44,13 +46,15 @@ const SchoolDetailContent = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Determine the identifier to use (id has priority over slug)
-  const identifier = id || slug;
+  // Determine if we're using slug or ID route
+  const isIdRoute = window.location.pathname.includes('/id/');
+  const identifier = slug || id;
   
   console.log('🎯 [SchoolDetail] Component loaded with params:', { 
-    id, 
     slug, 
+    id, 
     identifier,
+    isIdRoute,
     currentUrl: window.location.href
   });
 
@@ -59,14 +63,20 @@ const SchoolDetailContent = () => {
     return <Navigate to="/" replace />;
   }
 
-  const { data: school, isLoading, error } = useSchoolById(identifier);
+  // Use appropriate hook based on route type
+  const slugQuery = useSchoolBySlug(identifier);
+  const idQuery = useSchoolById(identifier);
+  
+  // Choose which query to use based on route type
+  const { data: school, isLoading, error } = isIdRoute ? idQuery : slugQuery;
 
   console.log('📊 [SchoolDetail] Query state:', { 
     schoolFound: !!school,
     schoolName: school?.name, 
     isLoading, 
     error: error?.message,
-    identifier: identifier
+    identifier: identifier,
+    isIdRoute
   });
 
   // Use the same image integration system as SchoolCard
@@ -259,12 +269,14 @@ const SchoolDetailContent = () => {
     { label: school.name }
   ];
 
-  const currentUrl = `/${language === 'es' ? 'escuela' : 'school'}/${identifier}`;
+  // Generate SEO-friendly URL using slug
+  const schoolSlug = school.slug || generateSlug(school.name);
+  const currentUrl = `/${language === 'es' ? 'escuela' : 'school'}/${schoolSlug}`;
   const fullUrl = `https://escuelasdecocina.com${currentUrl}`;
   const alternateUrls = [
-    { lang: 'es', url: `https://escuelasdecocina.com/escuela/${identifier}` },
-    { lang: 'en', url: `https://escuelasdecocina.com/school/${identifier}` },
-    { lang: 'x-default', url: `https://escuelasdecocina.com/escuela/${identifier}` }
+    { lang: 'es', url: `https://escuelasdecocina.com/escuela/${schoolSlug}` },
+    { lang: 'en', url: `https://escuelasdecocina.com/school/${schoolSlug}` },
+    { lang: 'x-default', url: `https://escuelasdecocina.com/escuela/${schoolSlug}` }
   ];
 
   const seoTitle = language === 'es'
