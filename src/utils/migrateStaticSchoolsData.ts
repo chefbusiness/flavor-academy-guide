@@ -2,6 +2,43 @@ import { supabase } from '@/integrations/supabase/client';
 import { schools } from '@/data/schools';
 import { generateSlug } from '@/utils/slugUtils';
 
+// Función para generar descripción enriquecida de 400-500 caracteres
+const generateEnhancedDescription = (school: any): string => {
+  const baseDesc = school.description;
+  const specialtiesMap: { [key: string]: string } = {
+    'culinaryArts': 'artes culinarias',
+    'pastry': 'pastelería',
+    'wineGastronomy': 'enología y gastronomía',
+    'hospitality': 'hostelería y gestión hotelera',
+    'nutrition': 'nutrición culinaria',
+    'molecular': 'cocina molecular',
+    'traditional': 'cocina tradicional',
+    'international': 'cocina internacional'
+  };
+  
+  const specialtiesText = school.specialties
+    .map((s: string) => specialtiesMap[s] || s)
+    .join(', ');
+    
+  const foundedText = `Fundada en ${school.founded}, esta prestigiosa institución`;
+  
+  const methodologyText = 'combina técnicas tradicionales con innovación culinaria moderna, ofreciendo una formación integral que prepara a los estudiantes para destacar en la industria gastronómica internacional.';
+  
+  const facilitiesText = `Con más de ${school.studentsCount.toLocaleString()} estudiantes y ${school.programsCount} programas especializados, cuenta con instalaciones de última generación y un equipo docente de reconocidos profesionales del sector.`;
+  
+  const specialtyText = `Especializada en ${specialtiesText}, ofrece una experiencia educativa única que combina teoría y práctica en un entorno de excelencia académica.`;
+  
+  // Construir descripción enriquecida de ~400-500 caracteres
+  const enhancedDescription = `${foundedText} ${methodologyText} ${facilitiesText} ${specialtyText}`;
+  
+  // Si es muy larga, usar versión más corta
+  if (enhancedDescription.length > 500) {
+    return `${foundedText} ${methodologyText} ${facilitiesText}`;
+  }
+  
+  return enhancedDescription;
+};
+
 export const migrateStaticSchoolsData = async () => {
   console.log('🚀 Iniciando migración de datos estáticos a Supabase...');
   
@@ -12,7 +49,7 @@ export const migrateStaticSchoolsData = async () => {
       // Preparar los datos para Supabase
       const schoolData = {
         name: school.name,
-        description: school.description,
+        description: generateEnhancedDescription(school),
         country: school.country,
         city: school.city,
         address: school.address,

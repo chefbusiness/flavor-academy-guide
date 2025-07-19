@@ -10,11 +10,11 @@ export const MigrateStaticDataButton = () => {
   const handleMigration = async () => {
     try {
       setIsMigrating(true);
-      toast.info('Iniciando migración de datos estáticos...');
+      toast.info('Generando descripciones enriquecidas para SEO...');
       
       await runMigrationIfAdmin();
       
-      toast.success('¡Migración completada exitosamente!');
+      toast.success('¡Descripciones enriquecidas generadas exitosamente!');
       
       // Refresh the page to see updated data
       setTimeout(() => {
@@ -33,15 +33,16 @@ export const MigrateStaticDataButton = () => {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="secondary" disabled={isMigrating}>
-          {isMigrating ? 'Migrando...' : 'Migrar Datos Estáticos'}
+          {isMigrating ? 'Enriqueciendo...' : 'Enriquecer Descripciones'}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Migrar Datos Estáticos a Base de Datos</AlertDialogTitle>
+          <AlertDialogTitle>Enriquecer Descripciones de Escuelas</AlertDialogTitle>
           <AlertDialogDescription>
-            Esta acción migrará todos los datos del archivo estático (schools.ts) a la base de datos de Supabase.
-            Los datos existentes se actualizarán con la información más completa del archivo estático.
+            Esta acción generará descripciones enriquecidas de 400-500 caracteres para todas las escuelas,
+            optimizadas para SEO. Las descripciones incluirán información sobre fundación, metodología, 
+            instalaciones y especialidades.
             
             <br /><br />
             
@@ -51,7 +52,7 @@ export const MigrateStaticDataButton = () => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction onClick={handleMigration} disabled={isMigrating}>
-            {isMigrating ? 'Migrando...' : 'Migrar Datos'}
+            {isMigrating ? 'Enriqueciendo...' : 'Enriquecer Descripciones'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
