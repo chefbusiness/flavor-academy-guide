@@ -4,7 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { Button } from '@/components/ui/button';
-import { Globe, Menu, X, ChefHat, Settings, LogOut } from 'lucide-react';
+import { Globe, Menu, X, ChefHat, Settings, LogOut, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export const Header = () => {
@@ -75,9 +75,9 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* Admin Access & Language Toggle & Mobile Menu */}
+          {/* Auth Controls & Language Toggle & Mobile Menu */}
           <div className="flex items-center space-x-4">
-            {/* Admin Panel Access */}
+            {/* Admin Panel Access - Only for authenticated admins */}
             {isAuthenticated && isAdmin && (
               <Link to="/admin">
                 <Button
@@ -86,7 +86,7 @@ export const Header = () => {
                   className="hidden md:flex items-center space-x-1"
                 >
                   <Settings className="h-4 w-4" />
-                  <span className="text-sm">Admin</span>
+                  <span className="text-sm">Panel Admin</span>
                 </Button>
               </Link>
             )}
@@ -100,7 +100,7 @@ export const Header = () => {
                 className="hidden md:flex items-center space-x-1"
               >
                 <LogOut className="h-4 w-4" />
-                <span className="text-sm">Salir</span>
+                <span className="text-sm">Cerrar Sesión</span>
               </Button>
             ) : (
               <Link to="/auth">
@@ -109,8 +109,8 @@ export const Header = () => {
                   size="sm"
                   className="hidden md:flex items-center space-x-1"
                 >
-                  <Settings className="h-4 w-4" />
-                  <span className="text-sm">Admin</span>
+                  <User className="h-4 w-4" />
+                  <span className="text-sm">Iniciar Sesión</span>
                 </Button>
               </Link>
             )}
@@ -173,7 +173,7 @@ export const Header = () => {
                 <span className="text-sm">{language.toUpperCase()}</span>
               </Button>
               
-              {/* Mobile Admin Access */}
+              {/* Mobile Admin Access - Only for authenticated admins */}
               {isAuthenticated && isAdmin && (
                 <Link
                   to="/admin"
@@ -201,7 +201,7 @@ export const Header = () => {
                   className="block text-sm font-medium text-muted-foreground hover:text-primary"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Acceso Admin
+                  Iniciar Sesión
                 </Link>
               )}
             </nav>
