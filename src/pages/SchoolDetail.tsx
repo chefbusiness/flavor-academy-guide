@@ -47,22 +47,29 @@ const SchoolDetailContent = () => {
   // Determine the identifier to use (id has priority over slug)
   const identifier = id || slug;
   
-  console.log('🎯 SchoolDetail - URL params:', { id, slug, identifier });
+  console.log('🎯 [SchoolDetail] Component loaded with params:', { 
+    id, 
+    slug, 
+    identifier,
+    currentUrl: window.location.href
+  });
 
   if (!identifier) {
-    console.log('❌ No identifier provided, redirecting to home');
+    console.log('❌ [SchoolDetail] No identifier provided, redirecting to home');
     return <Navigate to="/" replace />;
   }
 
   const { data: school, isLoading, error } = useSchoolById(identifier);
 
-  console.log('📊 SchoolDetail - Query state:', { 
-    school: school?.name, 
+  console.log('📊 [SchoolDetail] Query state:', { 
+    schoolFound: !!school,
+    schoolName: school?.name, 
     isLoading, 
-    error: error?.message 
+    error: error?.message,
+    identifier: identifier
   });
 
-  // Use the same image integration system as SchoolCard - moved before conditional returns
+  // Use the same image integration system as SchoolCard
   const { imageSource, getFallbackImageSource, altText } = useSchoolImageIntegration(school || {
     id: '',
     name: '',
@@ -87,23 +94,64 @@ const SchoolDetailContent = () => {
   });
 
   if (isLoading) {
-    console.log('⏳ Loading school data...');
+    console.log('⏳ [SchoolDetail] Loading school data...');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">{t('loading')}...</p>
+          <p className="text-xs text-muted-foreground mt-2">
+            Buscando escuela con identificador: {identifier}
+          </p>
         </div>
       </div>
     );
   }
 
-  if (error || !school) {
-    console.log('❌ Error or no school found, redirecting to home:', { error: error?.message, school: !!school });
-    return <Navigate to="/" replace />;
+  if (error) {
+    console.error('❌ [SchoolDetail] Error occurred:', error);
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+          <p className="text-muted-foreground mb-4">
+            Ha ocurrido un error al cargar la escuela.
+          </p>
+          <p className="text-xs text-muted-foreground mb-4">
+            Identificador buscado: {identifier}
+          </p>
+          <p className="text-xs text-muted-foreground mb-4">
+            Error: {error.message}
+          </p>
+          <Button onClick={() => window.location.href = '/'}>
+            Volver al inicio
+          </Button>
+        </div>
+      </div>
+    );
   }
 
-  console.log('✅ School loaded successfully:', school.name);
+  if (!school) {
+    console.log('❌ [SchoolDetail] No school found for identifier:', identifier);
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <h1 className="text-2xl font-bold text-yellow-600 mb-4">Escuela no encontrada</h1>
+          <p className="text-muted-foreground mb-4">
+            No se pudo encontrar la escuela solicitada.
+          </p>
+          <p className="text-xs text-muted-foreground mb-4">
+            Identificador buscado: {identifier}
+          </p>
+          <Button onClick={() => window.location.href = '/'}>
+            Volver al directorio
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  console.log('✅ [SchoolDetail] School loaded successfully:', school.name);
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat(language === 'es' ? 'es-ES' : 'en-US').format(num);

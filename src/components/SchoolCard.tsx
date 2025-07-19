@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,16 +24,21 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
   };
 
   const handleViewDetails = () => {
-    // Use the school ID directly for guaranteed navigation
-    const identifier = school.id;
-    console.log('🚀 Navigating to school:', {
+    console.log('🚀 [SchoolCard] Navigation triggered for school:', {
       schoolName: school.name,
       schoolId: school.id,
-      identifier: identifier
+      schoolIdType: typeof school.id,
+      schoolIdLength: school.id?.length,
+      language: language
     });
     
+    // Use the school ID directly - this should always work
+    const identifier = school.id;
     const route = language === 'es' ? `/escuela/${identifier}` : `/school/${identifier}`;
-    console.log('🗺️ Final route:', route);
+    
+    console.log('🗺️ [SchoolCard] Navigating to route:', route);
+    console.log('🔍 [SchoolCard] Using identifier:', identifier);
+    
     navigate(route);
   };
 
