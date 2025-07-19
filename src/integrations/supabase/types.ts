@@ -92,6 +92,7 @@ export type Database = {
           country: string
           created_at: string
           description: string
+          description_en: string | null
           email: string
           features: Json
           founded: number
@@ -125,6 +126,7 @@ export type Database = {
           country: string
           created_at?: string
           description: string
+          description_en?: string | null
           email: string
           features?: Json
           founded: number
@@ -158,6 +160,7 @@ export type Database = {
           country?: string
           created_at?: string
           description?: string
+          description_en?: string | null
           email?: string
           features?: Json
           founded?: number

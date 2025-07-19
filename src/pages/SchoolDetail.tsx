@@ -119,8 +119,11 @@ const SchoolDetailContent = () => {
     }
   };
 
-  // Usar la descripción directamente de la base de datos
+  // Get school description based on current language
   const getSchoolDescription = () => {
+    if (language === 'en' && school.description_en) {
+      return school.description_en;
+    }
     return school.description;
   };
 

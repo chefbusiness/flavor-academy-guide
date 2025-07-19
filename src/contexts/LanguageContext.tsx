@@ -133,7 +133,7 @@ const translations = {
     // Stats
     totalSchools: 'escuelas registradas',
     countries: 'países',
-    specialties: 'especialidades',
+    specialtiesCount: 'especialidades',
 
     // FAQ
     faqTitle: 'Preguntas Frecuentes',
@@ -275,7 +275,7 @@ const translations = {
     // Stats
     totalSchools: 'registered schools',
     countries: 'countries',
-    specialties: 'specialties',
+    specialtiesCount: 'specialties',
 
     // FAQ
     faqTitle: 'Frequently Asked Questions',

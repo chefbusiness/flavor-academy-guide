@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { useAdminRole } from '@/hooks/useAdminRole';
 import { useSchools } from '@/hooks/useSchoolsDatabase';
+import { GenerateEnglishDescriptionsButton } from '@/components/GenerateEnglishDescriptionsButton';
 import { School, Settings, BarChart3, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -96,6 +97,11 @@ export default function Admin() {
                       Crear Nueva Escuela
                     </Button>
                   </Link>
+                </div>
+                <div className="mt-4 pt-4 border-t">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <GenerateEnglishDescriptionsButton />
+                  </div>
                 </div>
               </CardContent>
             </Card>

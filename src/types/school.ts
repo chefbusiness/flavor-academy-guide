@@ -3,6 +3,7 @@ export interface School {
   id: string;
   name: string;
   description: string;
+  description_en?: string;
   country: string;
   city: string;
   address: string;
