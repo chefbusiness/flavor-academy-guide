@@ -85,6 +85,7 @@ export type Database = {
       schools: {
         Row: {
           accreditation: Json
+          accreditation_en: Json | null
           address: string
           city: string
           coordinates_lat: number | null
@@ -95,6 +96,7 @@ export type Database = {
           description_en: string | null
           email: string
           features: Json
+          features_en: Json | null
           founded: number
           gallery: Json | null
           id: string
@@ -109,6 +111,7 @@ export type Database = {
           rating: number
           slug: string | null
           specialties: Json
+          specialties_en: Json | null
           students_count: number
           tuition_currency: string
           tuition_max: number
@@ -119,6 +122,7 @@ export type Database = {
         }
         Insert: {
           accreditation?: Json
+          accreditation_en?: Json | null
           address: string
           city: string
           coordinates_lat?: number | null
@@ -129,6 +133,7 @@ export type Database = {
           description_en?: string | null
           email: string
           features?: Json
+          features_en?: Json | null
           founded: number
           gallery?: Json | null
           id?: string
@@ -143,6 +148,7 @@ export type Database = {
           rating?: number
           slug?: string | null
           specialties?: Json
+          specialties_en?: Json | null
           students_count?: number
           tuition_currency?: string
           tuition_max?: number
@@ -153,6 +159,7 @@ export type Database = {
         }
         Update: {
           accreditation?: Json
+          accreditation_en?: Json | null
           address?: string
           city?: string
           coordinates_lat?: number | null
@@ -163,6 +170,7 @@ export type Database = {
           description_en?: string | null
           email?: string
           features?: Json
+          features_en?: Json | null
           founded?: number
           gallery?: Json | null
           id?: string
@@ -177,6 +185,7 @@ export type Database = {
           rating?: number
           slug?: string | null
           specialties?: Json
+          specialties_en?: Json | null
           students_count?: number
           tuition_currency?: string
           tuition_max?: number

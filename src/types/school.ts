@@ -12,6 +12,7 @@ export interface School {
   phone: string;
   type: 'university' | 'institute' | 'academy' | 'college';
   specialties: string[];
+  specialties_en?: string[];
   founded: number;
   studentsCount: number;
   programsCount: number;
@@ -24,7 +25,9 @@ export interface School {
   };
   languages: string[];
   accreditation: string[];
+  accreditation_en?: string[];
   features: string[];
+  features_en?: string[];
   // New fields for enhanced functionality
   coordinates?: {
     lat: number;

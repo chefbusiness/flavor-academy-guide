@@ -27,6 +27,9 @@ export interface DatabaseSchool {
   languages: string; // JSON string
   accreditation: string; // JSON string
   features: string; // JSON string
+  features_en: string; // JSON string
+  accreditation_en: string; // JSON string
+  specialties_en: string; // JSON string
   coordinates_lat: number | null;
   coordinates_lng: number | null;
   programs: string; // JSON string
@@ -52,6 +55,7 @@ export const convertDatabaseSchoolToSchool = (dbSchool: DatabaseSchool): School 
     phone: dbSchool.phone,
     type: dbSchool.type,
     specialties: JSON.parse(dbSchool.specialties),
+    specialties_en: dbSchool.specialties_en ? JSON.parse(dbSchool.specialties_en) : null,
     founded: dbSchool.founded,
     studentsCount: dbSchool.students_count,
     programsCount: dbSchool.programs_count,
@@ -64,7 +68,9 @@ export const convertDatabaseSchoolToSchool = (dbSchool: DatabaseSchool): School 
     },
     languages: JSON.parse(dbSchool.languages),
     accreditation: JSON.parse(dbSchool.accreditation),
+    accreditation_en: dbSchool.accreditation_en ? JSON.parse(dbSchool.accreditation_en) : null,
     features: JSON.parse(dbSchool.features),
+    features_en: dbSchool.features_en ? JSON.parse(dbSchool.features_en) : null,
     coordinates: dbSchool.coordinates_lat && dbSchool.coordinates_lng ? {
       lat: dbSchool.coordinates_lat,
       lng: dbSchool.coordinates_lng,

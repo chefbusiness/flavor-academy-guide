@@ -24,7 +24,7 @@ interface SchoolModalProps {
 }
 
 export const SchoolModal = ({ school, isOpen, onClose }: SchoolModalProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!school) return null;
 
@@ -129,11 +129,13 @@ export const SchoolModal = ({ school, isOpen, onClose }: SchoolModalProps) => {
 
           {/* Specialties */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-foreground">Especialidades</h4>
+            <h4 className="font-semibold text-foreground">
+              {language === 'en' ? 'Specialties' : 'Especialidades'}
+            </h4>
             <div className="flex flex-wrap gap-2">
-              {school.specialties.map((specialty) => (
+              {(language === 'en' && school.specialties_en ? school.specialties_en : school.specialties).map((specialty) => (
                 <Badge key={specialty} variant="outline" className="text-sm">
-                  {t(specialty)}
+                  {specialty}
                 </Badge>
               ))}
             </div>
@@ -166,9 +168,11 @@ export const SchoolModal = ({ school, isOpen, onClose }: SchoolModalProps) => {
 
           {/* Accreditation */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-foreground">Acreditaciones</h4>
+            <h4 className="font-semibold text-foreground">
+              {language === 'en' ? 'Accreditations' : 'Acreditaciones'}
+            </h4>
             <div className="flex flex-wrap gap-2">
-              {school.accreditation.map((accred) => (
+              {(language === 'en' && school.accreditation_en ? school.accreditation_en : school.accreditation).map((accred) => (
                 <Badge key={accred} variant="outline" className="text-sm">
                   <Award className="w-3 h-3 mr-1" />
                   {accred}
@@ -179,9 +183,11 @@ export const SchoolModal = ({ school, isOpen, onClose }: SchoolModalProps) => {
 
           {/* Features */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-foreground">Características Destacadas</h4>
+            <h4 className="font-semibold text-foreground">
+              {language === 'en' ? 'Featured Characteristics' : 'Características Destacadas'}
+            </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {school.features.map((feature) => (
+              {(language === 'en' && school.features_en ? school.features_en : school.features).map((feature) => (
                 <div key={feature} className="flex items-center space-x-2 text-sm">
                   <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
                   <span className="text-muted-foreground">{feature}</span>

@@ -441,9 +441,9 @@ const SchoolDetailContent = () => {
                   {t('specialties')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {school.specialties.map((specialty) => (
+                  {(language === 'en' && school.specialties_en ? school.specialties_en : school.specialties).map((specialty) => (
                     <Badge key={specialty} variant="outline">
-                      {t(specialty)}
+                      {specialty}
                     </Badge>
                   ))}
                 </div>
@@ -486,7 +486,7 @@ const SchoolDetailContent = () => {
                   {t('accreditations')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {school.accreditation.map((accred) => (
+                  {(language === 'en' && school.accreditation_en ? school.accreditation_en : school.accreditation).map((accred) => (
                     <Badge key={accred} variant="outline">
                       <Award className="w-3 h-3 mr-1" />
                       {accred}
@@ -502,7 +502,7 @@ const SchoolDetailContent = () => {
                 {t('featuredCharacteristics')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {school.features.map((feature) => (
+                {(language === 'en' && school.features_en ? school.features_en : school.features).map((feature) => (
                   <div key={feature} className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
                     <span className="text-muted-foreground">{feature}</span>
