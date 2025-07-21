@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, MapPin, GraduationCap, Users } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { schools } from '@/data/schools';
+import { useSchools } from '@/hooks/useSchoolsDatabase';
 
 export const Hero = ({ onSearch }: { onSearch: (query: string) => void }) => {
   const { t } = useLanguage();
+  const { schools } = useSchools();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
@@ -86,7 +87,7 @@ export const Hero = ({ onSearch }: { onSearch: (query: string) => void }) => {
                 <Users className="w-8 h-8 text-white" />
               </div>
               <div className="text-3xl font-bold text-white mb-2">{totalSpecialties}</div>
-              <div className="text-white/80 text-lg">{t('specialties')}</div>
+              <div className="text-white/80 text-lg">{t('specialtiesCount')}</div>
             </div>
           </div>
         </div>

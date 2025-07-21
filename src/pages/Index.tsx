@@ -12,12 +12,13 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useStructuredData } from '@/hooks/useStructuredData';
 import { useImageMigrationDebug } from '@/hooks/useImageMigrationDebug';
+import { useSchools } from '@/hooks/useSchoolsDatabase';
 import { School, SchoolFilters } from '@/types/school';
-import { schools } from '@/data/schools';
 
 const IndexContent = () => {
   const { language, t } = useLanguage();
   const { generateOrganizationSchema, generateWebsiteSchema } = useStructuredData();
+  const { schools, loading, error } = useSchools();
   
   // Debug image migration status
   useImageMigrationDebug();
@@ -34,15 +35,18 @@ const IndexContent = () => {
       const matchesCountry = !filters.country || school.country === filters.country;
       const matchesType = !filters.type || school.type === filters.type;
       const matchesSpecialty = !filters.specialty || school.specialties.includes(filters.specialty);
+      
+      // Get the appropriate description based on language for search
+      const searchDescription = language === 'en' && school.description_en ? school.description_en : school.description;
       const matchesSearch = !filters.search || 
         school.name.toLowerCase().includes(filters.search.toLowerCase()) ||
         school.city.toLowerCase().includes(filters.search.toLowerCase()) ||
         school.country.toLowerCase().includes(filters.search.toLowerCase()) ||
-        school.description.toLowerCase().includes(filters.search.toLowerCase());
+        searchDescription.toLowerCase().includes(filters.search.toLowerCase());
 
       return matchesCountry && matchesType && matchesSpecialty && matchesSearch;
     });
-  }, [filters]);
+  }, [filters, schools, language]);
 
   const handleSearch = (query: string) => {
     setFilters(prev => ({ ...prev, search: query }));
@@ -191,33 +195,60 @@ const IndexContent = () => {
               />
             </div>
 
-            {/* Schools Grid */}
-            {filteredSchools.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredSchools.map((school) => (
-                  <SchoolCard
-                    key={school.id}
-                    school={school}
-                  />
-                ))}
+            {/* Loading State */}
+            {loading && (
+              <div className="text-center py-16">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">{t('loading')}</p>
               </div>
-            ) : (
+            )}
+
+            {/* Error State */}
+            {error && (
               <div className="text-center py-16">
                 <div className="max-w-md mx-auto">
-                  <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-4xl text-muted-foreground">🔍</span>
+                  <div className="w-24 h-24 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-4xl text-destructive">⚠️</span>
                   </div>
                   <h3 className="text-xl font-semibold text-foreground mb-2">
-                    {language === 'es' ? 'No se encontraron resultados' : 'No results found'}
+                    {language === 'es' ? 'Error al cargar las escuelas' : 'Error loading schools'}
                   </h3>
-                  <p className="text-muted-foreground">
-                    {language === 'es'
-                      ? 'Intenta ajustar los filtros o buscar con términos diferentes.'
-                      : 'Try adjusting the filters or searching with different terms.'
-                    }
-                  </p>
+                  <p className="text-muted-foreground">{error}</p>
                 </div>
               </div>
+            )}
+
+            {/* Schools Grid */}
+            {!loading && !error && (
+              <>
+                {filteredSchools.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {filteredSchools.map((school) => (
+                      <SchoolCard
+                        key={school.id}
+                        school={school}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <div className="max-w-md mx-auto">
+                      <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span className="text-4xl text-muted-foreground">🔍</span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-foreground mb-2">
+                        {language === 'es' ? 'No se encontraron resultados' : 'No results found'}
+                      </h3>
+                      <p className="text-muted-foreground">
+                        {language === 'es'
+                          ? 'Intenta ajustar los filtros o buscar con términos diferentes.'
+                          : 'Try adjusting the filters or searching with different terms.'
+                        }
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
