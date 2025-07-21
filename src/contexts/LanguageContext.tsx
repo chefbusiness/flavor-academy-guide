@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Language = 'es' | 'en';
 
@@ -298,8 +297,31 @@ const translations = {
   }
 };
 
+// Function to get the initial language from localStorage or browser preference
+const getInitialLanguage = (): Language => {
+  // First, check if there's a saved language preference
+  const savedLanguage = localStorage.getItem('language');
+  if (savedLanguage && (savedLanguage === 'es' || savedLanguage === 'en')) {
+    return savedLanguage as Language;
+  }
+  
+  // If no saved preference, check browser language
+  const browserLanguage = navigator.language.toLowerCase();
+  if (browserLanguage.startsWith('en')) {
+    return 'en';
+  }
+  
+  // Default to Spanish
+  return 'es';
+};
+
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('es');
+  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+
+  // Save language preference to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'es' ? 'en' : 'es');
