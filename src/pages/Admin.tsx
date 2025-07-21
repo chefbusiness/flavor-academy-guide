@@ -74,7 +74,7 @@ const Admin = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading admin panel...</p>
+          <p className="text-muted-foreground">Cargando panel de administración...</p>
         </div>
       </div>
     );
@@ -92,10 +92,10 @@ const Admin = () => {
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              Admin Panel
+              Panel de Administración
             </h1>
             <p className="text-muted-foreground">
-              Manage schools, users, and system settings
+              Gestiona escuelas, usuarios y configuración del sistema
             </p>
           </div>
 
@@ -103,41 +103,41 @@ const Admin = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Schools</CardTitle>
+                <CardTitle className="text-sm font-medium">Total de Escuelas</CardTitle>
                 <GraduationCap className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.totalSchools}</div>
                 <p className="text-xs text-muted-foreground">
-                  {stats.activeSchools} active
+                  {stats.activeSchools} activas
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+                <CardTitle className="text-sm font-medium">Total de Usuarios</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.totalUsers}</div>
                 <p className="text-xs text-muted-foreground">
-                  Registered users
+                  Usuarios registrados
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">System Status</CardTitle>
+                <CardTitle className="text-sm font-medium">Estado del Sistema</CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  <Badge variant="default">Online</Badge>
+                  <Badge variant="default">En Línea</Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  All systems operational
+                  Todos los sistemas operativos
                 </p>
               </CardContent>
             </Card>
@@ -149,16 +149,16 @@ const Admin = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Database className="w-5 h-5" />
-                  Data Management
+                  Gestión de Datos
                 </CardTitle>
                 <CardDescription>
-                  Manage school data and database operations
+                  Gestiona datos de escuelas y operaciones de base de datos
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Button asChild className="flex-1">
-                    <Link to="/admin/schools">Manage Schools</Link>
+                    <Link to="/admin/schools">Gestionar Escuelas</Link>
                   </Button>
                   <MigrateStaticDataButton />
                 </div>
@@ -172,10 +172,10 @@ const Admin = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="w-5 h-5" />
-                  Internationalization
+                  Internacionalización
                 </CardTitle>
                 <CardDescription>
-                  Manage translations and multilingual content
+                  Gestiona traducciones y contenido multiidioma
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -190,23 +190,23 @@ const Admin = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-5 h-5" />
-                System Tools
+                Herramientas del Sistema
               </CardTitle>
               <CardDescription>
-                Advanced system configuration and maintenance tools
+                Herramientas avanzadas de configuración y mantenimiento del sistema
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Button variant="outline" asChild>
-                  <Link to="/image-manager">Image Manager</Link>
+                  <Link to="/image-manager">Gestor de Imágenes</Link>
                 </Button>
                 <Button variant="outline" asChild>
-                  <Link to="/admin/setup">Initial Setup</Link>
+                  <Link to="/admin/setup">Configuración Inicial</Link>
                 </Button>
                 <Button variant="outline" disabled>
-                  Analytics Dashboard
-                  <Badge variant="secondary" className="ml-2">Soon</Badge>
+                  Panel de Analíticas
+                  <Badge variant="secondary" className="ml-2">Próximamente</Badge>
                 </Button>
               </div>
             </CardContent>
