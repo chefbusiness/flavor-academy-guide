@@ -26,7 +26,8 @@ import {
   ChevronDown,
   Plus,
   Grid,
-  Wand2
+  Wand2,
+  RefreshCw
 } from 'lucide-react';
 
 interface SchoolImageManagerProps {
@@ -74,13 +75,16 @@ export const SchoolImageManager = ({
   const { 
     imageSource, 
     isSupabaseImageAvailable, 
-    altText 
+    altText,
+    refetchImage
   } = useSchoolImageIntegration(school);
 
   // Main image generation
   const generateAIImage = async (regenerate = false) => {
     setIsGenerating(true);
     try {
+      console.log(`🎨 Generating AI image for school: ${schoolName} (ID: ${schoolId}), regenerate: ${regenerate}`);
+      
       const { data, error } = await supabase.functions.invoke('generate-ai-school-images', {
         body: {
           schoolId,
@@ -89,10 +93,17 @@ export const SchoolImageManager = ({
         }
       });
 
+      console.log('📡 AI Generation response:', { data, error });
+
       if (error) throw error;
 
       if (data.success) {
+        // Immediately refresh the image data
+        await refetchImage();
+        
+        // Update the parent component
         onImageUpdate(data.imageUrl);
+        
         toast({
           title: regenerate ? 'Imagen regenerada' : 'Imagen generada',
           description: `Nueva imagen AI creada para ${schoolName}`,
@@ -104,7 +115,7 @@ export const SchoolImageManager = ({
       console.error('Error generating AI image:', error);
       toast({
         title: 'Error',
-        description: 'No se pudo generar la imagen con AI',
+        description: `No se pudo generar la imagen con AI: ${error.message}`,
         variant: 'destructive',
       });
     } finally {
@@ -148,7 +159,10 @@ export const SchoolImageManager = ({
         .update({ image: publicUrl })
         .eq('id', schoolId);
 
+      // Refresh image data
+      await refetchImage();
       onImageUpdate(publicUrl);
+      
       toast({
         title: 'Imagen subida',
         description: 'La imagen principal se ha subido correctamente',
@@ -423,16 +437,19 @@ export const SchoolImageManager = ({
                   Generar
                 </Button>
                 
-                {imageSource && (
-                  <Button
-                    onClick={() => generateAIImage(true)}
-                    disabled={isGenerating}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Loader2 className="h-4 w-4" />
-                  </Button>
-                )}
+                <Button
+                  onClick={() => generateAIImage(true)}
+                  disabled={isGenerating}
+                  variant="outline"
+                  size="sm"
+                  title="Regenerar imagen"
+                >
+                  {isGenerating ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <RefreshCw className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
             </div>
           </div>
