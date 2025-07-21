@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -34,6 +33,7 @@ import { useSchoolById, useUpdateSchool, SchoolFormData } from '@/hooks/useSchoo
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Save, Eye, MapPin, GraduationCap, DollarSign, Globe, Settings } from 'lucide-react';
 import { SchoolImageManager } from '@/components/admin/SchoolImageManager';
+import { SchoolDescriptionGenerator } from '@/components/admin/SchoolDescriptionGenerator';
 
 const schoolFormSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
@@ -175,6 +175,10 @@ export default function AdminSchoolEdit() {
 
   const removeFromArray = (array: string[], setArray: (arr: string[]) => void, value: string) => {
     setArray(array.filter(item => item !== value));
+  };
+
+  const handleDescriptionUpdate = (field: 'description' | 'description_en', value: string) => {
+    form.setValue(field, value);
   };
 
   if (isLoading) {
@@ -387,6 +391,19 @@ export default function AdminSchoolEdit() {
                                 placeholder="Describe la escuela, sus fortalezas, programas destacados..."
                               />
                             </FormControl>
+                            <div className="flex justify-between text-sm text-muted-foreground">
+                              <span>{field.value?.length || 0}/500 caracteres</span>
+                              <span className={
+                                (field.value?.length || 0) >= 400 && (field.value?.length || 0) <= 500
+                                  ? 'text-green-600' 
+                                  : 'text-orange-500'
+                              }>
+                                {(field.value?.length || 0) >= 400 && (field.value?.length || 0) <= 500 
+                                  ? '✓ Longitud óptima' 
+                                  : 'Recomendado: 400-500 caracteres'
+                                }
+                              </span>
+                            </div>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -405,9 +422,31 @@ export default function AdminSchoolEdit() {
                                 placeholder="English description..."
                               />
                             </FormControl>
+                            <div className="flex justify-between text-sm text-muted-foreground">
+                              <span>{field.value?.length || 0}/500 caracteres</span>
+                              <span className={
+                                (field.value?.length || 0) >= 400 && (field.value?.length || 0) <= 500
+                                  ? 'text-green-600' 
+                                  : 'text-orange-500'
+                              }>
+                                {(field.value?.length || 0) >= 400 && (field.value?.length || 0) <= 500 
+                                  ? '✓ Optimal length' 
+                                  : 'Recommended: 400-500 characters'
+                                }
+                              </span>
+                            </div>
                             <FormMessage />
                           </FormItem>
                         )}
+                      />
+
+                      {/* AI Description Generator */}
+                      <SchoolDescriptionGenerator
+                        schoolId={id!}
+                        schoolName={school?.name || ''}
+                        currentDescriptionEs={form.watch('description')}
+                        currentDescriptionEn={form.watch('description_en')}
+                        onDescriptionUpdate={handleDescriptionUpdate}
                       />
                     </CardContent>
                   </Card>
