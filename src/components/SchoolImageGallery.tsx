@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Images, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useSchoolGalleryImages } from '@/hooks/useSchoolImages';
 
 interface SchoolImageGalleryProps {
   schoolName: string;
@@ -21,11 +22,27 @@ export const SchoolImageGallery: React.FC<SchoolImageGalleryProps> = ({
   const [selectedImage, setSelectedImage] = useState<number>(0);
   const [showModal, setShowModal] = useState(false);
 
-  // Generate additional sample images for gallery
-  const generateGalleryImages = () => {
+  // Fetch gallery images from database
+  const { data: galleryImages, isLoading } = useSchoolGalleryImages(schoolId);
+
+  // Category translations
+  const getCategoryLabel = (category: string) => {
+    const categoryLabels = {
+      'kitchen-facilities': language === 'es' ? 'Instalaciones de Cocina' : 'Kitchen Facilities',
+      'classroom': language === 'es' ? 'Aulas' : 'Classrooms',
+      'students-cooking': language === 'es' ? 'Estudiantes en Acción' : 'Students in Action',
+      'dishes-created': language === 'es' ? 'Platos Creados' : 'Dishes Created',
+      'exterior-building': language === 'es' ? 'Edificio' : 'Building',
+      'dining-area': language === 'es' ? 'Área de Degustación' : 'Tasting Area'
+    };
+    return categoryLabels[category as keyof typeof categoryLabels] || category;
+  };
+
+  // Generate fallback images if no gallery images exist
+  const generateFallbackImages = () => {
     const categories = [
       'kitchen-facilities',
-      'classroom',
+      'classroom', 
       'students-cooking',
       'dishes-created',
       'exterior-building',
@@ -35,29 +52,48 @@ export const SchoolImageGallery: React.FC<SchoolImageGalleryProps> = ({
     return categories.map((category, index) => {
       const imageId = (parseInt(schoolId) + index).toString().padStart(8, '0');
       return {
-        id: index,
+        id: `fallback-${index}`,
         url: index === 0 ? mainImage : `https://images.unsplash.com/photo-1556909114-${imageId}?w=800&h=600&fit=crop&auto=format`,
         alt: `${schoolName} - ${category}`,
-        category: language === 'es' ? {
-          'kitchen-facilities': 'Instalaciones de Cocina',
-          'classroom': 'Aulas',
-          'students-cooking': 'Estudiantes en Acción',
-          'dishes-created': 'Platos Creados',
-          'exterior-building': 'Edificio',
-          'dining-area': 'Área de Degustación'
-        }[category] : {
-          'kitchen-facilities': 'Kitchen Facilities',
-          'classroom': 'Classrooms', 
-          'students-cooking': 'Students in Action',
-          'dishes-created': 'Dishes Created',
-          'exterior-building': 'Building',
-          'dining-area': 'Tasting Area'
-        }[category]
+        category: getCategoryLabel(category),
+        categoryCode: category,
+        isFallback: true
       };
     });
   };
 
-  const images = generateGalleryImages();
+  // Process images: combine main image + real gallery images, or use fallback
+  const processImages = () => {
+    // Always include main image first
+    const mainImageData = {
+      id: 'main',
+      url: mainImage,
+      alt: `${schoolName} - ${language === 'es' ? 'Imagen Principal' : 'Main Image'}`,
+      category: language === 'es' ? 'Imagen Principal' : 'Main Image',
+      categoryCode: 'main',
+      isFallback: false
+    };
+
+    if (galleryImages && galleryImages.length > 0) {
+      // Use real gallery images
+      const realGalleryImages = galleryImages.map((img, index) => ({
+        id: img.id,
+        url: img.image_url,
+        alt: img.alt_text || `${schoolName} - ${img.image_category}`,
+        category: getCategoryLabel(img.image_category || 'unknown'),
+        categoryCode: img.image_category || 'unknown',
+        isFallback: false
+      }));
+      
+      return [mainImageData, ...realGalleryImages];
+    } else {
+      // Use fallback images (excluding main since we already have it)
+      const fallbackImages = generateFallbackImages().slice(1);
+      return [mainImageData, ...fallbackImages];
+    }
+  };
+
+  const images = processImages();
 
   const nextImage = () => {
     setSelectedImage((prev) => (prev + 1) % images.length);

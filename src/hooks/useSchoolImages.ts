@@ -7,6 +7,8 @@ export interface SchoolImage {
   image_url: string;
   image_type: string;
   alt_text?: string;
+  image_category?: string;
+  display_order?: number;
   created_at: string;
   updated_at: string;
 }
@@ -29,7 +31,7 @@ export const useSchoolImages = () => {
   });
 };
 
-// Hook to get a specific school image
+// Hook to get a specific school's main image
 export const useSchoolImage = (schoolId: string) => {
   return useQuery({
     queryKey: ['school-image', schoolId],
@@ -40,6 +42,7 @@ export const useSchoolImage = (schoolId: string) => {
         .from('school_images')
         .select('*')
         .eq('school_id', schoolId)
+        .eq('image_category', 'main')
         .maybeSingle();
 
       console.log(`📊 Resultado de Supabase para ${schoolId}:`, { data, error });
@@ -49,6 +52,25 @@ export const useSchoolImage = (schoolId: string) => {
         throw error;
       }
       return data;
+    },
+    enabled: !!schoolId,
+  });
+};
+
+// Hook for managing gallery images by school
+export const useSchoolGalleryImages = (schoolId: string) => {
+  return useQuery({
+    queryKey: ['school-gallery-images', schoolId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('school_images')
+        .select('*')
+        .eq('school_id', schoolId)
+        .neq('image_category', 'main')
+        .order('display_order', { ascending: true });
+
+      if (error) throw error;
+      return data as SchoolImage[];
     },
     enabled: !!schoolId,
   });
@@ -64,6 +86,8 @@ export const useUploadSchoolImage = () => {
       imageUrl: string;
       imageType: 'real' | 'ai_generated';
       altText?: string;
+      imageCategory?: string;
+      displayOrder?: number;
     }) => {
       const { data, error } = await supabase
         .from('school_images')
@@ -71,7 +95,9 @@ export const useUploadSchoolImage = () => {
           school_id: params.schoolId,
           image_url: params.imageUrl,
           image_type: params.imageType,
-          alt_text: params.altText || `${params.schoolId} culinary school building`,
+          alt_text: params.altText || `${params.schoolId} culinary school`,
+          image_category: params.imageCategory || 'main',
+          display_order: params.displayOrder || 0,
           updated_at: new Date().toISOString(),
         })
         .select();
@@ -82,9 +108,55 @@ export const useUploadSchoolImage = () => {
       return data;
     },
     onSuccess: () => {
-      // Invalidate and refetch school images
       queryClient.invalidateQueries({ queryKey: ['school-images'] });
       queryClient.invalidateQueries({ queryKey: ['school-image'] });
+      queryClient.invalidateQueries({ queryKey: ['school-gallery-images'] });
+    },
+  });
+};
+
+// Hook for deleting gallery images
+export const useDeleteSchoolImage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (imageId: string) => {
+      const { error } = await supabase
+        .from('school_images')
+        .delete()
+        .eq('id', imageId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['school-images'] });
+      queryClient.invalidateQueries({ queryKey: ['school-image'] });
+      queryClient.invalidateQueries({ queryKey: ['school-gallery-images'] });
+    },
+  });
+};
+
+// Hook for reordering gallery images
+export const useReorderGalleryImages = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (updates: { id: string; display_order: number }[]) => {
+      // Update each image's display_order individually
+      for (const update of updates) {
+        const { error } = await supabase
+          .from('school_images')
+          .update({ 
+            display_order: update.display_order,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', update.id);
+
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['school-gallery-images'] });
     },
   });
 };

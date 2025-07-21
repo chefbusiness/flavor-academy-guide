@@ -45,7 +45,9 @@ export type Database = {
         Row: {
           alt_text: string | null
           created_at: string
+          display_order: number | null
           id: string
+          image_category: string | null
           image_type: string
           image_url: string
           school_id: string
@@ -55,7 +57,9 @@ export type Database = {
         Insert: {
           alt_text?: string | null
           created_at?: string
+          display_order?: number | null
           id?: string
+          image_category?: string | null
           image_type: string
           image_url: string
           school_id: string
@@ -65,7 +69,9 @@ export type Database = {
         Update: {
           alt_text?: string | null
           created_at?: string
+          display_order?: number | null
           id?: string
+          image_category?: string | null
           image_type?: string
           image_url?: string
           school_id?: string
