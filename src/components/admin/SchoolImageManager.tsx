@@ -192,6 +192,13 @@ export const SchoolImageManager = ({
 
     setIsGeneratingGallery(true);
     try {
+      console.log('🎨 Generating gallery image with params:', {
+        schoolId,
+        schoolName,
+        category: selectedCategory,
+        description: customPrompt || 'default prompt'
+      });
+
       const { data, error } = await supabase.functions.invoke('generate-gallery-images', {
         body: {
           schoolId,
@@ -201,10 +208,15 @@ export const SchoolImageManager = ({
         }
       });
 
-      if (error) throw error;
+      console.log('📡 Gallery generation response:', { data, error });
 
-      if (data.success) {
-        refetchGallery();
+      if (error) {
+        console.error('❌ Supabase function error:', error);
+        throw new Error(`Function call failed: ${error.message}`);
+      }
+
+      if (data?.success) {
+        await refetchGallery();
         setSelectedCategory('');
         setCustomPrompt('');
         toast({
@@ -212,13 +224,30 @@ export const SchoolImageManager = ({
           description: `Nueva imagen AI creada para la categoría ${selectedCategory}`,
         });
       } else {
-        throw new Error(data.error || 'Error generando imagen de galería');
+        console.error('❌ Function returned error:', data);
+        const errorMessage = data?.error || 'Error desconocido generando imagen de galería';
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      console.error('Error generating gallery image:', error);
+      console.error('❌ Error generating gallery image:', error);
+      
+      let errorMessage = 'No se pudo generar la imagen de galería';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('OpenAI')) {
+          errorMessage = 'Error con la API de OpenAI. Verifica la configuración.';
+        } else if (error.message.includes('Supabase')) {
+          errorMessage = 'Error de almacenamiento. Inténtalo de nuevo.';
+        } else if (error.message.includes('unique constraint')) {
+          errorMessage = 'Ya existe una imagen para esta categoría. Elimina la existente primero.';
+        } else {
+          errorMessage = `Error: ${error.message}`;
+        }
+      }
+      
       toast({
-        title: 'Error',
-        description: 'No se pudo generar la imagen de galería',
+        title: 'Error generando imagen',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {

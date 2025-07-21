@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
@@ -19,13 +20,25 @@ serve(async (req) => {
   try {
     console.log('🚀 Starting gallery image generation...');
     
+    // Validate environment variables
+    if (!openAIApiKey) {
+      console.error('❌ Missing OPENAI_API_KEY');
+      throw new Error('OpenAI API key not configured');
+    }
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('❌ Missing Supabase configuration');
+      throw new Error('Supabase configuration missing');
+    }
+    
     const { schoolName, schoolId, category, description } = await req.json();
     
     if (!schoolName || !schoolId || !category) {
+      console.error('❌ Missing required fields:', { schoolName, schoolId, category });
       throw new Error('Missing required fields: schoolName, schoolId, or category');
     }
 
-    console.log(`📋 Generating image for: ${schoolName}, Category: ${category}`);
+    console.log(`📋 Generating image for: ${schoolName} (ID: ${schoolId}), Category: ${category}`);
 
     // Category-specific prompts
     const categoryPrompts = {
@@ -39,6 +52,8 @@ serve(async (req) => {
 
     const prompt = description || categoryPrompts[category as keyof typeof categoryPrompts] || 
       `Professional image related to culinary education at ${schoolName}, category: ${category}`;
+
+    console.log(`🎨 Using prompt: ${prompt.substring(0, 100)}...`);
 
     // Generate image with OpenAI
     console.log('🎨 Calling OpenAI DALL-E API...');
@@ -72,18 +87,24 @@ serve(async (req) => {
     // Download and upload to Supabase Storage
     console.log('📥 Downloading image...');
     const imageResponse = await fetch(imageUrl);
+    if (!imageResponse.ok) {
+      console.error('❌ Failed to download image:', imageResponse.status);
+      throw new Error('Failed to download generated image');
+    }
+    
     const imageBlob = await imageResponse.blob();
     const imageBuffer = await imageBlob.arrayBuffer();
 
     // Initialize Supabase client
     const supabase = createClient(supabaseUrl!, supabaseServiceKey!);
 
-    // Generate unique filename
+    // Generate unique filename with timestamp and random string
     const timestamp = Date.now();
-    const filename = `${schoolId}-gallery-${category}-${timestamp}.jpg`;
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    const filename = `${schoolId}-gallery-${category}-${timestamp}-${randomSuffix}.jpg`;
     const filePath = `gallery/${filename}`;
 
-    console.log('☁️ Uploading to Supabase Storage...');
+    console.log('☁️ Uploading to Supabase Storage:', filePath);
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('school-images')
       .upload(filePath, imageBuffer, {
@@ -94,7 +115,7 @@ serve(async (req) => {
 
     if (uploadError) {
       console.error('❌ Upload error:', uploadError);
-      throw uploadError;
+      throw new Error(`Storage upload failed: ${uploadError.message}`);
     }
 
     // Get public URL
@@ -105,8 +126,9 @@ serve(async (req) => {
     const finalImageUrl = urlData.publicUrl;
     console.log('📎 Final image URL:', finalImageUrl);
 
-    // Get next display order
-    const { data: existingImages } = await supabase
+    // Get next display order for this category
+    console.log('🔍 Getting next display order...');
+    const { data: existingImages, error: queryError } = await supabase
       .from('school_images')
       .select('display_order')
       .eq('school_id', schoolId)
@@ -114,11 +136,18 @@ serve(async (req) => {
       .order('display_order', { ascending: false })
       .limit(1);
 
+    if (queryError) {
+      console.error('❌ Query error:', queryError);
+      // Continue anyway with default order
+    }
+
     const nextOrder = existingImages && existingImages.length > 0 
       ? (existingImages[0].display_order || 0) + 1 
       : 1;
 
-    // Save to database
+    console.log(`📊 Next display order: ${nextOrder}`);
+
+    // Save to database - Note: NOT using school_id as unique constraint for gallery images
     console.log('💾 Saving to database...');
     const { data: dbData, error: dbError } = await supabase
       .from('school_images')
@@ -135,10 +164,16 @@ serve(async (req) => {
 
     if (dbError) {
       console.error('❌ Database error:', dbError);
-      throw dbError;
+      
+      // If it's a unique constraint error, provide more helpful message
+      if (dbError.code === '23505') {
+        throw new Error(`Image already exists for this category. Try a different category or delete existing images first.`);
+      }
+      
+      throw new Error(`Database save failed: ${dbError.message}`);
     }
 
-    console.log('🎉 Gallery image generated successfully!');
+    console.log('🎉 Gallery image generated successfully!', dbData);
 
     return new Response(
       JSON.stringify({ 
@@ -151,10 +186,15 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('❌ Error in generate-gallery-images:', error);
+    
+    // Return more specific error information
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+    
     return new Response(
       JSON.stringify({ 
-        error: error.message || 'An unexpected error occurred',
-        success: false 
+        error: errorMessage,
+        success: false,
+        details: error instanceof Error ? error.stack : undefined
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }, 
