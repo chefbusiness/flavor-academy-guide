@@ -55,6 +55,7 @@ import {
   Wand2
 } from 'lucide-react';
 import { MigrateStaticDataButton } from '@/components/MigrateStaticDataButton';
+import { AdminSchoolImage } from '@/components/admin/AdminSchoolImage';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function AdminSchools() {
@@ -371,19 +372,7 @@ export default function AdminSchools() {
                   {filteredSchools.map((school) => (
                     <TableRow key={school.id}>
                       <TableCell>
-                        <div className="w-8 h-8 bg-muted rounded overflow-hidden">
-                          {school.image ? (
-                            <img
-                              src={school.image}
-                              alt={school.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <ImageIcon className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                          )}
-                        </div>
+                        <AdminSchoolImage school={school} />
                       </TableCell>
                       <TableCell className="font-medium">
                         <div className="max-w-48 truncate">
