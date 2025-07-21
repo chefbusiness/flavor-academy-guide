@@ -40,20 +40,29 @@ serve(async (req) => {
 
     console.log(`📋 Generating image for: ${schoolName} (ID: ${schoolId}), Category: ${category}`);
 
-    // Category-specific prompts
-    const categoryPrompts = {
-      'kitchen-facilities': `Professional modern culinary kitchen facilities at ${schoolName}. Industrial-grade kitchen equipment, stainless steel surfaces, cooking stations, ovens, and culinary tools. Clean, bright, professional cooking environment. High-end culinary school kitchen.`,
-      'classroom': `Modern culinary classroom at ${schoolName}. Students learning cooking techniques, chef instructor teaching, cooking demonstration, professional kitchen classroom setup. Educational culinary environment.`,
-      'students-cooking': `Students actively cooking and learning at ${schoolName}. Young chefs in white uniforms and aprons practicing cooking techniques, collaborative learning, hands-on culinary education.`,
-      'dishes-created': `Beautiful gourmet dishes and culinary creations made by students at ${schoolName}. Professional food plating, colorful ingredients, artistic food presentation, culinary masterpieces.`,
-      'exterior-building': `Exterior view of ${schoolName} culinary school building. Modern educational architecture, professional signage, welcoming entrance, contemporary design.`,
-      'dining-area': `Elegant dining area and tasting room at ${schoolName}. Professional restaurant-style dining space, tasteful table settings, comfortable seating for culinary tastings and events.`
+    // Realistic category-specific prompts
+    const generateRealisticCategoryPrompt = (schoolName: string, category: string) => {
+      const basePrompts = {
+        'kitchen-facilities': `Functional cooking kitchen at ${schoolName}. Practical stainless steel equipment, basic professional ovens and cooktops, clean work surfaces, educational cooking stations. Simple and organized learning environment, natural lighting, no luxury elements. Authentic culinary school kitchen.`,
+        
+        'classroom': `Educational cooking classroom at ${schoolName}. Students learning basic cooking techniques, instructor demonstrating, simple kitchen classroom setup, practical learning environment. Real cooking education, natural lighting, functional space.`,
+        
+        'students-cooking': `Students practicing cooking at ${schoolName}. Young people in aprons learning basic culinary skills, hands-on cooking education, practical kitchen environment, authentic learning atmosphere. Educational cooking session.`,
+        
+        'dishes-created': `Simple dishes prepared by students at ${schoolName}. Basic but well-prepared food, practical cooking results, educational meal presentation, authentic student work. Real cooking school dishes, natural food photography.`,
+        
+        'exterior-building': `Exterior view of ${schoolName} culinary school. Simple educational building, practical architecture, welcoming entrance for a cooking school, functional design. Real educational institution, natural daylight.`,
+        
+        'dining-area': `Simple dining and tasting area at ${schoolName}. Basic tables and chairs for food tasting, practical dining space for culinary education, functional and clean environment. Educational dining area, natural lighting.`
+      };
+
+      return basePrompts[category as keyof typeof basePrompts] || 
+        `Practical educational space at ${schoolName} related to culinary training, category: ${category}. Functional and authentic learning environment.`;
     };
 
-    const prompt = description || categoryPrompts[category as keyof typeof categoryPrompts] || 
-      `Professional image related to culinary education at ${schoolName}, category: ${category}`;
+    const prompt = description || generateRealisticCategoryPrompt(schoolName, category);
 
-    console.log(`🎨 Using prompt: ${prompt.substring(0, 100)}...`);
+    console.log(`🎨 Using realistic prompt: ${prompt.substring(0, 100)}...`);
 
     // Generate image with OpenAI
     console.log('🎨 Calling OpenAI DALL-E API...');
@@ -147,7 +156,7 @@ serve(async (req) => {
 
     console.log(`📊 Next display order: ${nextOrder}`);
 
-    // Save to database - Note: NOT using school_id as unique constraint for gallery images
+    // Save to database
     console.log('💾 Saving to database...');
     const { data: dbData, error: dbError } = await supabase
       .from('school_images')
@@ -157,7 +166,7 @@ serve(async (req) => {
         image_type: 'ai_generated',
         image_category: category,
         display_order: nextOrder,
-        alt_text: `${schoolName} - ${category} (AI Generated)`,
+        alt_text: `${schoolName} - ${category} (AI Generated - Realistic)`,
       })
       .select()
       .single();
@@ -173,7 +182,7 @@ serve(async (req) => {
       throw new Error(`Database save failed: ${dbError.message}`);
     }
 
-    console.log('🎉 Gallery image generated successfully!', dbData);
+    console.log('🎉 Realistic gallery image generated successfully!', dbData);
 
     return new Response(
       JSON.stringify({ 
