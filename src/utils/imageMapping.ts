@@ -25,6 +25,15 @@ import aulaGastronomicaRibera from '@/assets/schools/aula-gastronomica-mercado-d
 import escuelaMalaespera from '@/assets/schools/escuela-de-cocina-malaespera.jpg';
 import sukaldikas from '@/assets/schools/sukaldikas-escuela-de-cocina-macrobiotica.jpg';
 import bscFormacion from '@/assets/schools/bsc-formacion.jpg';
+// New schools added recently
+import enekoSukaldari from '@/assets/schools/eneko-sukaldari.jpg';
+import kitxen from '@/assets/schools/kitxen.jpg';
+import mimoBiteTheExperience from '@/assets/schools/mimo-bite-the-experience.jpg';
+import fleischmannsCookingGroup from '@/assets/schools/fleischmanns-cooking-group.jpg';
+import osoaSukaldaritza from '@/assets/schools/osoa-sukaldaritza.jpg';
+import gastronomiaBilbao from '@/assets/schools/gastronomia-bilbao.jpg';
+import goeGastronomyOpenEcosystem from '@/assets/schools/goe-gastronomy-open-ecosystem.jpg';
+import cofradiaVascaGastronomia from '@/assets/schools/cofradia-vasca-gastronomia.jpg';
 
 // Mapping of school IDs to their corresponding images - using correct numeric IDs
 export const schoolImageMapping: Record<string, string> = {
@@ -53,6 +62,15 @@ export const schoolImageMapping: Record<string, string> = {
   '24': escuelaMalaespera,       // Escuela de Cocina Malaespera
   '25': sukaldikas,              // Sukaldikas Escuela de Cocina Macrobiótica
   '26': bscFormacion,            // BSC FORMACIÓN
+  // New schools with UUID IDs
+  '451764d3-bca1-4ba8-880c-f900e0055de2': enekoSukaldari,  // Eneko Sukaldari
+  'f76befb8-b55a-4391-ba81-d13bdd10b320': kitxen,          // KITXEN
+  'f44a1c3a-0d73-4b87-8cb7-893f29144e36': mimoBiteTheExperience, // Mimo Bite The Experience
+  '626f1f4d-ed5c-4e69-9917-9b122a16d0a0': fleischmannsCookingGroup, // Fleischmann´s Cooking Group
+  '3bb82b6a-8567-4d17-b350-e9f055b70457': osoaSukaldaritza,       // Osoa Sukaldaritza eta Ikaskuntza
+  '76089d57-8f78-416f-927d-643de6ae6ee2': gastronomiaBilbao,      // Gastronomía Bilbao
+  'a5d81fea-80b4-4b3e-87a1-1ff450283cdd': goeGastronomyOpenEcosystem, // GOe Gastronomy Open Ecosystem
+  '50d80600-b6ea-46f8-9aa2-83a522647ac6': cofradiaVascaGastronomia, // Cofradía Vasca de Gastronomía
 };
 
 // Function to get school image URL by ID
