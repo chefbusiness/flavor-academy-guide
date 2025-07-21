@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -158,7 +158,7 @@ const Admin = () => {
               <CardContent className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-2">
                   <Button asChild className="flex-1">
-                    <a href="/admin/schools">Manage Schools</a>
+                    <Link to="/admin/schools">Manage Schools</Link>
                   </Button>
                   <MigrateStaticDataButton />
                 </div>
@@ -199,10 +199,10 @@ const Admin = () => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Button variant="outline" asChild>
-                  <a href="/image-manager">Image Manager</a>
+                  <Link to="/image-manager">Image Manager</Link>
                 </Button>
                 <Button variant="outline" asChild>
-                  <a href="/admin/setup">Initial Setup</a>
+                  <Link to="/admin/setup">Initial Setup</Link>
                 </Button>
                 <Button variant="outline" disabled>
                   Analytics Dashboard
