@@ -1,3 +1,4 @@
+
 project_id = "kbeeuzqdvpsyzyovinyp"
 
 [functions.real-migration-to-storage]
@@ -13,4 +14,10 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.upload-school-image]
+verify_jwt = false
+
+[functions.upload-new-school-images]
+verify_jwt = false
+
+[functions.upload-ai-school-images]
 verify_jwt = false
