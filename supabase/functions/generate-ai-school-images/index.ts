@@ -44,9 +44,41 @@ serve(async (req) => {
       }
     }
 
-    // Generate image with OpenAI DALL-E
-    const prompt = `Modern culinary school building for "${schoolName}", professional architectural photography, contemporary design, cooking facilities visible through windows, warm lighting, educational institution, high quality, realistic style`;
+    // Generate realistic prompt based on school characteristics
+    const generateRealisticPrompt = (name: string) => {
+      // Determine school type and characteristics
+      const isTraditional = name.toLowerCase().includes('traditional') || 
+                           name.toLowerCase().includes('artisan') || 
+                           name.toLowerCase().includes('heritage');
+      
+      const isSmall = name.toLowerCase().includes('studio') || 
+                      name.toLowerCase().includes('atelier') || 
+                      name.toLowerCase().includes('workshop');
+      
+      const isRegional = name.toLowerCase().includes('basque') || 
+                        name.toLowerCase().includes('euskera') ||
+                        name.toLowerCase().includes('vasco');
 
+      let basePrompt = '';
+      
+      if (isTraditional) {
+        basePrompt = `Authentic traditional cooking school building for "${name}". Small-scale educational facility with practical kitchen spaces, simple professional equipment, warm wooden elements, natural lighting. Educational institution focused on hands-on learning, approachable and welcoming atmosphere.`;
+      } else if (isSmall) {
+        basePrompt = `Intimate culinary studio building for "${name}". Modest educational space with functional kitchen facilities, clean and practical design, good natural light, teaching-focused environment. Real cooking school atmosphere, educational and authentic.`;
+      } else if (isRegional) {
+        basePrompt = `Regional culinary school building for "${name}". Traditional Basque architectural elements, practical cooking facilities, educational institution with cultural heritage, functional kitchen spaces, authentic regional character.`;
+      } else {
+        basePrompt = `Practical culinary school building for "${name}". Educational cooking facility with functional kitchen spaces, professional but approachable equipment, natural lighting, clean and organized learning environment. Authentic cooking school atmosphere.`;
+      }
+
+      return basePrompt + ' Realistic photography style, natural colors, educational setting, no luxury elements.';
+    };
+
+    const prompt = generateRealisticPrompt(schoolName);
+
+    console.log(`🎨 Using realistic prompt: ${prompt.substring(0, 100)}...`);
+
+    // Generate image with OpenAI DALL-E
     const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
@@ -59,7 +91,8 @@ serve(async (req) => {
         n: 1,
         size: '1024x1024',
         quality: 'standard',
-        response_format: 'url'
+        response_format: 'url',
+        style: 'natural'
       }),
     });
 
@@ -130,7 +163,7 @@ serve(async (req) => {
         .eq('id', schoolId);
     }
 
-    console.log(`✅ Successfully generated and saved AI image for ${schoolName}`);
+    console.log(`✅ Successfully generated and saved realistic AI image for ${schoolName}`);
 
     return new Response(JSON.stringify({
       success: true,
