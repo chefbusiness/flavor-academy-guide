@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { useSchoolImageIntegration } from '@/hooks/useSchoolImageIntegration';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Upload, 
@@ -33,6 +34,19 @@ export const SchoolImageManager = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
+
+  // Use the integrated image system to get the proper image
+  const school = { 
+    id: schoolId, 
+    name: schoolName, 
+    image: currentImage 
+  } as any;
+  
+  const { 
+    imageSource, 
+    isSupabaseImageAvailable, 
+    altText 
+  } = useSchoolImageIntegration(school);
 
   const generateAIImage = async (regenerate = false) => {
     setIsGenerating(true);
@@ -132,24 +146,46 @@ export const SchoolImageManager = ({
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Current Image Preview */}
-        {currentImage && (
-          <div className="space-y-2">
-            <Label>Imagen Actual</Label>
-            <div className="relative w-full h-48 bg-muted rounded-lg overflow-hidden">
-              <img
-                src={currentImage}
-                alt={schoolName}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-2 right-2">
-                <Badge variant="secondary">
-                  <Eye className="h-3 w-3 mr-1" />
-                  Actual
-                </Badge>
+        <div className="space-y-2">
+          <Label>Imagen Actual</Label>
+          <div className="relative w-full h-48 bg-muted rounded-lg overflow-hidden">
+            {imageSource ? (
+              <>
+                <img
+                  src={imageSource}
+                  alt={altText}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = 'none';
+                    const placeholder = img.nextElementSibling as HTMLElement;
+                    if (placeholder) {
+                      placeholder.style.display = 'flex';
+                    }
+                  }}
+                />
+                <div 
+                  className="w-full h-full flex items-center justify-center"
+                  style={{ display: 'none' }}
+                >
+                  <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                  <span className="ml-2 text-sm text-muted-foreground">No hay imagen</span>
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                <span className="ml-2 text-sm text-muted-foreground">No hay imagen</span>
               </div>
+            )}
+            <div className="absolute top-2 right-2">
+              <Badge variant={isSupabaseImageAvailable ? "default" : "secondary"}>
+                <Eye className="h-3 w-3 mr-1" />
+                {isSupabaseImageAvailable ? 'Supabase' : 'Fallback'}
+              </Badge>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -197,7 +233,7 @@ export const SchoolImageManager = ({
                 Generar
               </Button>
               
-              {currentImage && (
+              {imageSource && (
                 <Button
                   onClick={() => generateAIImage(true)}
                   disabled={isGenerating}
@@ -218,6 +254,7 @@ export const SchoolImageManager = ({
             <li>• Las imágenes AI se generan automáticamente basadas en el nombre de la escuela</li>
             <li>• Puedes subir imágenes reales para mayor precisión</li>
             <li>• Las imágenes se optimizan automáticamente para web</li>
+            <li>• Las imágenes de Supabase Storage tienen prioridad sobre otras fuentes</li>
           </ul>
         </div>
       </CardContent>
