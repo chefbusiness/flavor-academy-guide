@@ -1,0 +1,1 @@
+UPDATE schools SET image = NULL WHERE name IN ('Eneko Sukaldari', 'KITXEN', 'Mimo Bite The Experience', 'Fleischmann´s Cooking Group', 'Osoa Sukaldaritza eta Ikaskuntza', 'Gastronomía Bilbao', 'GOe Gastronomy Open Ecosystem', 'Cofradía Vasca de Gastronomía');
