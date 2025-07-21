@@ -17,7 +17,7 @@ export const GenerateEnglishFieldsButton = () => {
         description: "Generando traducciones en inglés para especialidades, características y acreditaciones...",
       });
 
-      const { data, error } = await supabase.functions.invoke('generate-english-fields');
+      const { data, error } = await supabase.functions.invoke('generate-english-fields', {});
 
       if (error) {
         throw error;

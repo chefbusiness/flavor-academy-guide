@@ -23,6 +23,16 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
     return new Intl.NumberFormat('es-ES').format(num);
   };
 
+  const getTranslatedDescription = () => {
+    return language === 'en' && school.description_en ? school.description_en : school.description;
+  };
+
+  const getTranslatedSpecialties = () => {
+    return language === 'en' && school.specialties_en && school.specialties_en.length > 0 
+      ? school.specialties_en 
+      : school.specialties;
+  };
+
   const handleViewDetails = () => {
     console.log('🚀 [SchoolCard] Navigation triggered for school:', {
       schoolName: school.name,
@@ -95,7 +105,7 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
             {school.name}
           </h3>
           <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
-            {school.description}
+            {getTranslatedDescription()}
           </p>
         </div>
 
@@ -124,14 +134,14 @@ export const SchoolCard = ({ school }: SchoolCardProps) => {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {school.specialties.slice(0, 3).map((specialty) => (
+          {getTranslatedSpecialties().slice(0, 3).map((specialty) => (
             <Badge key={specialty} variant="outline" className="text-xs">
-              {t(specialty)}
+              {specialty}
             </Badge>
           ))}
-          {school.specialties.length > 3 && (
+          {getTranslatedSpecialties().length > 3 && (
             <Badge variant="outline" className="text-xs">
-              +{school.specialties.length - 3}
+              +{getTranslatedSpecialties().length - 3}
             </Badge>
           )}
         </div>
