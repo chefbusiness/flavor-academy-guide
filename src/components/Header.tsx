@@ -19,8 +19,8 @@ export const Header = () => {
   const navItems = [
     { key: 'home', href: '/' },
     { key: 'directory', href: '/' },
-    { key: 'about', href: '/about' },
-    { key: 'contact', href: '/contact' }
+    { key: 'about', href: language === 'en' ? '/about-us' : '/sobre-nosotros' },
+    { key: 'contact', href: language === 'en' ? '/contact' : '/contacto' }
   ];
 
   const handleSignOut = async () => {
