@@ -160,3 +160,60 @@ export const useReorderGalleryImages = () => {
     },
   });
 };
+
+// Hook to delete main school image
+export const useDeleteMainSchoolImage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (schoolId: string) => {
+      // First, get the main image to delete the file from storage
+      const { data: mainImage } = await supabase
+        .from('school_images')
+        .select('*')
+        .eq('school_id', schoolId)
+        .eq('image_category', 'main')
+        .maybeSingle();
+
+      // Delete from school_images table
+      const { error: dbError } = await supabase
+        .from('school_images')
+        .delete()
+        .eq('school_id', schoolId)
+        .eq('image_category', 'main');
+
+      if (dbError) throw dbError;
+
+      // Delete from storage if there was an image
+      if (mainImage?.image_url) {
+        // Extract file path from URL
+        const urlParts = mainImage.image_url.split('/');
+        const fileName = urlParts[urlParts.length - 1];
+        
+        const { error: storageError } = await supabase.storage
+          .from('school-images')
+          .remove([fileName]);
+
+        // Log storage error but don't throw (image might be external)
+        if (storageError) {
+          console.warn('Storage deletion warning:', storageError);
+        }
+      }
+
+      // Update schools table to remove main image reference
+      const { error: schoolError } = await supabase
+        .from('schools')
+        .update({ image: null })
+        .eq('id', schoolId);
+
+      if (schoolError) throw schoolError;
+
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['school-images'] });
+      queryClient.invalidateQueries({ queryKey: ['school-image'] });
+      queryClient.invalidateQueries({ queryKey: ['schools'] });
+    },
+  });
+};
