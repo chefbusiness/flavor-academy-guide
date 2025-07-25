@@ -156,8 +156,6 @@ export default function AdminSchoolEdit() {
         title: 'Escuela actualizada',
         description: 'Los cambios se han guardado correctamente.',
       });
-      
-      navigate('/admin/schools');
     } catch (error) {
       toast({
         title: 'Error',
