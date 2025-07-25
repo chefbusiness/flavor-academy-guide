@@ -32,6 +32,7 @@ export interface SchoolFormData {
   image?: string;
   gallery: string[];
   is_active: boolean;
+  slug?: string;
 }
 
 export const useSchoolsPaginated = (page: number = 1, pageSize: number = 10) => {

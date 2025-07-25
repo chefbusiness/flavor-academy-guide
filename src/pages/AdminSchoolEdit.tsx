@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { generateSlug } from '@/utils/slugUtils';
 import {
   Form,
   FormControl,
@@ -139,8 +140,12 @@ export default function AdminSchoolEdit() {
     if (!id) return;
 
     try {
+      // Auto-generate slug if empty
+      const slug = values.slug?.trim() || generateSlug(values.name);
+      
       const formData: Partial<SchoolFormData> = {
         ...values,
+        slug,
         specialties,
         languages,
         accreditation,
