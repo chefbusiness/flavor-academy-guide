@@ -12,7 +12,8 @@ import {
   useSchoolGalleryImages, 
   useUploadSchoolImage, 
   useDeleteSchoolImage,
-  useReorderGalleryImages 
+  useReorderGalleryImages,
+  useDeleteMainSchoolImage
 } from '@/hooks/useSchoolImages';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -55,6 +56,7 @@ export const SchoolImageManager = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isGeneratingGallery, setIsGeneratingGallery] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [customPrompt, setCustomPrompt] = useState('');
   const { toast } = useToast();
@@ -64,6 +66,7 @@ export const SchoolImageManager = ({
   const uploadImageMutation = useUploadSchoolImage();
   const deleteImageMutation = useDeleteSchoolImage();
   const reorderImagesMutation = useReorderGalleryImages();
+  const deleteMainImageMutation = useDeleteMainSchoolImage();
 
   // Use the integrated image system to get the proper main image
   const school = { 
@@ -78,6 +81,36 @@ export const SchoolImageManager = ({
     altText,
     refetchImage
   } = useSchoolImageIntegration(school);
+
+  // Delete main image
+  const deleteMainImage = async () => {
+    if (!confirm('¿Estás seguro de que quieres eliminar la imagen principal? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await deleteMainImageMutation.mutateAsync(schoolId);
+      
+      // Refresh image data
+      await refetchImage();
+      onImageUpdate('');
+      
+      toast({
+        title: 'Imagen eliminada',
+        description: 'La imagen principal se ha eliminado correctamente',
+      });
+    } catch (error) {
+      console.error('Error deleting main image:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo eliminar la imagen principal',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Main image generation
   const generateAIImage = async (regenerate = false) => {
@@ -123,7 +156,6 @@ export const SchoolImageManager = ({
     }
   };
 
-  // Main image upload
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -179,7 +211,6 @@ export const SchoolImageManager = ({
     }
   };
 
-  // Gallery image generation with AI
   const generateGalleryImage = async () => {
     if (!selectedCategory) {
       toast({
@@ -255,7 +286,6 @@ export const SchoolImageManager = ({
     }
   };
 
-  // Gallery image upload
   const handleGalleryUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || !selectedCategory) return;
@@ -284,7 +314,6 @@ export const SchoolImageManager = ({
         .from('school-images')
         .getPublicUrl(`gallery/${fileName}`);
 
-      // Get next display order
       const maxOrder = galleryImages?.filter(img => img.image_category === selectedCategory)
         .reduce((max, img) => Math.max(max, img.display_order || 0), 0) || 0;
 
@@ -317,7 +346,6 @@ export const SchoolImageManager = ({
     }
   };
 
-  // Delete gallery image
   const deleteGalleryImage = async (imageId: string, imageName: string) => {
     try {
       await deleteImageMutation.mutateAsync(imageId);
@@ -336,7 +364,6 @@ export const SchoolImageManager = ({
     }
   };
 
-  // Move image up/down in order
   const moveImage = async (imageId: string, direction: 'up' | 'down') => {
     if (!galleryImages) return;
 
@@ -431,12 +458,12 @@ export const SchoolImageManager = ({
                   type="file"
                   accept="image/*"
                   onChange={handleFileUpload}
-                  disabled={isUploading}
+                  disabled={isUploading || isDeleting}
                   className="flex-1"
                 />
                 <Button
                   size="sm"
-                  disabled={isUploading}
+                  disabled={isUploading || isDeleting}
                   className="shrink-0"
                 >
                   {isUploading ? (
@@ -454,7 +481,7 @@ export const SchoolImageManager = ({
               <div className="flex gap-2">
                 <Button
                   onClick={() => generateAIImage(false)}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isDeleting}
                   variant="outline"
                   className="flex-1"
                 >
@@ -468,7 +495,7 @@ export const SchoolImageManager = ({
                 
                 <Button
                   onClick={() => generateAIImage(true)}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isDeleting}
                   variant="outline"
                   size="sm"
                   title="Regenerar imagen"
@@ -482,6 +509,26 @@ export const SchoolImageManager = ({
               </div>
             </div>
           </div>
+
+          {/* Delete Main Image Button - Only show if there's an image */}
+          {imageSource && (
+            <div className="pt-2 border-t">
+              <Button
+                onClick={deleteMainImage}
+                disabled={isDeleting || isGenerating || isUploading}
+                variant="destructive"
+                size="sm"
+                className="w-full"
+              >
+                {isDeleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Trash2 className="h-4 w-4 mr-2" />
+                )}
+                Eliminar Imagen Principal
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -572,7 +619,6 @@ export const SchoolImageManager = ({
                       />
                     </div>
                     
-                    {/* Image Info */}
                     <div className="absolute top-2 left-2">
                       <Badge variant="secondary" className="text-xs">
                         {GALLERY_CATEGORIES.find(cat => cat.value === image.image_category)?.emoji || '📸'}
@@ -585,7 +631,6 @@ export const SchoolImageManager = ({
                       </Badge>
                     </div>
 
-                    {/* Controls */}
                     <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Button
                         size="sm"
@@ -615,7 +660,6 @@ export const SchoolImageManager = ({
                       </Button>
                     </div>
 
-                    {/* Category Label */}
                     <div className="mt-1 text-xs text-muted-foreground text-center truncate">
                       {GALLERY_CATEGORIES.find(cat => cat.value === image.image_category)?.label || image.image_category}
                     </div>
@@ -631,7 +675,6 @@ export const SchoolImageManager = ({
             </div>
           )}
 
-          {/* Info */}
           <div className="text-sm text-muted-foreground bg-muted p-3 rounded-lg">
             <p className="font-medium mb-1">💡 Consejos para la Galería:</p>
             <ul className="space-y-1 text-xs">
